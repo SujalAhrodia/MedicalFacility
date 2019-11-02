@@ -1,82 +1,85 @@
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+
 CREATE TABLE Address(
        addr_id int,
        addr_number int,
-       addr_street char,
-       addr_city char,
-       addr_state char,
-       addr_country char,
+       addr_street char(32),
+       addr_city char(32),
+       addr_state char(32),
+       addr_country char(32),
        PRIMARY KEY(addr_id)
 );
 
 CREATE TABLE Login_user(
        uid int,
-       Fname char,
-       Lname char,
-       ph_no char,
+       Fname char(32),
+       Lname char(32),
+       ph_no char(32),
        DoB DATE,
        PRIMARY KEY(uid)
 );
 
 CREATE TABLE Facility(
        fid int,
-       fac_name char,
-       classification char,
+       fac_name char(32),
+       classification char(32),
        no_of_departments int,
        capacity int,
        PRIMARY KEY(fid)
 );
 
 CREATE TABLE Certification(
-       acronym char,
-       cert_name char,
+       acronym char(32),
+       cert_name char(32),
        PRIMARY KEY(acronym)
 );
 
 CREATE TABLE Service(
-       service_name char,
-       code char,
+       service_name char(32),
+       code char(32),
        PRIMARY KEY(code)
 );
 
 CREATE TABLE Equipment(
-       equip_name char,
+       equip_name char(32),
        PRIMARY KEY(equip_name)
 );
 
 CREATE TABLE Body_part(
-       code char,
-       part_name char,
+       code char(32),
+       part_name char(32),
        PRIMARY KEY(code)
 );
 
 CREATE TABLE Symptom_scale(
-       scale_name char,
+       scale_name char(32),
        PRIMARY KEY(scale_name)
 );
 
 CREATE TABLE Assessment(
        assessment_id int,
-       category char,
+       category char(32),
        PRIMARY KEY(assessment_id)
 );
 
 CREATE TABLE Vital_signals(
        vital_id int,
        temperature int,
-       blood_pressure char,
+       blood_pressure char(32),
        PRIMARY KEY(vital_id)
 );
 
 CREATE TABLE Negative_experience(
        ne_code int,
-       description char,
+       description char(32),
        PRIMARY KEY(ne_code)
 );
 
 CREATE TABLE Report(
        rid int,
-       treatment char,
-       discharge_status char,
+       treatment char(32),
+       discharge_status char(32),
        PRIMARY KEY(rid)
 );
 
@@ -101,7 +104,7 @@ CREATE TABLE Facility_has_address(
 CREATE TABLE Certified(
        fid int,
        FOREIGN KEY (fid) REFERENCES Facility(fid),
-       acronym char,
+       acronym char(32),
        date_certified DATE,
        date_of_expiration DATE,
        PRIMARY KEY(fid)
@@ -117,7 +120,7 @@ CREATE TABLE Patient(
 
 CREATE TABLE Service_department(
        dept_id int,
-       dept_name char,
+       dept_name char(32),
        director int,
        /*FOREIGN KEY REFERENCES (director) Staff(uid),*/
        PRIMARY KEY(dept_id)
@@ -126,7 +129,7 @@ CREATE TABLE Service_department(
 CREATE TABLE Staff(
        uid int,
        FOREIGN KEY (uid) REFERENCES Login_user(uid),
-       designation char,
+       designation char(32),
        hiredate DATE,
        primary_dept int,
        FOREIGN KEY (primary_dept) REFERENCES Service_department(dept_id),
@@ -136,7 +139,7 @@ CREATE TABLE Staff(
 ALTER TABLE service_department ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(uid);
 
 CREATE TABLE Provides(
-       service char,
+       service char(32),
        FOREIGN KEY (service) REFERENCES Service(code),
        dept_id int,
        FOREIGN KEY (dept_id) REFERENCES Service_department(dept_id),
@@ -144,54 +147,54 @@ CREATE TABLE Provides(
 );
 
 CREATE TABLE Service_has_equipment(
-       service char,
+       service char(32),
        FOREIGN KEY (service) REFERENCES Service(code),
-       equipment char,
+       equipment char(32),
        FOREIGN KEY (equipment) REFERENCES Equipment(equip_name),
        PRIMARY KEY(service, equipment)
 );
 
 CREATE TABLE Associated_to(
-       service char,
+       service char(32),
        FOREIGN KEY (service) REFERENCES Service(code),
-       part char,
+       part char(32),
        FOREIGN KEY (part) REFERENCES Body_part(code),
        PRIMARY KEY(service, part)
 );
 
 CREATE TABLE Symptom(
-       symptom_name char,
-       code char,
+       symptom_name char(32),
+       code char(32),
        priority int,
-       symptom_scale char,
+       symptom_scale char(32),
        FOREIGN KEY (symptom_scale) REFERENCES Symptom_scale(scale_name),
        PRIMARY KEY(code)
 );
 
 CREATE TABLE Implies(
-       symptom char,
+       symptom char(32),
        FOREIGN KEY (symptom) REFERENCES Symptom(code),
-       part char,
+       part char(32),
        FOREIGN KEY (part) REFERENCES Body_part(code),
        PRIMARY KEY(symptom)
 );
 
 CREATE TABLE Has_symptom(
-       symptom char,
+       symptom char(32),
        FOREIGN KEY (symptom) REFERENCES Symptom(code),
        patient int,
        FOREIGN KEY (patient) REFERENCES Patient(uid),
-       value char,
-       duration char,
-       incident char,
+       value char(32),
+       duration char(32),
+       incident char(32),
        recurring BOOLEAN,
        PRIMARY KEY(symptom, patient)
 );
 
 CREATE TABLE Scale_parameter(
-       scale_name char,
+       scale_name char(32),
        FOREIGN KEY (scale_name) REFERENCES Symptom_scale(scale_name),
-       param char,
+       param char(32),
        severity int,
        PRIMARY KEY(scale_name, param)
 );
@@ -207,11 +210,11 @@ CREATE TABLE Evaluate(
 CREATE TABLE Consists_of(
        assessment_id int,
        FOREIGN KEY (assessment_id) REFERENCES Assessment(assessment_id),
-       symptom char,
+       symptom char(32),
        FOREIGN KEY (symptom) REFERENCES Symptom(code),
-       part char,
+       part char(32),
        FOREIGN KEY (part) REFERENCES Body_part(code),
-       severity char,
+       severity char(32),
        FOREIGN KEY (severity) REFERENCES Symptom_scale(scale_name),
        PRIMARY KEY(assessment_id)
 );
@@ -250,17 +253,17 @@ CREATE TABLE Report_has_ref(
 );
 
 CREATE TABLE Reason(
-       reason_code char,
-       service_name char,
+       reason_code char(32),
+       service_name char(32),
        FOREIGN KEY (service_name) REFERENCES Service(code),
-       description char,
+       description char(32),
        PRIMARY KEY(reason_code)
 );
 
 CREATE TABLE Report_has_reason(
        rid int,
        FOREIGN KEY (rid) REFERENCES Report(rid),
-       reason char,
+       reason char(32),
        FOREIGN KEY (reason) REFERENCES Reason(reason_code),
        PRIMARY KEY(rid)
 );
