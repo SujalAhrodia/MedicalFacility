@@ -15,8 +15,6 @@ public class establish {
         }
         catch (Exception e)
         {
-            System.out.println("here");
-
             System.out.println(e.getMessage());
         }
 
