@@ -133,6 +133,8 @@ CREATE TABLE Staff(
        PRIMARY KEY(uid)
 );
 
+ALTER TABLE service_department ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(uid);
+
 CREATE TABLE Provides(
        service char,
        FOREIGN KEY (service) REFERENCES Service(code),
