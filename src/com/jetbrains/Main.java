@@ -14,6 +14,11 @@ public class Main {
         if(conn != null)
         {
             System.out.println("Successful Connection!");
+
+            //Display the menu
+            Menu menu = new Menu();
+            menu.menuOptions(conn);
+
             conn.close();
         }
     }
