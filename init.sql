@@ -12,12 +12,12 @@ CREATE TABLE Address(
 );
 
 CREATE TABLE Login_user(
-       uid int,
+       user_id int,
        Fname char(32),
        Lname char(32),
        ph_no char(32),
        DoB DATE,
-       PRIMARY KEY(uid)
+       PRIMARY KEY(user_id)
 );
 
 CREATE TABLE Facility(
@@ -86,11 +86,11 @@ CREATE TABLE Report(
 /* ------ begin foreign key members ------ */
 
 CREATE TABLE User_has_address(
-       uid int,
-       FOREIGN KEY (uid) REFERENCES Login_user(uid),
+       user_id int,
+       FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
        addr_id int,
        FOREIGN KEY (addr_id) REFERENCES Address(addr_id),
-       PRIMARY KEY(uid)
+       PRIMARY KEY(user_id)
 );
 
 CREATE TABLE Facility_has_address(
@@ -111,32 +111,32 @@ CREATE TABLE Certified(
 );
 
 CREATE TABLE Patient(
-       uid int,
-       FOREIGN KEY (uid) REFERENCES Login_user(uid),
+       user_id int,
+       FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
        checkin_time DATE,
        checkout_time DATE,
-       PRIMARY KEY(uid)
+       PRIMARY KEY(user_id)
 );
 
 CREATE TABLE Service_department(
        dept_id int,
        dept_name char(32),
        director int,
-       /*FOREIGN KEY REFERENCES (director) Staff(uid),*/
+       /*FOREIGN KEY REFERENCES (director) Staff(user_id),*/
        PRIMARY KEY(dept_id)
 );
 
 CREATE TABLE Staff(
-       uid int,
-       FOREIGN KEY (uid) REFERENCES Login_user(uid),
+       user_id int,
+       FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
        designation char(32),
        hiredate DATE,
        primary_dept int,
        FOREIGN KEY (primary_dept) REFERENCES Service_department(dept_id),
-       PRIMARY KEY(uid)
+       PRIMARY KEY(user_id)
 );
 
-ALTER TABLE service_department ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(uid);
+ALTER TABLE service_department ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(user_id);
 
 CREATE TABLE Provides(
        service char(32),
@@ -183,7 +183,7 @@ CREATE TABLE Has_symptom(
        symptom char(32),
        FOREIGN KEY (symptom) REFERENCES Symptom(code),
        patient int,
-       FOREIGN KEY (patient) REFERENCES Patient(uid),
+       FOREIGN KEY (patient) REFERENCES Patient(user_id),
        value char(32),
        duration char(32),
        incident char(32),
@@ -200,11 +200,11 @@ CREATE TABLE Scale_parameter(
 );
 
 CREATE TABLE Evaluate(
-       uid int,
-       FOREIGN KEY (uid) REFERENCES Patient(uid),
+       user_id int,
+       FOREIGN KEY (user_id) REFERENCES Patient(user_id),
        assessment_id int,
        FOREIGN KEY (assessment_id) REFERENCES Assessment(assessment_id),
-       PRIMARY KEY(uid)
+       PRIMARY KEY(user_id)
 );
 
 CREATE TABLE Consists_of(
@@ -220,11 +220,11 @@ CREATE TABLE Consists_of(
 );
 
 CREATE TABLE Patient_has_report(
-       uid int,
-       FOREIGN KEY (uid) REFERENCES Patient(uid),
+       user_id int,
+       FOREIGN KEY (user_id) REFERENCES Patient(user_id),
        rid int,
        FOREIGN KEY (rid) REFERENCES Report(rid),
-       PRIMARY KEY(uid, rid)
+       PRIMARY KEY(user_id, rid)
 );
 
 CREATE TABLE Report_has_negative(
@@ -240,7 +240,7 @@ CREATE TABLE Referral_status(
        fid int,
        FOREIGN KEY (fid) REFERENCES Facility(fid),
        referrer int,
-       FOREIGN KEY (referrer) REFERENCES Staff(uid),
+       FOREIGN KEY (referrer) REFERENCES Staff(user_id),
        PRIMARY KEY(rs_id)
 );
 
@@ -272,8 +272,8 @@ CREATE TABLE Vital_recordings(
        vital_id int,
        FOREIGN KEY (vital_id) REFERENCES Vital_signals(vital_id),
        patient int,
-       FOREIGN KEY (patient) REFERENCES Patient(uid),
+       FOREIGN KEY (patient) REFERENCES Patient(user_id),
        staff int,
-       FOREIGN KEY (staff) REFERENCES Staff(uid),
+       FOREIGN KEY (staff) REFERENCES Staff(user_id),
        PRIMARY KEY(vital_id, patient, staff)
 );

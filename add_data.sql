@@ -10,7 +10,7 @@ VALUES (0, 1337, 'kingsford lane', 'Raleigh', 'NC', 'Wake'),
 (2, 42, 'unfortunate st', 'Greensboro', 'NC', 'nowhere');
 
 INSERT INTO login_user
-(uid, Fname, Lname, ph_no, dob)
+(user_id, Fname, Lname, ph_no, dob)
 VALUES (0, 'carl', 'wheezer', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY')),
 (1, 'jimmy', 'neutron', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
 
