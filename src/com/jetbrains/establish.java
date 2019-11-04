@@ -9,7 +9,8 @@ public class establish {
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/?useTimezone=true&serverTimezone=UTC","root","12345678");
+            //change the url for the database
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/public?useTimezone=true&serverTimezone=UTC","root","12345678");
             Statement s = con.createStatement();
             return con;
         }
