@@ -136,7 +136,9 @@ CREATE TABLE Staff(
        PRIMARY KEY(user_id)
 );
 
-ALTER TABLE service_department ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(user_id);
+ALTER TABLE service_department
+ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(user_id)
+DEFERRABLE INITIALLY DEFERRED;
 
 CREATE TABLE Provides(
        service char(32),
@@ -214,8 +216,9 @@ CREATE TABLE Consists_of(
        FOREIGN KEY (symptom) REFERENCES Symptom(code),
        part char(32),
        FOREIGN KEY (part) REFERENCES Body_part(code),
+       sympt_scale char(32),
        severity char(32),
-       FOREIGN KEY (severity) REFERENCES Symptom_scale(scale_name),
+       FOREIGN KEY (sympt_scale, severity) REFERENCES Scale_parameter(scale_name, param),
        PRIMARY KEY(assessment_id)
 );
 
