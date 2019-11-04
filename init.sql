@@ -1,6 +1,14 @@
 DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 
+/* use this for getting unique ids */
+CREATE SEQUENCE seq
+  MINVALUE 0
+  MAXVALUE 999999999999999999
+  START WITH 100
+  INCREMENT BY 1
+  CACHE 20;
+
 CREATE TABLE Address(
        addr_id int,
        addr_number int,
