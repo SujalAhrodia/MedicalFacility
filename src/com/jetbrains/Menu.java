@@ -32,6 +32,8 @@ public class Menu {
                     break;
                 case "2":
                     System.out.println("Sign Up");
+                    Signup su = new Signup();
+                    su.menuOptions(conn);
                     break;
                 case "3":
                     System.out.println("Demo");
