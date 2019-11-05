@@ -4,7 +4,7 @@ package com.jetbrains;
 import java.sql.*;
 import java.util.Scanner;
 
-public class Signin {
+public class SignIn {
     String userinput;
 
     Scanner in = new Scanner(System.in);
@@ -12,10 +12,12 @@ public class Signin {
 
     public void menuOptions(Connection conn) throws SQLException
     {
-        Statement st = conn.createStatement();
+        Statement st = null;
 
         try
         {
+            st = conn.createStatement();
+
             while (true)
             {
                 //print facilities from facilities table
@@ -40,8 +42,8 @@ public class Signin {
                 System.out.println("Last Name:");
                 String lname = in.next();
 
-                System.out.println("Date of Birth:");
-                //to-do
+                System.out.println("Date of Birth: (format: YYYY-MM-DD)");
+                //format needs to be updated
                 String dob = in.next();
 
                 System.out.println("City of Address:");
@@ -68,6 +70,7 @@ public class Signin {
                         // fetch
                         String dbL = null;
                         String dbdob = null;
+
                         while (temp.next()) {
                             dbL = temp.getString("Lname");
                             dbdob = temp.getString("DoB");
@@ -75,9 +78,17 @@ public class Signin {
 
                         if (lname.equals(dbL) && dob.equals(dbdob))
                         {
-                            System.out.println("Successful Login!");
-                            //route to patient 
-                            break;
+                            //route to patient
+                            if(o.equals("y"))
+                            {
+                                System.out.println("Successful Patient login");
+                                //route to patient
+                            }
+                            else
+                            {
+                                System.out.println("Staff login");
+                                //route to staff login
+                            }
                         }
                         else
                         {
@@ -96,10 +107,16 @@ public class Signin {
                 }
             }
 
-        }
-        catch (Exception e )
+        } catch (Exception e)
         {
-            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+        }
+        finally
+        {
+            if (st != null)
+            {
+                st.close();
+            }
         }
     }
 }

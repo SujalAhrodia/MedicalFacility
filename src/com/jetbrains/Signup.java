@@ -1,19 +1,16 @@
 package com.jetbrains;
 
 import java.sql.*;
-import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Signup {
+public class SignUp {
     String userinput;
 
     Scanner in = new Scanner(System.in);
 
     public void menuOptions(Connection conn) throws SQLException
     {
-        Statement st = conn.createStatement();
-
         System.out.println("*************");
         System.out.println("Enter the following information:");
         System.out.println("First Name: ");
@@ -62,7 +59,7 @@ public class Signup {
                     System.out.println("Profile Created!");
 
                     //goto sign in page
-                    Signin si = new Signin();
+                    SignIn si = new SignIn();
                     si.menuOptions(conn);
                     break;
                 case "2":
@@ -77,7 +74,7 @@ public class Signup {
         }
         catch (Exception e )
         {
-            System.out.println(e.getMessage());
+            System.out.println(e.toString());
         }
     }
 }
