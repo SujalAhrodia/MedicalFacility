@@ -1,19 +1,16 @@
 package com.jetbrains;
 
 import java.sql.*;
-import java.util.Date;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Signup {
+public class SignUp {
     String userinput;
 
     Scanner in = new Scanner(System.in);
 
     public void menuOptions(Connection conn) throws SQLException
     {
-        Statement st = conn.createStatement();
-
         System.out.println("*************");
         System.out.println("Enter the following information:");
         System.out.println("First Name: ");
@@ -22,7 +19,7 @@ public class Signup {
         System.out.println("Last Name: ");
         String lname = in.next();
 
-        System.out.println("Date of Birth: ");
+        System.out.println("Date of Birth: (format: YYYY-MM-DD)");
         //to-do
         String dob = in.next();
 
@@ -46,15 +43,15 @@ public class Signup {
                 case "1":
                     System.out.println("Sign Up");
                     //store info in db
-                    Random rand = new Random();
-                    int id = rand.nextInt(1000);
+                    //Random rand = new Random();
+                    //int id = rand.nextInt(1000);
 
-                    PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Login_user (uid, Fname, Lname, ph_no , DoB) VALUE (?,?,?,?,?)");
-                    pstmt.setInt (1, id);
-                    pstmt.setString (2, fname);
-                    pstmt.setString (3, lname);
-                    pstmt.setInt (4, ph);
-                    pstmt.setString (5, dob);
+                    PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Login_user (Fname, Lname, ph_no , DoB) VALUE (?,?,?,?)");
+                    //pstmt.setInt (1, id);
+                    pstmt.setString (1, fname);
+                    pstmt.setString (2, lname);
+                    pstmt.setInt (3, ph);
+                    pstmt.setString (4, dob);
 
                     pstmt.execute();
 
@@ -62,7 +59,7 @@ public class Signup {
                     System.out.println("Profile Created!");
 
                     //goto sign in page
-                    Signin si = new Signin();
+                    SignIn si = new SignIn();
                     si.menuOptions(conn);
                     break;
                 case "2":
@@ -77,7 +74,7 @@ public class Signup {
         }
         catch (Exception e )
         {
-            System.out.println(e.getMessage());
+            System.out.println(e.toString());
         }
     }
 }
