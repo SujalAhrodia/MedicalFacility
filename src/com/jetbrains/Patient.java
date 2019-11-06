@@ -13,6 +13,23 @@ public class Patient {
     ResultSet temp = null;
     Statement st = null;
 
+    public static boolean has_uid(Connection conn, int uid) {
+	    try {
+		    Statement st = conn.createStatement();
+		    ResultSet rs =
+			    st.executeQuery("SELECT user_id FROM patient WHERE user_id = "
+					    + uid + ";");
+
+		    if (rs.next()) {
+			    return true;
+		    }
+
+	    } catch (Exception e) {
+		    System.out.println(e.toString());
+	    }
+	    return false;
+    }
+
     public void routingMenu(Connection conn) throws SQLException
     {
         try

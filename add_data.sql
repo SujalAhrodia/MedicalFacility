@@ -87,8 +87,7 @@ VALUES (0, 'SRG', TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD
 
 INSERT INTO Patient
 (user_id, checkin_time, checkout_time)
-VALUES (0, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY')),
-(1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
+VALUES (1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
 
 /* update the circular dependency in a transaction */
 BEGIN;
@@ -125,7 +124,7 @@ VALUES ('HDCH', 'HED');
 
 INSERT INTO Has_symptom
 (symptom, patient, duration, incident, recurring)
-VALUES ('HDCH', 0, '3 days', 'Dehydrated', TRUE);
+VALUES ('HDCH', 1, '3 days', 'Dehydrated', TRUE);
 
 INSERT INTO Scale_parameter
 (scale_name, param, severity)
@@ -144,7 +143,7 @@ VALUES ('1-10', '1', 1),
 
 INSERT INTO Evaluate
 (user_id, assessment_id)
-VALUES (0, 0);
+VALUES (1, 0);
 
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, severity)
@@ -152,7 +151,7 @@ VALUES (0, 'HDCH', 'HED', '1-10', '4');
 
 INSERT INTO Patient_has_report
 (user_id, rid)
-VALUES (0, 0);
+VALUES (1, 0);
 
 INSERT INTO Report_has_negative
 (rid, ne_code)
@@ -177,7 +176,7 @@ VALUES (0, 'X');
 
 INSERT INTO Vital_recordings
 (vital_id, patient, staff)
-VALUES (0, 0, 0);
+VALUES (0, 1, 0);
 
 
 

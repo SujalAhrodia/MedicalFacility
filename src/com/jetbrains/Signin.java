@@ -46,12 +46,6 @@ public class SignIn {
                 //format needs to be updated
                 String dob = in.next();
 
-                System.out.println("City of Address:");
-                String city = in.next();
-
-                System.out.println("Patient: (y/n)");
-                String o = in.next();
-
                 System.out.println("*************");
                 System.out.println("1.  Sign In ");
                 System.out.println("2.  Go Back ");
@@ -61,49 +55,46 @@ public class SignIn {
                 userinput = in.next();
 
                 switch (userinput) {
-                    case "1":
+		case "1":
                         System.out.println("Sign In");
                         temp = null;
 
-                        temp = st.executeQuery("select * from Login_user where Lname='"+lname+"' && DoB='"+dob+"'");
+                        temp = st.executeQuery("SELECT * FROM login_user WHERE Lname='"
+					       +lname+"' AND dob='"+dob+"'");
 
-                        // fetch
-                        String dbL = null;
-                        String dbdob = null;
-
+			int id = -1;
                         while (temp.next()) {
-                            dbL = temp.getString("Lname");
-                            dbdob = temp.getString("DoB");
+			    id = temp.getInt("user_id");
                         }
+			System.out.println("Found uid " + id);
 
-                        if (lname.equals(dbL) && dob.equals(dbdob))
-                        {
-                            //route to patient
-                            if(o.equals("y"))
-                            {
+			//route to patient
+			if (Patient.has_uid(conn, id))
+			{
                                 System.out.println("Successful Patient login");
                                 //route to patient
                                 Patient p = new Patient();
                                 p.routingMenu(conn);
-                            }
-                            else
-                            {
+			}
+			else if (Staff.has_uid(conn,id))
+			{
                                 System.out.println("Staff login");
-                                //route to staff login
-                            }
-                        }
+                                Staff s = new Staff();
+				s.routingMenu(conn);
+			}
                         else
                         {
-                            System.out.println("Sign In Incorrect!");
-                            System.out.println("Please enter again");
-                            continue;
+				System.out.println("Sign In Incorrect!");
+				System.out.println("Please enter again");
+				continue;
                         }
-                    case "2":
+			break;
+		case "2":
                         System.out.println("GO Back");
                         Menu menu = new Menu();
                         menu.menuOptions(conn);
                         break;
-                    default:
+		default:
                         System.out.println("Invalid input!");
                         System.out.println("Please read the options carefully");
                 }
