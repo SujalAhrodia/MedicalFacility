@@ -6,16 +6,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-public class PatientRouting {
+public class Patient {
     String userinput;
 
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
+    Statement st = null;
 
-    public void menuOptions(Connection conn) throws SQLException
+    public void routingMenu(Connection conn) throws SQLException
     {
-        Statement st = null;
-
         try
         {
             st = conn.createStatement();
@@ -53,8 +52,7 @@ public class PatientRouting {
                     int facID= in.nextInt();
 
                     //check if the patient has already checked in at that facility
-                    PatientCheckIn pci = new PatientCheckIn();
-                    pci.menuOptions(conn);
+                    checkinMenu(conn);
                     break;
                 case "2":
                     System.out.println("Check out");
@@ -79,4 +77,60 @@ public class PatientRouting {
             }
         }
     }
+    public void checkinMenu(Connection conn) throws SQLException
+    {
+        try
+        {
+            st = conn.createStatement();
+
+            //print symptoms from symptoms table
+            System.out.println("*************");
+            System.out.println("List of Symptoms");
+            System.out.println("*************");
+
+            temp = st.executeQuery("select symptom_name from Symptom");
+
+            int i=1;
+            //array for choice of symptoms
+            String[] symp = new String[100];
+
+            while(temp.next())
+            {
+                String name = temp.getString("symptom_name");
+                System.out.println(i + ".\t" + name);
+                symp[i]=name;
+                i++;
+            }
+
+            System.out.println(i + "\t" + "Other");
+            i++;
+            System.out.println(i + "\t" + "Done");
+            System.out.println("*************");
+            System.out.println("Enter your choice: (1-"+i+")");
+
+            int userinput = in.nextInt();
+
+            for (int j=1; j<i; j++)
+            {
+                metaData(symp[i]);
+            }
+
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.toString());
+        }
+        finally
+        {
+            if (st != null)
+            {
+                st.close();
+            }
+        }
+    }
+    public void metaData(String symp) throws SQLException
+    {
+
+    }
+
 }

@@ -37,6 +37,8 @@ public class Menu {
                     break;
                 case "3":
                     System.out.println("Demo");
+                    Demo d = new Demo();
+                    d.displayQueries(conn);
                     break;
                 case "4":
                     System.out.println("Exiting.......");
