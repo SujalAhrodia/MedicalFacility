@@ -110,9 +110,19 @@ public class Patient {
 
             int userinput = in.nextInt();
 
-            for (int j=1; j<i; j++)
+            if( userinput == i )
             {
-                metaData(symp[i]);
+                Menu m = new Menu();
+                m.menuOptions(conn);
+            }
+            else if (userinput == i-1)
+            {
+                System.out.println("Add information about new symptom");
+            }
+            else {
+                //validate,record time, logout
+                System.out.println("*** Logging out ***");
+                metaData(symp[userinput], conn);
             }
 
         }
@@ -128,9 +138,10 @@ public class Patient {
             }
         }
     }
-    public void metaData(String symp) throws SQLException
+    public void metaData(String symp, Connection conn) throws SQLException
     {
-
+        System.out.println("Enter data for "+symp);
+        checkinMenu(conn);
     }
 
 }

@@ -83,6 +83,8 @@ public class SignIn {
                             {
                                 System.out.println("Successful Patient login");
                                 //route to patient
+                                Patient p = new Patient();
+                                p.routingMenu(conn);
                             }
                             else
                             {
