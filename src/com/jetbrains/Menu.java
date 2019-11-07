@@ -27,16 +27,18 @@ public class Menu {
             switch (userinput) {
                 case "1":
                     System.out.println("Sign In");
-                    Signin si = new Signin();
+                    SignIn si = new SignIn();
                     si.menuOptions(conn);
                     break;
                 case "2":
                     System.out.println("Sign Up");
-                    Signup su = new Signup();
+                    SignUp su = new SignUp();
                     su.menuOptions(conn);
                     break;
                 case "3":
                     System.out.println("Demo");
+                    Demo d = new Demo();
+                    d.displayQueries(conn);
                     break;
                 case "4":
                     System.out.println("Exiting.......");
@@ -48,7 +50,7 @@ public class Menu {
         }
         catch (Exception e )
         {
-            System.out.println(e.getMessage());
+            System.out.println(e.toString());
         }
     }
 }

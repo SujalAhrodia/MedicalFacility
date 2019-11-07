@@ -4,7 +4,7 @@ package com.jetbrains;
 import java.sql.*;
 import java.util.Scanner;
 
-public class Signin {
+public class SignIn {
     String userinput;
 
     Scanner in = new Scanner(System.in);
@@ -12,10 +12,12 @@ public class Signin {
 
     public void menuOptions(Connection conn) throws SQLException
     {
-        Statement st = conn.createStatement();
+        Statement st = null;
 
         try
         {
+            st = conn.createStatement();
+
             while (true)
             {
                 //print facilities from facilities table
@@ -40,15 +42,9 @@ public class Signin {
                 System.out.println("Last Name:");
                 String lname = in.next();
 
-                System.out.println("Date of Birth:");
-                //to-do
+                System.out.println("Date of Birth: (format: YYYY-MM-DD)");
+                //format needs to be updated
                 String dob = in.next();
-
-                System.out.println("City of Address:");
-                String city = in.next();
-
-                System.out.println("Patient: (y/n)");
-                String o = in.next();
 
                 System.out.println("*************");
                 System.out.println("1.  Sign In ");
@@ -58,48 +54,64 @@ public class Signin {
 
                 userinput = in.next();
 
-                switch (userinput) {
-                    case "1":
+                switch (userinput)
+                {
+		            case "1":
                         System.out.println("Sign In");
                         temp = null;
 
-                        temp = st.executeQuery("select * from Login_user where Lname='"+lname+"' && DoB='"+dob+"'");
+                        temp = st.executeQuery("SELECT * FROM login_user WHERE Lname='"
+					       +lname+"' AND dob='"+dob+"'");
 
-                        // fetch
-                        String dbL = null;
-                        String dbdob = null;
-                        while (temp.next()) {
-                            dbL = temp.getString("Lname");
-                            dbdob = temp.getString("DoB");
+			            int id = -1;
+
+			            while (temp.next())
+			            {
+			                id = temp.getInt("user_id");
                         }
+			            System.out.println("Found uid " + id);
 
-                        if (lname.equals(dbL) && dob.equals(dbdob))
+			            if (Patient.has_uid(conn, id))
                         {
-                            System.out.println("Successful Login!");
-                            //route to patient 
-                            break;
+                            System.out.println("Successful Patient login");
+                            //route to patient
+                            Patient p = new Patient();
+                            p.routingMenu(conn);
                         }
+            			else if (Staff.has_uid(conn,id))
+			            {
+			                System.out.println("Staff login");
+			                Staff s = new Staff();
+			                s.routingMenu(conn);
+			            }
                         else
                         {
-                            System.out.println("Sign In Incorrect!");
-                            System.out.println("Please enter again");
-                            continue;
+				            System.out.println("Sign In Incorrect!");
+				            System.out.println("Please enter again");
+				            continue;
                         }
-                    case "2":
+			            break;
+		            case "2":
                         System.out.println("GO Back");
                         Menu menu = new Menu();
                         menu.menuOptions(conn);
                         break;
-                    default:
+		            default:
                         System.out.println("Invalid input!");
                         System.out.println("Please read the options carefully");
                 }
             }
 
-        }
-        catch (Exception e )
+        } catch (Exception e)
         {
-            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+        }
+        finally
+        {
+            if (st != null)
+            {
+                st.close();
+            }
         }
     }
 }
