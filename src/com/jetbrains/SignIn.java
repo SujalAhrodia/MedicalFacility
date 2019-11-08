@@ -46,6 +46,9 @@ public class SignIn {
                 //format needs to be updated
                 String dob = in.next();
 
+                System.out.println("City of Address: ");
+                String city = in.next();
+
                 System.out.println("*************");
                 System.out.println("1.  Sign In ");
                 System.out.println("2.  Go Back ");
@@ -60,6 +63,7 @@ public class SignIn {
                         System.out.println("Sign In");
                         temp = null;
 
+                        //query to be added for city
                         temp = st.executeQuery("SELECT * FROM login_user WHERE Lname='"
 					       +lname+"' AND dob='"+dob+"'");
 
@@ -79,6 +83,7 @@ public class SignIn {
                         }
                         else if (Staff.has_uid(conn,id)) {
                             System.out.println("Staff login");
+                            //route to staff
                             Staff s = new Staff();
                             s.routingMenu(conn);
                         }

@@ -8,6 +8,7 @@ public class SignUp {
     String userinput;
 
     Scanner in = new Scanner(System.in);
+    PreparedStatement pstmt = null;
 
     public void menuOptions(Connection conn) throws SQLException
     {
@@ -23,8 +24,21 @@ public class SignUp {
         //to-do
         String dob = in.next();
 
-        System.out.println("City of Address: ");
+        System.out.println("** Address ** ");
+        System.out.println("Number: ");
+        int no = in.nextInt();
+
+        System.out.println("Street Name: ");
+        String sname = in.next();
+
+        System.out.println("City: ");
         String city = in.next();
+
+        System.out.println("State: ");
+        String state = in.next();
+
+        System.out.println("Country: ");
+        String country = in.next();
 
         System.out.println("Phone number: ");
         int ph = in.nextInt();
@@ -43,18 +57,23 @@ public class SignUp {
                 case "1":
                     System.out.println("Sign Up");
                     //store info in db
-                    //Random rand = new Random();
-                    //int id = rand.nextInt(1000);
+                    pstmt = conn.prepareStatement("INSERT INTO Login_user (Fname, Lname, ph_no , DoB) VALUE (?,?,?,?)");
 
-                    PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Login_user (Fname, Lname, ph_no , DoB) VALUE (?,?,?,?)");
-                    //pstmt.setInt (1, id);
                     pstmt.setString (1, fname);
                     pstmt.setString (2, lname);
                     pstmt.setInt (3, ph);
                     pstmt.setString (4, dob);
 
                     pstmt.execute();
+                    pstmt = conn.prepareStatement("INSERT INTO Address(addr_number, addr_street, addr_city, addr_state, addr_country) VALUES (?,?,?,?,?)");
 
+                    pstmt.setInt (1, no);
+                    pstmt.setString (2, sname);
+                    pstmt.setString (3, city);
+                    pstmt.setString (4, state);
+                    pstmt.setString (5, country);
+
+                    pstmt.execute();
                     //show msg
                     System.out.println("Profile Created!");
 
@@ -75,6 +94,13 @@ public class SignUp {
         catch (Exception e )
         {
             System.out.println(e.toString());
+        }
+        finally
+        {
+            if(pstmt != null)
+            {
+                pstmt.close();
+            }
         }
     }
 }

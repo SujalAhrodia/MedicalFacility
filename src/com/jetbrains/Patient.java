@@ -129,6 +129,8 @@ public class Patient {
 
             if( userinput == i )
             {
+                //validate,record time, logout
+                System.out.println("*** Logging out ***");
                 Menu m = new Menu();
                 m.menuOptions(conn);
             }
@@ -137,8 +139,6 @@ public class Patient {
                 System.out.println("Add information about new symptom");
             }
             else {
-                //validate,record time, logout
-                System.out.println("*** Logging out ***");
                 metaData(symp[userinput], conn);
             }
 
