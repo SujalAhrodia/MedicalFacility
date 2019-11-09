@@ -65,32 +65,29 @@ public class SignIn {
 
 			            int id = -1;
 
-			            while (temp.next())
-			            {
-			                id = temp.getInt("user_id");
+                        while (temp.next()) {
+                            id = temp.getInt("user_id");
                         }
-			            System.out.println("Found uid " + id);
 
-			            if (Patient.has_uid(conn, id))
-                        {
+                        System.out.println("Found uid " + id);
+
+                        if (Patient.has_uid(conn, id)) {
                             System.out.println("Successful Patient login");
                             //route to patient
                             Patient p = new Patient();
                             p.routingMenu(conn);
                         }
-            			else if (Staff.has_uid(conn,id))
-			            {
-			                System.out.println("Staff login");
-			                Staff s = new Staff();
-			                s.routingMenu(conn);
-			            }
-                        else
-                        {
-				            System.out.println("Sign In Incorrect!");
-				            System.out.println("Please enter again");
-				            continue;
+                        else if (Staff.has_uid(conn,id)) {
+                            System.out.println("Staff login");
+                            Staff s = new Staff();
+                            s.routingMenu(conn);
                         }
-			            break;
+                        else {
+                            System.out.println("Sign In Incorrect!");
+                            System.out.println("Please enter again");
+                            continue;
+                        }
+                        break;
 		            case "2":
                         System.out.println("GO Back");
                         Menu menu = new Menu();
