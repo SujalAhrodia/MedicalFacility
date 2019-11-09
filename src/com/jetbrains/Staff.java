@@ -51,6 +51,11 @@ public class Staff {
 
 			case "4":
 				System.out.println("Add Severity");
+				this.addSeverity(conn);
+				break;
+			case "5":
+				System.out.println("Add assessment rule");
+				this.addAssessment(conn);
 				break;
 			}
 		} catch(Exception e) {
@@ -133,6 +138,127 @@ public class Staff {
 			pstmt.setInt(3, severity);
 			pstmt.execute();
 			System.out.println("Symptom severity added");
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void addAssessment(Connection conn) {
+		try {
+			System.out.println("Enter category N, H, or Q : ");
+			String category = in.next();
+
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT nextval('seq')");
+			int aid = -1;
+			while (rs.next())
+				aid = rs.getInt("nextval");
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Assessment (assessment_id, category) VALUES (?,?)");
+			pstmt.setInt(1, aid);
+			pstmt.setString(2, category);
+			pstmt.execute();
+
+			addEvaluate(conn, aid);
+			addConsists_of(conn, aid);
+
+			System.out.println("Assessment added");
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void addEvaluate(Connection conn, int aid) {
+		try {
+			Statement st = conn.createStatement();
+			System.out.println("*************");
+			System.out.println("Patients");
+			System.out.println("*************");
+
+			ResultSet temp = st.executeQuery("SELECT user_id FROM Patient");
+
+			while(temp.next())
+			{
+				String id = temp.getString("user_id");
+				System.out.println(id);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Patient id :");
+			int uid = in.nextInt();
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Evaluate (assessment_id, user_id) VALUES (?,?)");
+			pstmt.setInt(1, aid);
+			pstmt.setInt(2, uid);
+			pstmt.execute();
+			System.out.println("Evaluation added");
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void addConsists_of(Connection conn, int aid) {
+		try {
+			Statement st = conn.createStatement();
+			System.out.println("*************");
+			System.out.println("Symptoms");
+			System.out.println("*************");
+
+			ResultSet temp = st.executeQuery("SELECT code,symptom_name,symptom_scale FROM symptom");
+
+			String scale = "";
+			while(temp.next())
+			{
+				String id = temp.getString("code");
+				String name = temp.getString("symptom_name");
+				scale  = temp.getString("symptom_scale");
+				System.out.println(id + " " + name);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Symptom code:");
+			String symptom = in.next();
+
+			System.out.println("*************");
+			System.out.println("Body Parts");
+			System.out.println("*************");
+
+			temp = st.executeQuery("SELECT code,part_name FROM body_part");
+
+			while(temp.next())
+			{
+				String id = temp.getString("code");
+				String name = temp.getString("part_name");
+				System.out.println(id + " " + name);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Body Part:");
+			String part = in.next();
+
+			System.out.println("*************");
+			System.out.println("Severity");
+			System.out.println("*************");
+
+			temp = st.executeQuery("SELECT param FROM scale_parameter WHERE scale_name = '" + scale  + "'");
+
+			while(temp.next())
+			{
+				String id = temp.getString("param");
+				System.out.println(id);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Symptom Severity :");
+			String threshold = in.next();
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Consists_of (assessment_id, symptom, part, sympt_scale, threshold) VALUES (?,?,?,?,?)");
+			pstmt.setInt(1, aid);
+			pstmt.setString(2, symptom);
+			pstmt.setString(3, part);
+			pstmt.setString(4, scale);
+			pstmt.setString(5, threshold);
+
+			pstmt.execute();
+			System.out.println("Consists_of added");
 
 		} catch (Exception e) {
 			System.out.println(e.toString());

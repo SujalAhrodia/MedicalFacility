@@ -225,9 +225,10 @@ CREATE TABLE Consists_of(
        part char(32),
        FOREIGN KEY (part) REFERENCES Body_part(code),
        sympt_scale char(32),
-       severity char(32),
-       FOREIGN KEY (sympt_scale, severity) REFERENCES Scale_parameter(scale_name, param),
-       PRIMARY KEY(assessment_id)
+       threshold char(32),
+       FOREIGN KEY (sympt_scale, threshold) REFERENCES Scale_parameter(scale_name, param),
+       direction char(32),
+       PRIMARY KEY(assessment_id, symptom)
 );
 
 CREATE TABLE Patient_has_report(
