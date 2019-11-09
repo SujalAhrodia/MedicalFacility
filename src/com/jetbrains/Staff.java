@@ -250,12 +250,16 @@ public class Staff {
 			System.out.println("Choose a Symptom Severity :");
 			String threshold = in.next();
 
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Consists_of (assessment_id, symptom, part, sympt_scale, threshold) VALUES (?,?,?,?,?)");
+			System.out.println("Should the rule trigger when GREATER or LESSER to the threshold?:");
+			String dir = in.next();
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Consists_of (assessment_id, symptom, part, sympt_scale, direction, threshold) VALUES (?,?,?,?,?,?)");
 			pstmt.setInt(1, aid);
 			pstmt.setString(2, symptom);
 			pstmt.setString(3, part);
 			pstmt.setString(4, scale);
-			pstmt.setString(5, threshold);
+			pstmt.setString(5, dir);
+			pstmt.setString(6, threshold);
 
 			pstmt.execute();
 			System.out.println("Consists_of added");
