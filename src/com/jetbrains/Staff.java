@@ -27,26 +27,36 @@ public class Staff {
 	public void routingMenu(Connection conn) {
 		try {
 			System.out.println("*************");
-			System.out.println("1.  Add Symptom ");
-			System.out.println("2.  Add Severity");
-			System.out.println("3.  Assessment Rule");
-			System.out.println("4.  Go Back ");
+			System.out.println("1.  Checked-in Patient List ");
+			System.out.println("2.  Treated Patient List");
+			System.out.println("3.  Add Symptom ");
+			System.out.println("4.  Add Severity");
+			System.out.println("5.  Assessment Rule");
+			System.out.println("6.  Go Back ");
 			System.out.println("*************");
 			System.out.println("Please enter your selection: (1-3) ");
 
 			userinput = in.next();
 
 			switch (userinput) {
-			case "1":
+			case "2":
+				System.out.println("Treated Patient List");
+				TreatedPatient treatedPatient = new TreatedPatient();
+				treatedPatient.treatedPatientMenu(conn);
+				break;
+			case "3":
 				System.out.println("Add Symptom");
 				this.addSymptom(conn);
 				break;
-			case "2":
+
+			case "4":
 				System.out.println("Add Severity");
 				this.addSeverity(conn);
 				break;
-			case "3":
-			case "4":
+			case "5":
+				System.out.println("Add assessment rule");
+				this.addAssessment(conn);
+				break;
 			}
 		} catch(Exception e) {
 			System.out.println(e.toString());
@@ -128,6 +138,131 @@ public class Staff {
 			pstmt.setInt(3, severity);
 			pstmt.execute();
 			System.out.println("Symptom severity added");
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void addAssessment(Connection conn) {
+		try {
+			System.out.println("Enter category N, H, or Q : ");
+			String category = in.next();
+
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("SELECT nextval('seq')");
+			int aid = -1;
+			while (rs.next())
+				aid = rs.getInt("nextval");
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Assessment (assessment_id, category) VALUES (?,?)");
+			pstmt.setInt(1, aid);
+			pstmt.setString(2, category);
+			pstmt.execute();
+
+			addEvaluate(conn, aid);
+			addConsists_of(conn, aid);
+
+			System.out.println("Assessment added");
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void addEvaluate(Connection conn, int aid) {
+		try {
+			Statement st = conn.createStatement();
+			System.out.println("*************");
+			System.out.println("Patients");
+			System.out.println("*************");
+
+			ResultSet temp = st.executeQuery("SELECT user_id FROM Patient");
+
+			while(temp.next())
+			{
+				String id = temp.getString("user_id");
+				System.out.println(id);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Patient id :");
+			int uid = in.nextInt();
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Evaluate (assessment_id, user_id) VALUES (?,?)");
+			pstmt.setInt(1, aid);
+			pstmt.setInt(2, uid);
+			pstmt.execute();
+			System.out.println("Evaluation added");
+
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void addConsists_of(Connection conn, int aid) {
+		try {
+			Statement st = conn.createStatement();
+			System.out.println("*************");
+			System.out.println("Symptoms");
+			System.out.println("*************");
+
+			ResultSet temp = st.executeQuery("SELECT code,symptom_name,symptom_scale FROM symptom");
+
+			String scale = "";
+			while(temp.next())
+			{
+				String id = temp.getString("code");
+				String name = temp.getString("symptom_name");
+				scale  = temp.getString("symptom_scale");
+				System.out.println(id + " " + name);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Symptom code:");
+			String symptom = in.next();
+
+			System.out.println("*************");
+			System.out.println("Body Parts");
+			System.out.println("*************");
+
+			temp = st.executeQuery("SELECT code,part_name FROM body_part");
+
+			while(temp.next())
+			{
+				String id = temp.getString("code");
+				String name = temp.getString("part_name");
+				System.out.println(id + " " + name);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Body Part:");
+			String part = in.next();
+
+			System.out.println("*************");
+			System.out.println("Severity");
+			System.out.println("*************");
+
+			temp = st.executeQuery("SELECT param FROM scale_parameter WHERE scale_name = '" + scale  + "'");
+
+			while(temp.next())
+			{
+				String id = temp.getString("param");
+				System.out.println(id);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Symptom Severity :");
+			String threshold = in.next();
+
+			System.out.println("Should the rule trigger when GREATER or LESSER to the threshold?:");
+			String dir = in.next();
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Consists_of (assessment_id, symptom, part, sympt_scale, direction, threshold) VALUES (?,?,?,?,?,?)");
+			pstmt.setInt(1, aid);
+			pstmt.setString(2, symptom);
+			pstmt.setString(3, part);
+			pstmt.setString(4, scale);
+			pstmt.setString(5, dir);
+			pstmt.setString(6, threshold);
+
+			pstmt.execute();
+			System.out.println("Consists_of added");
 
 		} catch (Exception e) {
 			System.out.println(e.toString());

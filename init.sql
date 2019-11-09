@@ -15,6 +15,7 @@ CREATE TABLE Address(
        addr_street char(32),
        addr_city char(32),
        addr_state char(32),
+       addr_zip char(32),
        addr_country char(32),
        PRIMARY KEY(addr_id)
 );
@@ -121,7 +122,8 @@ CREATE TABLE Certified(
 CREATE TABLE Patient(
        user_id int,
        FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
-       checkin_time DATE,
+       checkin_time_start DATE,
+       checkin_time_end DATE,
        checkout_time DATE,
        PRIMARY KEY(user_id)
 );
@@ -225,9 +227,10 @@ CREATE TABLE Consists_of(
        part char(32),
        FOREIGN KEY (part) REFERENCES Body_part(code),
        sympt_scale char(32),
-       severity char(32),
-       FOREIGN KEY (sympt_scale, severity) REFERENCES Scale_parameter(scale_name, param),
-       PRIMARY KEY(assessment_id)
+       threshold char(32),
+       FOREIGN KEY (sympt_scale, threshold) REFERENCES Scale_parameter(scale_name, param),
+       direction char(32),
+       PRIMARY KEY(assessment_id, symptom)
 );
 
 CREATE TABLE Patient_has_report(
@@ -288,3 +291,21 @@ CREATE TABLE Vital_recordings(
        FOREIGN KEY (staff) REFERENCES Staff(user_id),
        PRIMARY KEY(vital_id, patient, staff)
 );
+
+CREATE TABLE Works_in(
+      user_id int,
+      FOREIGN KEY (user_id) REFERENCES Staff(user_id),
+      dept_id int,
+      FOREIGN KEY (dept_id) REFERENCES Service_department(dept_id),
+      PRIMARY KEY(user_id, dept_id)
+);
+
+CREATE TABLE F_has_U(
+      fid int,
+      FOREIGN KEY (fid) REFERENCES facility(fid),
+      user_id int,
+      FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
+      PRIMARY KEY(fid, user_id)
+);
+
+
