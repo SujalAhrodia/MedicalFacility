@@ -87,9 +87,9 @@ INSERT INTO Certified
 VALUES (0, 'SRG', TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
 
 INSERT INTO Patient
-(user_id, checkin_time, checkout_time)
-VALUES (1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY')),
-(2, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
+(user_id, checkin_time_start, checkin_time_end, checkout_time)
+VALUES (1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY')),
+(2, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
 
 /* update the circular dependency in a transaction */
 BEGIN;
