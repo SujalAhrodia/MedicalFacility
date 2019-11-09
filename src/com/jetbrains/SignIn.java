@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class SignIn {
-    String userinput;
+    int userinput;
 
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
@@ -55,11 +55,11 @@ public class SignIn {
                 System.out.println("*************");
                 System.out.println("Please enter your selection: (1/2) ");
 
-                userinput = in.next();
+                userinput = in.nextInt();
 
                 switch (userinput)
                 {
-		            case "1":
+		            case 1:
                         System.out.println("Sign In");
                         temp = null;
 
@@ -93,7 +93,7 @@ public class SignIn {
                             continue;
                         }
                         break;
-		            case "2":
+		            case 2:
                         System.out.println("GO Back");
                         Menu menu = new Menu();
                         menu.menuOptions(conn);

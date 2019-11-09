@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Patient {
-    String userinput;
+    int userinput;
 
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
@@ -43,11 +43,11 @@ public class Patient {
             System.out.println("*************");
             System.out.println("Please enter your selection: (1-3) ");
 
-            userinput = in.next();
+            userinput = in.nextInt();
 
             switch (userinput)
             {
-                case "1":
+                case 1:
                     System.out.println("Check in");
                     //print facilities from facilities table
                     System.out.println("*************");
@@ -71,10 +71,10 @@ public class Patient {
                     //check if the patient has already checked in at that facility
                     checkinMenu(conn);
                     break;
-                case "2":
+                case 2:
                     System.out.println("Check out");
                     break;
-                case "3":
+                case 3:
                     System.out.println("GO Back");
                     Menu menu = new Menu();
                     menu.menuOptions(conn);
@@ -137,6 +137,7 @@ public class Patient {
             else if (userinput == i-1)
             {
                 System.out.println("Add information about new symptom");
+                //To-do
             }
             else {
                 metaData(symp[userinput], conn);
@@ -157,7 +158,47 @@ public class Patient {
     }
     public void metaData(String symp, Connection conn) throws SQLException
     {
-        System.out.println("Enter data for "+symp);
+        System.out.println("*************");
+        System.out.println("Enter the following data for "+symp);
+        System.out.println("*************");
+        System.out.println("1. Body Part: ");
+        System.out.println("2. Duration: ");
+        System.out.println("3. Reoccurring: ");
+        System.out.println("4. Severity: ");
+        System.out.println("5. Cause (Incident): ");
+        System.out.println("*************");
+        System.out.println("Please enter your selection: (1-5)");
+
+        try
+        {
+            userinput = in.nextInt();
+
+            switch (userinput)
+            {
+                case 1:
+                    System.out.println("Body Part");
+                    break;
+                case 2:
+                    System.out.println("Duration");
+                    break;
+                case 3:
+                    System.out.println("Reoccurring");
+                    break;
+                case 4:
+                    System.out.println("Severity");
+                    break;
+                case 5:
+                    System.out.println("Cause (Incident)");
+                    break;
+                default:
+                    System.out.println("Invalid input!");
+                    System.out.println("Please read the options carefully");
+            }
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.toString());
+        }
         checkinMenu(conn);
     }
 

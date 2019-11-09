@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class SignUp {
-    String userinput;
+    int userinput;
 
     Scanner in = new Scanner(System.in);
     PreparedStatement pstmt = null;
@@ -51,10 +51,10 @@ public class SignUp {
 
         try
         {
-            userinput = in.next();
+            userinput = in.nextInt();
 
             switch (userinput) {
-                case "1":
+                case 1:
                     System.out.println("Sign Up");
                     //store info in db
                     pstmt = conn.prepareStatement("INSERT INTO Login_user (Fname, Lname, ph_no , DoB) VALUE (?,?,?,?)");
@@ -81,7 +81,7 @@ public class SignUp {
                     SignIn si = new SignIn();
                     si.menuOptions(conn);
                     break;
-                case "2":
+                case 2:
                     System.out.println("GO Back");
                     Menu menu = new Menu();
                     menu.menuOptions(conn);
