@@ -27,23 +27,29 @@ public class Staff {
 	public void routingMenu(Connection conn) {
 		try {
 			System.out.println("*************");
-			System.out.println("1.  Add Symptom ");
-			System.out.println("2.  Add Severity");
-			System.out.println("3.  Assessment Rule");
-			System.out.println("4.  Go Back ");
+			System.out.println("1.  Checked-in Patient List ");
+			System.out.println("2.  Treated Patient List");
+			System.out.println("3.  Add Symptom ");
+			System.out.println("4.  Add Severity");
+			System.out.println("5.  Assessment Rule");
+			System.out.println("6.  Go Back ");
 			System.out.println("*************");
 			System.out.println("Please enter your selection: (1-3) ");
 
 			userinput = in.next();
 
 			switch (userinput) {
-			case "1":
+			case "2":
+				System.out.println("Treated Patient List");
+
+				break;
+			case "3":
 				System.out.println("Add Symptom");
 				this.addSymptom(conn);
 				break;
-			case "2":
-			case "3":
 			case "4":
+				System.out.println("Add Severity");
+				break;
 			}
 		} catch(Exception e) {
 			System.out.println(e.toString());
