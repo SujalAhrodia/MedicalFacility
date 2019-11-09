@@ -41,7 +41,8 @@ public class Staff {
 			switch (userinput) {
 			case "2":
 				System.out.println("Treated Patient List");
-
+				TreatedPatient treatedPatient = new TreatedPatient();
+				treatedPatient.treatedPatientMenu(conn);
 				break;
 			case "3":
 				System.out.println("Add Symptom");
