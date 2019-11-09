@@ -48,6 +48,7 @@ public class Staff {
 				System.out.println("Add Symptom");
 				this.addSymptom(conn);
 				break;
+
 			case "4":
 				System.out.println("Add Severity");
 				break;
@@ -80,12 +81,11 @@ public class Staff {
 
 			while(temp.next())
 			{
-				int id = temp.getInt("scale_name");
+				String id = temp.getString("scale_name");
 				System.out.println(id);
 			}
 			System.out.println("*************");
 			System.out.println("Choose a Symptom Severity Scale :");
-			System.out.println("*************");
 			System.out.println("Enter Scale name:");
 			String scale = in.next();
 		    
@@ -98,6 +98,42 @@ public class Staff {
 
 			System.out.println("Symptom created");
 					
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	public void addSeverity(Connection conn) {
+		try {
+			Statement st = conn.createStatement();
+			System.out.println("*************");
+			System.out.println("Symptom Scales");
+			System.out.println("*************");
+
+			ResultSet temp = st.executeQuery("SELECT scale_name FROM symptom_scale");
+
+			while(temp.next())
+			{
+				String id = temp.getString("scale_name");
+				System.out.println(id);
+			}
+			System.out.println("*************");
+			System.out.println("Choose a Symptom Severity Scale :");
+			String scale = in.next();
+
+			System.out.println("Enter a new parameter string for the scale: ");
+			String scale_param = in.next();
+
+			System.out.println("Enter a numerical severity for the parameter: ");
+			int severity = in.nextInt();
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Scale_parameter (scale_name, param, severity) VALUES (?,?,?)");
+			pstmt.setString(1, scale);
+			pstmt.setString(2, scale_param);
+			pstmt.setInt(3, severity);
+			pstmt.execute();
+			System.out.println("Symptom severity added");
+
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
