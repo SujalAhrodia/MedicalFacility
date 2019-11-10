@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class SignIn {
-    String userinput;
+    int userinput;
 
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
@@ -46,28 +46,31 @@ public class SignIn {
                 //format needs to be updated
                 String dob = in.next();
 
+                System.out.println("City of Address: ");
+                String city = in.next();
+
                 System.out.println("*************");
                 System.out.println("1.  Sign In ");
                 System.out.println("2.  Go Back ");
                 System.out.println("*************");
                 System.out.println("Please enter your selection: (1/2) ");
 
-                userinput = in.next();
+                userinput = in.nextInt();
 
                 switch (userinput)
                 {
-		            case "1":
+		            case 1:
                         System.out.println("Sign In");
                         temp = null;
 
+                        //query to be added for city
                         temp = st.executeQuery("SELECT * FROM login_user WHERE Lname='"
 					       +lname+"' AND dob='"+dob+"'");
 
 			            int id = -1;
 
-			            while (temp.next())
-			            {
-			                id = temp.getInt("user_id");
+                        while (temp.next()) {
+                            id = temp.getInt("user_id");
                         }
 
                         System.out.println("Found uid " + id);
@@ -91,7 +94,7 @@ public class SignIn {
 				            continue;
                         }
 			            break;
-		            case "2":
+		            case 2:
                         System.out.println("GO Back");
                         Menu menu = new Menu();
                         menu.menuOptions(conn);

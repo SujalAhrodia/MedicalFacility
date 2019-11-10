@@ -7,7 +7,7 @@ public class Main {
 
         System.out.println("Establish DB connection here");
 
-        Establish e = new Establish();
+        establish e = new establish();
         Connection conn = e.myConnection();
 
         if(conn != null)

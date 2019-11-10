@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 
 public class Menu {
-    String userinput;
+    int userinput;
 
     Scanner in = new Scanner(System.in);
 
@@ -22,25 +22,25 @@ public class Menu {
 
         try
         {
-            userinput = in.next();
+            userinput = in.nextInt();
 
             switch (userinput) {
-                case "1":
+                case 1:
                     System.out.println("Sign In");
                     SignIn si = new SignIn();
                     si.menuOptions(conn);
                     break;
-                case "2":
+                case 2:
                     System.out.println("Sign Up");
                     SignUp su = new SignUp();
                     su.menuOptions(conn);
                     break;
-                case "3":
+                case 3:
                     System.out.println("Demo");
                     Demo d = new Demo();
                     d.displayQueries(conn);
                     break;
-                case "4":
+                case 4:
                     System.out.println("Exiting.......");
                     System.exit(0);
                 default:

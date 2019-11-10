@@ -54,7 +54,6 @@ public class Staff {
 
 			case "4":
 				System.out.println("Add Severity");
-				this.addSeverity(conn);
 				break;
 			case "5":
 				System.out.println("Add assessment rule");
