@@ -24,10 +24,10 @@ public class Staff {
 		return false;
 	}
 
-	public void routingMenu(Connection conn) {
+	public void routingMenu(Connection conn,int uid) {
 		try {
 			System.out.println("*************");
-			System.out.println("1.  Checked-in Patient List ");
+			System.out.println("1.  View Checked-in Patient List ");
 			System.out.println("2.  Treated Patient List");
 			System.out.println("3.  Add Symptom ");
 			System.out.println("4.  Add Severity");
@@ -39,6 +39,9 @@ public class Staff {
 			userinput = in.next();
 
 			switch (userinput) {
+			case "1": 
+				CheckInPatient.displayCheckedInPatients(conn,uid);
+				break;
 			case "2":
 				System.out.println("Treated Patient List");
 				TreatedPatient treatedPatient = new TreatedPatient();
@@ -86,11 +89,12 @@ public class Staff {
 
 			while(temp.next())
 			{
-				String id = temp.getString("scale_name");
+				int id = temp.getInt("scale_name");
 				System.out.println(id);
 			}
 			System.out.println("*************");
 			System.out.println("Choose a Symptom Severity Scale :");
+			System.out.println("*************");
 			System.out.println("Enter Scale name:");
 			String scale = in.next();
 		    
