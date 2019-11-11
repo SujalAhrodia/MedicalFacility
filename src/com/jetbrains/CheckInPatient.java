@@ -32,8 +32,8 @@ public class CheckInPatient {
             System.out.println("Checked-In Patients");
             System.out.println("*************");
 			
-//			ResultSet rs =
-//				st.executeQuery("SELECT pid FROM Patient WHERE check-in !=null and check-out==null ");
+			ResultSet rs =
+				st.executeQuery("SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL;");
 			
 			// TODO clear checkin/checkout time on logout
 			
@@ -41,13 +41,13 @@ public class CheckInPatient {
 	        //list of patients checked-in
 	        String[] patients = new String[100];
 
-//	        while(rs.next())
-//	            {
-//	                String name = rs.getString("pid");
-//	                System.out.println(i + ".\t" + name);
-//	                patients[i] = name;
-//	                i++;
-//	            }
+	        while(rs.next())
+	            {
+	                String name = rs.getString("pid");
+	                System.out.println(i + ".\t" + name);
+	                patients[i] = name;
+	                i++;
+	            }
 	        System.out.println("*************");
             System.out.println("Select the patient:");	
             userinput = in.next();
@@ -126,7 +126,7 @@ public class CheckInPatient {
 		try {
 			st = conn.createStatement();
 
-	        q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = SELECT service from provides WHERE deptid = SELECT depId from worksIn Where staffid= "+userId+";");
+	        q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = SELECT service from Provides WHERE dept_id = SELECT dept_id from Works_in Where user_id = "+userId+";");
 	       
 	        
 	        q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = SELECT symptom from Has_symptom WHERE patient="+patientId+";");
@@ -134,7 +134,8 @@ public class CheckInPatient {
 	        while(q1.next() && q2.next())
             {
 	        	if(q1.getString("part").equals(q2.getString("part"))) {
-	        		pstmt = conn.prepareStatement("INSERT INTO Patient (isTreated) VALUE (?) Where pid ="+patientId+";");
+	        		//pstmt = conn.prepareStatement("INSERT INTO Patient (isTreated) VALUE (?) Where pid ="+patientId+";");
+	        		//pstmt.setBoolean(1, true);
 	        		System.out.println("Patient moved to treated list");
 	        	}else {
 	        		System.out.println("Inadequate Privilege");
@@ -176,11 +177,11 @@ public class CheckInPatient {
 	        Calendar calendar = Calendar.getInstance();
 	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
 	        //add check-in-end to patient table
-	        pstmt = conn.prepareStatement("INSERT INTO Patient (check-in-end) VALUE (?)");
+	        pstmt = conn.prepareStatement("INSERT INTO Patient (checkin_time_end) VALUE (?)");
 	        pstmt.setDate(1, dateObj);
 	        pstmt.executeUpdate();
 	        
-	        rs = st.executeQuery("SELECT assessment_id FROM Evaluate WHERE userid = pid");
+	        rs = st.executeQuery("SELECT assessment_id FROM Evaluate WHERE user_id = "+pid+";");
 	        String assessmentId = null;
 	        while(rs.next())
             {
