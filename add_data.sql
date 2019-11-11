@@ -55,9 +55,7 @@ VALUES ('1-10'),
 
 INSERT INTO Assessment
 (assessment_id, category)
-VALUES (0, 'Dead'),
-(1, 'Near death'),
-(2, 'You good');
+VALUES (0, 'H');
 
 INSERT INTO Vital_signals
 (vital_id, temperature, blood_pressure)
@@ -75,7 +73,9 @@ VALUES (0, 'Prescribed motrin', 'Discharged');
 
 INSERT INTO User_has_address
 (user_id, addr_id)
-VALUES (0, 2);
+VALUES (0, 2),
+(1, 1),
+(2, 0);
 
 INSERT INTO Facility_has_address
 (fid, addr_id)
@@ -149,8 +149,8 @@ INSERT INTO Evaluate
 VALUES (1, 0);
 
 INSERT INTO Consists_of
-(assessment_id, symptom, part, sympt_scale, threshold)
-VALUES (0, 'HDCH', 'HED', '1-10', '4');
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (0, 'HDCH', 'HED', '1-10', '6', 'GREATER');
 
 INSERT INTO Patient_has_report
 (user_id, rid)

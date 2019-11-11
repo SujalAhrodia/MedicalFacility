@@ -163,8 +163,25 @@ public class Staff {
 			pstmt.setString(2, category);
 			pstmt.execute();
 
-			addEvaluate(conn, aid);
-			addConsists_of(conn, aid);
+			//addEvaluate(conn, aid);
+			boolean cont = true;
+			while (cont) {
+				System.out.println("*************");
+				System.out.println("1.  Add rules to this assessment.");
+				System.out.println("2.  Go back.");
+				System.out.println("*************");
+				System.out.println("Please enter your selection: (1-2) ");
+
+				userinput = in.next();
+				switch(userinput) {
+				case "1":
+					addConsists_of(conn, aid);
+					break;
+				case "2":
+					cont = false;
+					break;
+				}
+			}
 
 			System.out.println("Assessment added");
 		} catch (Exception e) {
