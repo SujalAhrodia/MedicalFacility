@@ -12,8 +12,7 @@ VALUES (0, 1337, 'kingsford lane', 'Raleigh', 'NC', 'Wake'),
 INSERT INTO login_user
 (user_id, Fname, Lname, ph_no, dob)
 VALUES (0, 'carl', 'wheezer', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY')),
-(1, 'jimmy', 'neutron', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY')),
-(2, 'sheen', 'estevez', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
+(1, 'jimmy', 'neutron', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
 
 
 INSERT INTO Facility
@@ -87,10 +86,8 @@ INSERT INTO Certified
 VALUES (0, 'SRG', TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
 
 INSERT INTO Patient
-(user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY')),
-(2, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
-
+(user_id, checkin_time, checkout_time)
+VALUES (1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
 
 /* update the circular dependency in a transaction */
 BEGIN;
@@ -149,7 +146,7 @@ INSERT INTO Evaluate
 VALUES (1, 0);
 
 INSERT INTO Consists_of
-(assessment_id, symptom, part, sympt_scale, threshold)
+(assessment_id, symptom, part, sympt_scale, severity)
 VALUES (0, 'HDCH', 'HED', '1-10', '4');
 
 INSERT INTO Patient_has_report
@@ -180,3 +177,6 @@ VALUES (0, 'X');
 INSERT INTO Vital_recordings
 (vital_id, patient, staff)
 VALUES (0, 1, 0);
+
+
+

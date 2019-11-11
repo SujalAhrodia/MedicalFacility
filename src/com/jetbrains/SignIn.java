@@ -81,18 +81,19 @@ public class SignIn {
                             Patient p = new Patient();
                             p.routingMenu(conn);
                         }
-                        else if (Staff.has_uid(conn,id)) {
-                            System.out.println("Staff login");
-                            //route to staff
-                            Staff s = new Staff();
-                            s.routingMenu(conn);
+            			else if (Staff.has_uid(conn,id))
+			            {
+			                System.out.println("Staff login");
+			                Staff s = new Staff();
+			                s.routingMenu(conn,id);
+			            }
+                        else
+                        {
+				            System.out.println("Sign In Incorrect!");
+				            System.out.println("Please enter again");
+				            continue;
                         }
-                        else {
-                            System.out.println("Sign In Incorrect!");
-                            System.out.println("Please enter again");
-                            continue;
-                        }
-                        break;
+			            break;
 		            case 2:
                         System.out.println("GO Back");
                         Menu menu = new Menu();

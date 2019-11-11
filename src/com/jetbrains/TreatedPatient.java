@@ -54,7 +54,7 @@ public class TreatedPatient {
                 case "2":
                     System.out.println("Go Back");
                     Staff staff = new Staff();
-                    staff.routingMenu(conn);
+                    staff.routingMenu(conn,pId);
                     break;
             }
         }

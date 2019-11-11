@@ -227,10 +227,9 @@ CREATE TABLE Consists_of(
        part char(32),
        FOREIGN KEY (part) REFERENCES Body_part(code),
        sympt_scale char(32),
-       threshold char(32),
-       FOREIGN KEY (sympt_scale, threshold) REFERENCES Scale_parameter(scale_name, param),
-       direction char(32),
-       PRIMARY KEY(assessment_id, symptom)
+       severity char(32),
+       FOREIGN KEY (sympt_scale, severity) REFERENCES Scale_parameter(scale_name, param),
+       PRIMARY KEY(assessment_id)
 );
 
 CREATE TABLE Patient_has_report(
@@ -292,21 +291,20 @@ CREATE TABLE Vital_recordings(
        PRIMARY KEY(vital_id, patient, staff)
 );
 
-CREATE TABLE Works_in(
+CREATE TABLE Works_in{
       user_id int,
       FOREIGN KEY (user_id) REFERENCES Staff(user_id),
       dept_id int,
       FOREIGN KEY (dept_id) REFERENCES Service_department(dept_id),
       PRIMARY KEY(user_id, dept_id)
-);
+};
 
-CREATE TABLE F_has_U(
+CREATE TABLE F_has_U{
       fid int,
       FOREIGN KEY (fid) REFERENCES facility(fid),
       user_id int,
       FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
       PRIMARY KEY(fid, user_id)
-);
-
+};
 
 
