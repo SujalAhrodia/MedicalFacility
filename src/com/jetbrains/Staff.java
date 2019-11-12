@@ -189,23 +189,9 @@ public class Staff {
 		}
 	}
 
-	public void addEvaluate(Connection conn, int aid) {
+	public void addEvaluate(Connection conn, int aid, int uid) {
 		try {
 			Statement st = conn.createStatement();
-			System.out.println("*************");
-			System.out.println("Patients");
-			System.out.println("*************");
-
-			ResultSet temp = st.executeQuery("SELECT user_id FROM Patient");
-
-			while(temp.next())
-			{
-				String id = temp.getString("user_id");
-				System.out.println(id);
-			}
-			System.out.println("*************");
-			System.out.println("Choose a Patient id :");
-			int uid = in.nextInt();
 
 			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Evaluate (assessment_id, user_id) VALUES (?,?)");
 			pstmt.setInt(1, aid);
@@ -297,17 +283,22 @@ public class Staff {
 
 			ResultSet temp = st.executeQuery("SELECT assessment_id,category FROM assessment");
 
-			int aid = -1; String category = "";
+			int aid = -1, applied_aid = -1;
+			String category = "";
 			while(temp.next())
 			{
 				aid = temp.getInt("assessment_id");
 				category = temp.getString("category");
-			}
-			boolean apply = apply_one_rule(conn, pid, aid);
+				boolean apply = apply_one_rule(conn, pid, aid);
 
-			// if this consists_of has the highest priority, then update the return
-			if (apply)
-				priority = category;
+				// if this consists_of has the highest priority, then update the return
+				if (apply) {
+					priority = category;
+					applied_aid = aid;
+				}
+			}
+
+			addEvaluate(conn, applied_aid, pid);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
