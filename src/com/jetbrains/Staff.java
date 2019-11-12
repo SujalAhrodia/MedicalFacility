@@ -288,4 +288,100 @@ public class Staff {
 			System.out.println(e.toString());
 		}
 	}
+
+	void apply_rules(Connection conn, int pid) {
+		String priority = "";
+
+		try {
+			Statement st = conn.createStatement();
+
+			ResultSet temp = st.executeQuery("SELECT assessment_id,category FROM assessment");
+
+			int aid = -1; String category = "";
+			while(temp.next())
+			{
+				aid = temp.getInt("assessment_id");
+				category = temp.getString("category");
+			}
+			boolean apply = apply_one_rule(conn, pid, aid);
+
+			// if this consists_of has the highest priority, then update the return
+			if (apply)
+				priority = category;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+	}
+
+	int get_severity(Connection conn, String scale, String value) {
+		try {
+			Statement st = conn.createStatement();
+			// SELECT severity FROM scale_parameter WHERE param = value;
+			ResultSet temp = st.executeQuery("SELECT severity FROM scale_parameter WHERE scale_name = " + scale + " AND param = " + value);
+
+			int severity = -1;
+			while(temp.next()) {
+				severity = temp.getInt("severity");
+			}
+
+			return severity;
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return -1;
+	}
+
+	boolean apply_one_rule(Connection conn, int pid, int rule) {
+		boolean condition = false;
+		try {
+
+			// for each consists_of
+			// SELECT symptom,threshold,direction FROM consists_of WHERE assessment_id = pid;
+			Statement st = conn.createStatement();
+
+			ResultSet temp = st.executeQuery("SELECT symptom,threshold,direction FROM consists_of WHERE assessment_id = " + rule);
+
+			String symptom = "", threshold = "", direction = "";
+			while(temp.next()) {
+				symptom = temp.getString("symptom");
+				threshold = temp.getString("threshold");
+				direction = temp.getString("direction");
+
+				temp = st.executeQuery("SELECT symptom_scale FROM symptom");
+
+				String scale = "";
+				while(temp.next())
+					scale  = temp.getString("symptom_scale");
+
+				// check if the patient has this symptom
+				// SELECT value FROM has_symptom WHERE patient = pid AND symptom = symptom;
+				temp = st.executeQuery("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = " + symptom);
+
+				// patient does not have this symptom
+				if (!temp.next())
+					continue;
+
+				String value = "";
+				while(temp.next()) {
+					value = temp.getString("value");
+				}
+
+				// check if the severity hits the threshold
+				int severity = get_severity(conn, scale, value);
+				int thresh_severity = get_severity(conn, scale, value);
+
+				// add it to the WIP assessment
+				if (severity != -1 && thresh_severity != -1
+				    && ((direction == "GREATER" && severity > thresh_severity)
+					|| (direction == "LESSER" && severity < thresh_severity))
+					)
+					condition = true;
+				else
+					condition = false;
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		return condition;
+	}
 }
