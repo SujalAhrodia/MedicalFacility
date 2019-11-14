@@ -27,6 +27,9 @@ INSERT INTO login_user
 (user_id, Fname, Lname, ph_no, dob)
 VALUES (2, 'sheen', 'estevez', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
 
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (0, 'N');
 
 INSERT INTO Facility
 (fid, fac_name, classification, no_of_departments, capacity)
