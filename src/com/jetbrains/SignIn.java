@@ -8,7 +8,7 @@ public class SignIn {
     int userinput;
 
     Scanner in = new Scanner(System.in);
-    ResultSet temp = null;
+    ResultSet temp, temp1 = null;
 
     public void menuOptions(Connection conn) throws SQLException
     {
@@ -62,10 +62,11 @@ public class SignIn {
 		            case 1:
                         System.out.println("Sign In");
                         temp = null;
+                        temp1 = null;
 
                         //query to be added for city
-                        temp = st.executeQuery("SELECT * FROM login_user WHERE Lname='"
-					       +lname+"' AND dob='"+dob+"'");
+                        temp = st.executeQuery("SELECT * FROM login_user as l , User_has_address as u WHERE " +
+                                "l.Lname='"+lname+"' AND l.DoB='"+dob+"' AND u.addr_id");
 
 			            int id = -1;
 
@@ -78,7 +79,7 @@ public class SignIn {
                         if (Patient.has_uid(conn, id)) {
                             System.out.println("Successful Patient login");
                             //route to patient
-                            Patient p = new Patient();
+                            Patient p = new Patient(id);
                             p.routingMenu(conn);
                         }
             			else if (Staff.has_uid(conn,id))

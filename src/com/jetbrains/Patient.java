@@ -1,9 +1,6 @@
 package com.jetbrains;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Patient {
@@ -12,7 +9,13 @@ public class Patient {
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
     Statement st = null;
+    PreparedStatement pstmt = null;
+    int pid;
 
+    Patient(int patientID)
+    {
+        pid = patientID;
+    }
     public static boolean has_uid(Connection conn, int uid) {
 	    try {
 		    Statement st = conn.createStatement();
@@ -172,28 +175,48 @@ public class Patient {
         try
         {
             userinput = in.nextInt();
+            String duration = null;
+            boolean reoccur = false;
+            String value = null;
+            String incident = null;
 
             switch (userinput)
             {
                 case 1:
                     System.out.println("Body Part");
+                    //display the implied body part
                     break;
                 case 2:
-                    System.out.println("Duration");
+                    System.out.println("Enter Duration");
+                    duration = in.next();
                     break;
                 case 3:
                     System.out.println("Reoccurring");
+                    reoccur = in.nextBoolean();
                     break;
                 case 4:
                     System.out.println("Severity");
+                    value = in.next();
                     break;
                 case 5:
                     System.out.println("Cause (Incident)");
+                    incident = in.next();
                     break;
                 default:
                     System.out.println("Invalid input!");
                     System.out.println("Please read the options carefully");
             }
+
+            pstmt = conn.prepareStatement("INSERT INTO Has_symptom(symptom, patient, value, duration, incident, recurring) VALUE (?,?,?,?,?,?)");
+
+            pstmt.setString (1, symp);
+            pstmt.setInt (2, pid);
+            pstmt.setString (3, value);
+            pstmt.setString (4, duration);
+            pstmt.setString (5, incident);
+            pstmt.setBoolean (6, reoccur);
+
+            pstmt.execute();
         }
         catch (Exception e)
         {
