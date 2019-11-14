@@ -55,7 +55,7 @@ public class CheckInPatient {
             System.out.println("Select the patient:");	
             userinput = in.next();
             System.out.println("*************");
-            String patientId = patients[Integer.parseInt(userinput)];
+            int patientId = Integer.parseInt(userinput);
             System.out.println("*************");
             System.out.println("1.  Enter Vitals ");
             System.out.println("2.  Treat Patient ");
@@ -87,7 +87,7 @@ public class CheckInPatient {
 		
 	}
 	
-	public static void enterVitals(Connection conn,int userId,String patientId) throws SQLException {
+	public static void enterVitals(Connection conn,int userId,int patientId) throws SQLException {
 		System.out.println("*************");
         System.out.println("Enter the following information:");
         System.out.println("Body Temperature:");
@@ -101,24 +101,23 @@ public class CheckInPatient {
  
         System.out.println("*************");
         System.out.println("1. Record");
-        System.out.println("1. Go Back");
+        System.out.println("2. Go Back");
         System.out.println("Choose operation to be performed:");
         userinput = in.next();
         switch (userinput) {
         case "1":
-            recordVitals(conn,temp,sysBP,diaBP,patientId,userId);
-            break;
+		recordVitals(conn,temp,sysBP,diaBP,patientId,userId);
+		break;
         case "2":
         	System.out.println("GO Back");
-            displayCheckedInPatients(conn, userId);
-            break;
+		break;
         default:
             System.out.println("Invalid input!");
             System.out.println("Please read the options carefully");
     }
 		
 	}
-	public static void treatPatient(Connection conn,int userId,String patientId) throws SQLException {
+	public static void treatPatient(Connection conn,int userId,int patientId) throws SQLException {
 		
 		// Query to fetch body part associated to patient symptom
 		PreparedStatement pstmt;
@@ -148,7 +147,7 @@ public class CheckInPatient {
 		
 	}
 	
-	public static void recordVitals(Connection conn,int temp,int sysBP,int diaBP,String pid,int userId) throws SQLException {
+	public static void recordVitals(Connection conn,int temp,int sysBP,int diaBP,int pid,int userId) throws SQLException {
 		PreparedStatement pstmt;
 		ResultSet rs;
 		Statement st = null;
@@ -166,7 +165,7 @@ public class CheckInPatient {
 	        System.out.println("Vitals Updating for patient!");
 	        pstmt = conn.prepareStatement("INSERT INTO Vital_recordings (vital_id, patient, staff) VALUES (?,?,?)");
 			pstmt.setInt (1, 105);
-	        pstmt.setInt(2, Integer.valueOf(pid));
+	        pstmt.setInt(2, pid);
 	        pstmt.setInt(3, userId);
 	      
 	        pstmt.execute();
@@ -176,27 +175,14 @@ public class CheckInPatient {
 	        Calendar calendar = Calendar.getInstance();
 	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
 	        //add check-in-end to patient table
-	         pstmt = conn.prepareStatement("Update Patient SET checkin_time_end ="+dateObj+" WHERE user_id="+Integer.valueOf(pid)+ ";");
+		pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid+ ";");
 	        pstmt.executeUpdate();
 	        System.out.println("Patient check-in complete at:"+ dateObj+"for"+pid);
 	        
-	        rs = st.executeQuery("SELECT assessment_id FROM Evaluate WHERE user_id = "+pid+";");
-	        String assessmentId = null;
-	        while(rs.next())
-            {
-                 assessmentId = rs.getString("assessment_id");
-                 System.out.println("The assessment id is:"+ assessmentId);
-            }
-	       
-	        rs = st.executeQuery("SELECT category FROM Assessment WHERE assessment_id = "+assessmentId+";");
-	        while(rs.next())
-            {
-	        	System.out.println("***************");
-                System.out.println("The patient priority is:"+ rs.getString("category"));
-            }
+	        // enforce assessment rules
+		Staff.apply_rules(conn, pid);
 	        
-	        System.out.println("GO Back");
-            displayCheckedInPatients(conn, userId);
+	        System.out.println("Going Back");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {

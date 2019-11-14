@@ -189,7 +189,7 @@ public class Staff {
 		}
 	}
 
-	public void addEvaluate(Connection conn, int aid, int uid) {
+	public static void addEvaluate(Connection conn, int aid, int uid) {
 		try {
 			Statement st = conn.createStatement();
 
@@ -275,15 +275,14 @@ public class Staff {
 		}
 	}
 
-	void apply_rules(Connection conn, int pid) {
-		String priority = "";
-
+	static void apply_rules(Connection conn, int pid) {
+		String priority = "N";
 		try {
 			Statement st = conn.createStatement();
 
 			ResultSet temp = st.executeQuery("SELECT assessment_id,category FROM assessment");
 
-			int aid = -1, applied_aid = -1;
+			int aid = 0, applied_aid = 0;
 			String category = "";
 			while(temp.next())
 			{
@@ -298,17 +297,19 @@ public class Staff {
 				}
 			}
 
+			System.out.println("Patient priority is " + priority);
+
 			addEvaluate(conn, applied_aid, pid);
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 	}
 
-	int get_severity(Connection conn, String scale, String value) {
+	static int get_severity(Connection conn, String scale, String value) {
 		try {
 			Statement st = conn.createStatement();
 			// SELECT severity FROM scale_parameter WHERE param = value;
-			ResultSet temp = st.executeQuery("SELECT severity FROM scale_parameter WHERE scale_name = " + scale + " AND param = " + value);
+			ResultSet temp = st.executeQuery("SELECT severity FROM scale_parameter WHERE scale_name = '" + scale + "' AND param = '" + value + "'");
 
 			int severity = -1;
 			while(temp.next()) {
@@ -322,7 +323,7 @@ public class Staff {
 		return -1;
 	}
 
-	boolean apply_one_rule(Connection conn, int pid, int rule) {
+	static boolean apply_one_rule(Connection conn, int pid, int rule) {
 		boolean condition = false;
 		try {
 
@@ -346,7 +347,7 @@ public class Staff {
 
 				// check if the patient has this symptom
 				// SELECT value FROM has_symptom WHERE patient = pid AND symptom = symptom;
-				temp = st.executeQuery("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = " + symptom);
+				temp = st.executeQuery("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = '" + symptom + "'");
 
 				// patient does not have this symptom
 				if (!temp.next())

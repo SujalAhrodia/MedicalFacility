@@ -56,7 +56,8 @@ VALUES ('1-10'),
 
 INSERT INTO Assessment
 (assessment_id, category)
-VALUES (0, 'H');
+VALUES (0, 'N'),
+(1, 'H');
 
 INSERT INTO Vital_signals
 (vital_id, temperature, sys_blood_pressure, dia_blood_pressure)
@@ -148,14 +149,16 @@ VALUES ('1-10', '1', 1),
 ('true-false', 'True', 1),
 ('true-false', 'False', 0);
 
-INSERT INTO Evaluate
-(user_id, assessment_id)
-VALUES (1, 0),
-(2,1);
+/*
+* INSERT INTO Evaluate
+* (user_id, assessment_id)
+* VALUES (1, 0),
+* (2,1);
+*/
 
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (0, 'HDCH', 'HED', '1-10', '6', 'GREATER');
+VALUES (1, 'HDCH', 'HED', '1-10', '6', 'GREATER');
 
 INSERT INTO Patient_has_report
 (user_id, rid)
