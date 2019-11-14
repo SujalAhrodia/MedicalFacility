@@ -13,7 +13,7 @@ CREATE TABLE Address(
        addr_city char(32),
        addr_state char(32),
        addr_zip char(32),
-       addr_country char(32),
+       -- addr_country char(32),
        PRIMARY KEY(addr_id)
 );
 

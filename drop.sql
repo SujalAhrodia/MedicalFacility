@@ -30,9 +30,9 @@ DROP TABLE Report_has_negative cascade constraints;
 DROP TABLE Referral_status cascade constraints;
 DROP TABLE Report_has_ref cascade constraints;
 DROP TABLE Reason cascade constraints;
-DROP TABLE Report_has_reason cascade constraints;
+DROP TABLE Referral_has_reason cascade constraints;
 DROP TABLE Vital_recordings cascade constraints;
 DROP TABLE Works_in cascade constraints;
-DROP TABLE F_has_U cascade constraints;
+DROP TABLE Facility_has_User cascade constraints;
 
 drop sequence seq;
