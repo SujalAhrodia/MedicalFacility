@@ -1,6 +1,3 @@
-DROP SCHEMA public CASCADE;
-CREATE SCHEMA public;
-
 /* use this for getting unique ids */
 CREATE SEQUENCE seq
   MINVALUE 0
@@ -126,7 +123,7 @@ CREATE TABLE Patient(
        checkin_time_start DATE,
        checkin_time_end DATE,
        checkout_time DATE,
-       isTreated BOOLEAN,
+       isTreated CHAR,
        PRIMARY KEY(user_id)
 );
 
@@ -201,7 +198,7 @@ CREATE TABLE Has_symptom(
        value char(32),
        duration char(32),
        incident char(32),
-       recurring BOOLEAN,
+       recurring CHAR,
        PRIMARY KEY(symptom, patient)
 );
 
@@ -309,6 +306,4 @@ CREATE TABLE F_has_U(
       FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
       PRIMARY KEY(fid, user_id)
 );
-
-
 
