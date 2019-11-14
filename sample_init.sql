@@ -113,7 +113,7 @@ CREATE TABLE Certified(
        fid int,
        FOREIGN KEY (fid) REFERENCES Facility(fid),
        acronym char(32),
-       FOREIGN KEY (acronym) REFERENCES Certification(acronym)
+       FOREIGN KEY (acronym) REFERENCES Certification(acronym),
        PRIMARY KEY(fid, acronym)
 );
 
