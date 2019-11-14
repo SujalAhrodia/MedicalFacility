@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 
 public class CheckInPatient {
@@ -18,7 +20,7 @@ public class CheckInPatient {
 		try {
 			Statement st = conn.createStatement();
 			// check if user is not medical staff show error and go back
-			ResultSet q = st.executeQuery("SELECT designation FROM Staff WHere user_id ="+staffId+"");
+			ResultSet q = st.executeQuery("SELECT designation FROM Staff WHere user_id ="+staffId);
 			while(q.next()) {
 				if(q.getString("designation").equalsIgnoreCase("Medical")) {
 					System.out.println("Only medical Staff is allowed to view this information");
@@ -117,30 +119,40 @@ public class CheckInPatient {
     }
 		
 	}
-	public static void treatPatient(Connection conn,int userId,int patientId) throws SQLException {
+public static void treatPatient(Connection conn,int userId,int patientId) throws SQLException {
 		
 		// Query to fetch body part associated to patient symptom
 		PreparedStatement pstmt;
+		List<String> staffBodyPart =  new ArrayList<>();
+		List<String> patientBodyPart =  new ArrayList<>();
 		
 		Statement st = conn.createStatement();
 		try {
-			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = (SELECT service from Provides WHERE dept_id = (SELECT dept_id from Works_in Where user_id = "+userId +"))");
+			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service IN (SELECT service from Provides WHERE dept_id IN (SELECT dept_id from Works_in Where user_id = "+userId +"))");
+			 while(q1.next()) {
+				 String part =q1.getString("part");
+				 staffBodyPart.add(part);
+				 System.out.println("staff"+part);
+			 }
+			
+			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom IN (SELECT symptom from Has_symptom WHERE patient="+patientId+")");
+			while(q2.next()) {
+				 String part =q2.getString("part");
+				 patientBodyPart.add(part);
+				 System.out.println("patient1"+part);
+			 }
+			
+			if(staffBodyPart.containsAll(patientBodyPart)){
+				pstmt = conn.prepareStatement("Update Patient SET isTreated = "+'Y'+" WHERE user_id="+patientId);
+       		 pstmt.execute();
+       		System.out.println("Patient moved to treated list");
+			}else {
+				System.out.println("Inadequate Privilege");
+			}
+
 	        
-			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = (SELECT symptom from Has_symptom WHERE patient="+patientId+")");
-		
-	        while(q1.next() && q2.next())
-            {
-	        	if(q1.getString("part").equalsIgnoreCase(q2.getString("part"))) {
-	        		pstmt = conn.prepareStatement("Update Patient SET isTreated ="+Boolean.TRUE+" WHERE user_id="+Integer.valueOf(patientId)+ "");
-	        		 pstmt.execute();
-	        		System.out.println("Patient moved to treated list");
-	        	}else {
-	        		System.out.println("Inadequate Privilege");
-	        	}
-            }
-	        
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.toString());
 		}finally {
 	        if (st != null) { st.close(); }
 	    }
@@ -175,7 +187,7 @@ public class CheckInPatient {
 	        Calendar calendar = Calendar.getInstance();
 	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
 	        //add check-in-end to patient table
-		pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid+ "");
+	        pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
 	        pstmt.executeUpdate();
 	        System.out.println("Patient check-in complete at:"+ dateObj+"for"+pid);
 	        
