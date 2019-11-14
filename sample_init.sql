@@ -36,7 +36,7 @@ CREATE TABLE Facility(
 
 CREATE TABLE Certification(
        acronym char(32),
-       cert_name char(32),
+       cert_name char(100),
        date_certified DATE,
        date_of_expiration DATE,
        PRIMARY KEY(acronym)
