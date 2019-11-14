@@ -73,8 +73,6 @@ public class SignIn {
 				id = temp.getInt("user_id");
                         }
 
-                        System.out.println("Found uid " + id);
-
                         if (Patient.has_uid(conn, id)) {
 				System.out.println("Successful Patient login");
 				//route to patient
