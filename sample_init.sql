@@ -13,7 +13,6 @@ CREATE TABLE Address(
        addr_city char(32),
        addr_state char(32),
        addr_zip char(32),
-       addr_country char(32),
        PRIMARY KEY(addr_id)
 );
 
@@ -38,6 +37,8 @@ CREATE TABLE Facility(
 CREATE TABLE Certification(
        acronym char(32),
        cert_name char(32),
+       date_certified DATE,
+       date_of_expiration DATE,
        PRIMARY KEY(acronym)
 );
 
@@ -112,9 +113,8 @@ CREATE TABLE Certified(
        fid int,
        FOREIGN KEY (fid) REFERENCES Facility(fid),
        acronym char(32),
-       date_certified DATE,
-       date_of_expiration DATE,
-       PRIMARY KEY(fid)
+       FOREIGN KEY (acronym) REFERENCES Certification(acronym)
+       PRIMARY KEY(fid, acronym)
 );
 
 CREATE TABLE Patient(
@@ -306,3 +306,4 @@ CREATE TABLE Facility_has_User(
       FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
       PRIMARY KEY(fid, user_id)
 );
+

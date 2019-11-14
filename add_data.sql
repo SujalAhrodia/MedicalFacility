@@ -5,7 +5,7 @@
 
 INSERT INTO address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_country)
-VALUES (seq.NEXTVAL, 2650, 'Wolf Village Way Box 7220', 'Raleigh', 'NC', 'Wake');
+VALUES (0, 1337, 'kingsford lane', 'Raleigh', 'NC', 'Wake');
 
 INSERT INTO address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_country)
@@ -27,16 +27,10 @@ INSERT INTO login_user
 (user_id, Fname, Lname, ph_no, dob)
 VALUES (2, 'sheen', 'estevez', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
 
+INSERT INTO Facility
+(fid, fac_name, classification, no_of_departments, capacity)
+VALUES (0, 'Fac1', 'Hospital', 0, 100);
 
 INSERT INTO Facility
 (fid, fac_name, classification, no_of_departments, capacity)
-VALUES (1000, 'Wolf Hospital', '03', 3, 300);
-
-INSERT INTO Facility
-(fid, fac_name, classification, no_of_departments, capacity)
-VALUES (1001, 'California Health Care', '02', 2, 150);
-
-INSERT INTO Facility
-(fid, fac_name, classification, no_of_departments, capacity)
-VALUES (1002, 'Suny Medical Center', '01', 1, 10);
-
+VALUES (1, 'Fac2', 'ER', 0, 25);
