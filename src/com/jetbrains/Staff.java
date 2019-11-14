@@ -12,7 +12,7 @@ public class Staff {
 			Statement st = conn.createStatement();
 			ResultSet rs =
 				st.executeQuery("SELECT user_id FROM staff WHERE user_id = "
-						+ uid + ";");
+						+ uid);
 
 			if (rs.next()) {
 				return true;
@@ -88,7 +88,7 @@ public class Staff {
 
 			while(temp.next())
 			{
-				int id = temp.getInt("scale_name");
+				String id = temp.getString("scale_name");
 				System.out.println(id);
 			}
 			System.out.println("*************");
@@ -153,7 +153,7 @@ public class Staff {
 			String category = in.next();
 
 			Statement st = conn.createStatement();
-			ResultSet rs = st.executeQuery("SELECT nextval('seq')");
+			ResultSet rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
 			int aid = -1;
 			while (rs.next())
 				aid = rs.getInt("nextval");
