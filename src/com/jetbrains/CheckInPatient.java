@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 
 public class CheckInPatient {
@@ -121,26 +123,36 @@ public class CheckInPatient {
 		
 		// Query to fetch body part associated to patient symptom
 		PreparedStatement pstmt;
+		List<String> staffBodyPart =  new ArrayList<>();
+		List<String> patientBodyPart =  new ArrayList<>();
 		
 		Statement st = conn.createStatement();
 		try {
-			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = (SELECT service from Provides WHERE dept_id = (SELECT dept_id from Works_in Where user_id = "+userId +"));");
+			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service IN (SELECT service from Provides WHERE dept_id IN (SELECT dept_id from Works_in Where user_id = "+userId +"));");
+			 while(q1.next()) {
+				 String part =q1.getString("part");
+				 staffBodyPart.add(part);
+				 System.out.println("staff"+part);
+			 }
+			
+			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom IN (SELECT symptom from Has_symptom WHERE patient="+patientId+");");
+			while(q2.next()) {
+				 String part =q2.getString("part");
+				 patientBodyPart.add(part);
+				 System.out.println("patient1"+part);
+			 }
+			
+			if(staffBodyPart.containsAll(patientBodyPart)){
+				pstmt = conn.prepareStatement("Update Patient SET isTreated ="+Boolean.TRUE+" WHERE user_id="+Integer.valueOf(patientId)+ ";");
+       		 pstmt.execute();
+       		System.out.println("Patient moved to treated list");
+			}else {
+				System.out.println("Inadequate Privilege");
+			}
+
 	        
-			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = (SELECT symptom from Has_symptom WHERE patient="+patientId+");");
-		
-	        while(q1.next() && q2.next())
-            {
-	        	if(q1.getString("part").equalsIgnoreCase(q2.getString("part"))) {
-	        		pstmt = conn.prepareStatement("Update Patient SET isTreated ="+Boolean.TRUE+" WHERE user_id="+Integer.valueOf(patientId)+ ";");
-	        		 pstmt.execute();
-	        		System.out.println("Patient moved to treated list");
-	        	}else {
-	        		System.out.println("Inadequate Privilege");
-	        	}
-            }
-	        
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.toString());
 		}finally {
 	        if (st != null) { st.close(); }
 	    }
