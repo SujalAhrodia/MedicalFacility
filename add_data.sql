@@ -32,7 +32,8 @@ INSERT INTO Service
 (code, service_name)
 VALUES ('CST', 'Cast'),
 ('DFB', 'Defibrillator'),
-('XRY', 'X-ray');
+('XRY', 'X-ray'),
+('SER','Test');
 
 INSERT INTO Equipment
 (equip_name)
@@ -58,8 +59,8 @@ INSERT INTO Assessment
 VALUES (0, 'H');
 
 INSERT INTO Vital_signals
-(vital_id, temperature, blood_pressure)
-VALUES (0, '98', '80');
+(vital_id, temperature, sys_blood_pressure, dia_blood_pressure)
+VALUES (0, '98', '80', '180');
 
 INSERT INTO Negative_experience
 (ne_code, description)
@@ -89,7 +90,7 @@ VALUES (0, 'SRG', TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD
 INSERT INTO Patient
 (user_id, checkin_time_start, checkin_time_end, checkout_time)
 VALUES (1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY')),
-(2, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
+(2, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), null);
 
 
 /* update the circular dependency in a transaction */
@@ -107,7 +108,8 @@ COMMIT;
 
 INSERT INTO Provides
 (service, dept_id)
-VALUES ('XRY', 0);
+VALUES ('XRY', 0),
+('SER',0);
 
 INSERT INTO Service_has_equipment
 (service, equipment)
@@ -115,7 +117,8 @@ VALUES ('XRY', 'X-ray machine');
 
 INSERT INTO Associated_to
 (service, part)
-VALUES ('XRY', 'ALL');
+VALUES ('XRY', 'ALL'),
+('SER','HED');
 
 INSERT INTO Symptom
 (symptom_name, code, priority, symptom_scale)
@@ -127,7 +130,8 @@ VALUES ('HDCH', 'HED');
 
 INSERT INTO Has_symptom
 (symptom, patient, duration, incident, recurring)
-VALUES ('HDCH', 1, '3 days', 'Dehydrated', TRUE);
+VALUES ('HDCH', 1, '3 days', 'Dehydrated', TRUE),
+('HDCH', 2, '2 days', 'Dehydrated', TRUE);
 
 INSERT INTO Scale_parameter
 (scale_name, param, severity)
@@ -146,7 +150,8 @@ VALUES ('1-10', '1', 1),
 
 INSERT INTO Evaluate
 (user_id, assessment_id)
-VALUES (1, 0);
+VALUES (1, 0),
+(2,1);
 
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
@@ -180,3 +185,7 @@ VALUES (0, 'X');
 INSERT INTO Vital_recordings
 (vital_id, patient, staff)
 VALUES (0, 1, 0);
+
+INSERT INTO Works_in
+(user_id, dept_id)
+Values(0,0);

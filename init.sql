@@ -75,7 +75,8 @@ CREATE TABLE Assessment(
 CREATE TABLE Vital_signals(
        vital_id int,
        temperature int,
-       blood_pressure char(32),
+       sys_blood_pressure char(32),
+       dia_blood_pressure char(32),
        PRIMARY KEY(vital_id)
 );
 
@@ -125,6 +126,7 @@ CREATE TABLE Patient(
        checkin_time_start DATE,
        checkin_time_end DATE,
        checkout_time DATE,
+       isTreated BOOLEAN,
        PRIMARY KEY(user_id)
 );
 
