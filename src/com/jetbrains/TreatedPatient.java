@@ -204,7 +204,7 @@ public class TreatedPatient {
                 case "1":
                     System.out.println("Enter Facility Id (Enter 0 if none): ");
                     String fid = in.next();
-                    pstmt = conn.prepareStatement("UPDATE Referral_status SET fid = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?));");
+                    pstmt = conn.prepareStatement("UPDATE Referral_status SET fid = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))");
                     pstmt.setInt (1, Integer.parseInt(fid));
                     pstmt.setInt (2, pid);
                     pstmt.execute();
@@ -213,7 +213,7 @@ public class TreatedPatient {
                 case "2":
                     System.out.println("Enter Referrer's User Id: ");
                     String uid = in.next();
-                    pstmt = conn.prepareStatement("UPDATE Referral_status SET referrer = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?));");
+                    pstmt = conn.prepareStatement("UPDATE Referral_status SET referrer = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))");
                     pstmt.setInt (1, Integer.parseInt(uid));
                     pstmt.setInt (2, pid);
                     pstmt.execute();

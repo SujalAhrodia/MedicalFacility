@@ -12,7 +12,7 @@ public class Staff {
 			Statement st = conn.createStatement();
 			ResultSet rs =
 				st.executeQuery("SELECT user_id FROM staff WHERE user_id = "
-						+ uid + ";");
+						+ uid);
 
 			if (rs.next()) {
 				return true;

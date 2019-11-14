@@ -18,7 +18,7 @@ public class CheckInPatient {
 		try {
 			Statement st = conn.createStatement();
 			// check if user is not medical staff show error and go back
-			ResultSet q = st.executeQuery("SELECT designation FROM Staff WHere user_id ="+staffId+";");
+			ResultSet q = st.executeQuery("SELECT designation FROM Staff WHere user_id ="+staffId+"");
 			while(q.next()) {
 				if(q.getString("designation").equalsIgnoreCase("Medical")) {
 					System.out.println("Only medical Staff is allowed to view this information");
@@ -36,7 +36,7 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL;");
+				st.executeQuery("SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL");
 			
 			// TODO clear checkin/checkout time on logout
 			
@@ -124,14 +124,14 @@ public class CheckInPatient {
 		
 		Statement st = conn.createStatement();
 		try {
-			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = (SELECT service from Provides WHERE dept_id = (SELECT dept_id from Works_in Where user_id = "+userId +"));");
+			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = (SELECT service from Provides WHERE dept_id = (SELECT dept_id from Works_in Where user_id = "+userId +"))");
 	        
-			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = (SELECT symptom from Has_symptom WHERE patient="+patientId+");");
+			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = (SELECT symptom from Has_symptom WHERE patient="+patientId+")");
 		
 	        while(q1.next() && q2.next())
             {
 	        	if(q1.getString("part").equalsIgnoreCase(q2.getString("part"))) {
-	        		pstmt = conn.prepareStatement("Update Patient SET isTreated ="+Boolean.TRUE+" WHERE user_id="+Integer.valueOf(patientId)+ ";");
+	        		pstmt = conn.prepareStatement("Update Patient SET isTreated ="+Boolean.TRUE+" WHERE user_id="+Integer.valueOf(patientId)+ "");
 	        		 pstmt.execute();
 	        		System.out.println("Patient moved to treated list");
 	        	}else {
@@ -175,7 +175,7 @@ public class CheckInPatient {
 	        Calendar calendar = Calendar.getInstance();
 	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
 	        //add check-in-end to patient table
-		pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid+ ";");
+		pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid+ "");
 	        pstmt.executeUpdate();
 	        System.out.println("Patient check-in complete at:"+ dateObj+"for"+pid);
 	        

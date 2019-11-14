@@ -59,47 +59,46 @@ public class SignIn {
 
                 switch (userinput)
                 {
-		            case 1:
+		case 1:
                         System.out.println("Sign In");
                         temp = null;
 
                         //query to be added for city
                         temp = st.executeQuery("SELECT * FROM login_user WHERE Lname='"
-					       +lname+"' AND dob='"+dob+"'");
+					       +lname+"' AND dob=TO_DATE('"+dob+"', 'YYYY-MM-DD')");
 
-			            int id = -1;
+			int id = -1;
 
                         while (temp.next()) {
-                            id = temp.getInt("user_id");
+				id = temp.getInt("user_id");
                         }
 
                         System.out.println("Found uid " + id);
 
                         if (Patient.has_uid(conn, id)) {
-                            System.out.println("Successful Patient login");
-                            //route to patient
-                            Patient p = new Patient();
-                            p.routingMenu(conn);
-                        }
-            			else if (Staff.has_uid(conn,id))
-			            {
-			                System.out.println("Staff login");
-			                Staff s = new Staff();
-			                s.routingMenu(conn,id);
-			            }
+				System.out.println("Successful Patient login");
+				//route to patient
+				Patient p = new Patient();
+				p.routingMenu(conn);
+                        } else if (Staff.has_uid(conn,id))
+			{
+				System.out.println("Staff login");
+				Staff s = new Staff();
+				s.routingMenu(conn,id);
+			}
                         else
                         {
-				            System.out.println("Sign In Incorrect!");
-				            System.out.println("Please enter again");
-				            continue;
+				System.out.println("Sign In Incorrect!");
+				System.out.println("Please enter again");
+				continue;
                         }
-			            break;
-		            case 2:
+			break;
+		case 2:
                         System.out.println("GO Back");
                         Menu menu = new Menu();
                         menu.menuOptions(conn);
                         break;
-		            default:
+		default:
                         System.out.println("Invalid input!");
                         System.out.println("Please read the options carefully");
                 }
