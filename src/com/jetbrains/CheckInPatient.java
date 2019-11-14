@@ -1,6 +1,7 @@
 package com.jetbrains;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,8 +20,10 @@ public class CheckInPatient {
 			// check if user is not medical staff show error and go back
 			ResultSet q = st.executeQuery("SELECT designation FROM Staff WHere user_id ="+staffId+";");
 			while(q.next()) {
-				if(!q.getString("designation").equals("Medical")) {
+				if(q.getString("designation").equalsIgnoreCase("Medical")) {
 					System.out.println("Only medical Staff is allowed to view this information");
+					System.out.println("designation"+q.getString("designation"));
+					System.out.println("is medical:"+ q.getString("designation").equalsIgnoreCase("Medical") );
 					Staff s = new Staff();
 	                s.routingMenu(conn,staffId);
 	                return;
@@ -43,7 +46,7 @@ public class CheckInPatient {
 
 	        while(rs.next())
 	            {
-	                String name = rs.getString("pid");
+	                String name = rs.getString("user_id");
 	                System.out.println(i + ".\t" + name);
 	                patients[i] = name;
 	                i++;
@@ -63,10 +66,10 @@ public class CheckInPatient {
             System.out.println("*************");
             switch (userinput) {
             case "1":
-                //enterVitals(conn,staffId,patientId);
+                enterVitals(conn,staffId,patientId);
                 break;
             case "2":
-                //treatPatient(conn,staffId,patientId);
+                treatPatient(conn,staffId,patientId);
                 break;
             case "3":
             	System.out.println("GO Back");
@@ -103,12 +106,11 @@ public class CheckInPatient {
         userinput = in.next();
         switch (userinput) {
         case "1":
-            //recordVitals(conn,temp,sysBP,diaBP,patientId,userId);
-            
+            recordVitals(conn,temp,sysBP,diaBP,patientId,userId);
             break;
         case "2":
         	System.out.println("GO Back");
-            //displayCheckedInPatients(conn, userId);
+            displayCheckedInPatients(conn, userId);
             break;
         default:
             System.out.println("Invalid input!");
@@ -120,22 +122,18 @@ public class CheckInPatient {
 		
 		// Query to fetch body part associated to patient symptom
 		PreparedStatement pstmt;
-		ResultSet q1;
-		ResultSet q2;
-		Statement st = null;
+		
+		Statement st = conn.createStatement();
 		try {
-			st = conn.createStatement();
-
-	        q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = SELECT service from Provides WHERE dept_id = SELECT dept_id from Works_in Where user_id = "+userId+";");
-	       
+			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service = (SELECT service from Provides WHERE dept_id = (SELECT dept_id from Works_in Where user_id = "+userId +"));");
 	        
-	        q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = SELECT symptom from Has_symptom WHERE patient="+patientId+";");
-	        
+			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = (SELECT symptom from Has_symptom WHERE patient="+patientId+");");
+		
 	        while(q1.next() && q2.next())
             {
-	        	if(q1.getString("part").equals(q2.getString("part"))) {
-	        		//pstmt = conn.prepareStatement("INSERT INTO Patient (isTreated) VALUE (?) Where pid ="+patientId+";");
-	        		//pstmt.setBoolean(1, true);
+	        	if(q1.getString("part").equalsIgnoreCase(q2.getString("part"))) {
+	        		pstmt = conn.prepareStatement("Update Patient SET isTreated ="+Boolean.TRUE+" WHERE user_id="+Integer.valueOf(patientId)+ ";");
+	        		 pstmt.execute();
 	        		System.out.println("Patient moved to treated list");
 	        	}else {
 	        		System.out.println("Inadequate Privilege");
@@ -148,13 +146,6 @@ public class CheckInPatient {
 	        if (st != null) { st.close(); }
 	    }
 		
-		
-		// Query to fetch body part associated with staff(??)
-		/* if(a.equals(b)) {
-			 // add patient to treated patient list
-		 }else {
-			 System.out.println("Inadequate privilege: No services for selected symptoms");
-		 }*/
 	}
 	
 	public static void recordVitals(Connection conn,int temp,int sysBP,int diaBP,String pid,int userId) throws SQLException {
@@ -163,31 +154,40 @@ public class CheckInPatient {
 		Statement st = null;
 		try {
 			st = conn.createStatement();
-			pstmt = conn.prepareStatement("INSERT INTO Vital_Signals (sid, temp, sysBP, diaBP,pid) VALUE (?,?,?,?,?)");
-			//pstmt.setInt (1, id(autoincrement));
+			pstmt = conn.prepareStatement("INSERT INTO Vital_Signals (vital_id, temperature, sys_blood_pressure, dia_blood_pressure) VALUES (?,?,?,?)");
+			pstmt.setInt (1, 105);
 	        pstmt.setInt(2, temp);
 	        pstmt.setInt(3, sysBP);
 	        pstmt.setInt (4, diaBP);
-	        pstmt.setString(5, pid);
 	      
 	        pstmt.execute();
 
 	        System.out.println("Vitals Recorded!");
+	        System.out.println("Vitals Updating for patient!");
+	        pstmt = conn.prepareStatement("INSERT INTO Vital_recordings (vital_id, patient, staff) VALUES (?,?,?)");
+			pstmt.setInt (1, 105);
+	        pstmt.setInt(2, Integer.valueOf(pid));
+	        pstmt.setInt(3, userId);
+	      
+	        pstmt.execute();
+	        System.out.println("Patient vitals updated!");
+	        
 	        
 	        Calendar calendar = Calendar.getInstance();
 	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
 	        //add check-in-end to patient table
-	        pstmt = conn.prepareStatement("INSERT INTO Patient (checkin_time_end) VALUE (?)");
-	        pstmt.setDate(1, dateObj);
+	         pstmt = conn.prepareStatement("Update Patient SET checkin_time_end ="+dateObj+" WHERE user_id="+Integer.valueOf(pid)+ ";");
 	        pstmt.executeUpdate();
+	        System.out.println("Patient check-in complete at:"+ dateObj+"for"+pid);
 	        
 	        rs = st.executeQuery("SELECT assessment_id FROM Evaluate WHERE user_id = "+pid+";");
 	        String assessmentId = null;
 	        while(rs.next())
             {
                  assessmentId = rs.getString("assessment_id");
+                 System.out.println("The assessment id is:"+ assessmentId);
             }
-	        
+	       
 	        rs = st.executeQuery("SELECT category FROM Assessment WHERE assessment_id = "+assessmentId+";");
 	        while(rs.next())
             {
