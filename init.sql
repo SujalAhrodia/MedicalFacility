@@ -13,7 +13,7 @@ CREATE TABLE Address(
        addr_city char(32),
        addr_state char(32),
        addr_zip char(32),
-       addr_country char(32),
+       -- addr_country char(32),
        PRIMARY KEY(addr_id)
 );
 
@@ -273,12 +273,12 @@ CREATE TABLE Reason(
        PRIMARY KEY(reason_code)
 );
 
-CREATE TABLE Report_has_reason(
-       rid int,
-       FOREIGN KEY (rid) REFERENCES Report(rid),
-       reason char(32),
-       FOREIGN KEY (reason) REFERENCES Reason(reason_code),
-       PRIMARY KEY(rid)
+CREATE TABLE Referral_has_reason(
+       rs_id int,
+       FOREIGN KEY (rs_id) REFERENCES Referral_status(rs_id),
+       reason_code char(32),
+       FOREIGN KEY (reason_code) REFERENCES Reason(reason_code),
+       PRIMARY KEY(rs_id)
 );
 
 CREATE TABLE Vital_recordings(
@@ -299,7 +299,7 @@ CREATE TABLE Works_in(
       PRIMARY KEY(user_id, dept_id)
 );
 
-CREATE TABLE F_has_U(
+CREATE TABLE Facility_has_User(
       fid int,
       FOREIGN KEY (fid) REFERENCES facility(fid),
       user_id int,
