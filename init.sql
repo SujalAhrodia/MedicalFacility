@@ -268,17 +268,11 @@ CREATE TABLE Report_has_ref(
 CREATE TABLE Reason(
        reason_code char(32),
        service_name char(32),
-       FOREIGN KEY (service_name) REFERENCES Service(code),
-       description char(32),
-       PRIMARY KEY(reason_code)
-);
-
-CREATE TABLE Referral_has_reason(
        rs_id int,
        FOREIGN KEY (rs_id) REFERENCES Referral_status(rs_id),
-       reason_code char(32),
-       FOREIGN KEY (reason_code) REFERENCES Reason(reason_code),
-       PRIMARY KEY(rs_id)
+       FOREIGN KEY (service_name) REFERENCES Service(code),
+       description char(32),
+       PRIMARY KEY(reason_code,rs_id,service_name)
 );
 
 CREATE TABLE Vital_recordings(
