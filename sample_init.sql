@@ -203,6 +203,8 @@ CREATE TABLE Implies(
 CREATE TABLE Has_symptom(
        symptom char(32),
        FOREIGN KEY (symptom) REFERENCES Symptom(code),
+       part char(32),
+       FOREIGN KEY (part) REFERENCES Body_part(code),
        patient int,
        FOREIGN KEY (patient) REFERENCES Patient(user_id),
        value char(32),

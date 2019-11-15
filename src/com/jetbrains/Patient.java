@@ -259,13 +259,14 @@ public class Patient {
 
 	    try
 	    {
-		    PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Has_symptom (symptom, patient, value, duration, incident, recurring) VALUES (?,?,?,?,?,?)");
+		    PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Has_symptom (symptom, patient, value, duration, incident, recurring, part) VALUES (?,?,?,?,?,?,?)");
 		    pstmt.setString(1, symp_code);
 		    pstmt.setInt(2, pid);
 		    pstmt.setString(3, severity);
 		    pstmt.setString(4, dur);
 		    pstmt.setString(5, cause);
 		    pstmt.setString(6, re);
+		    pstmt.setString(7, part);
 		    pstmt.execute();
 		    System.out.println("Patient data updated");
 	    }
