@@ -142,21 +142,21 @@ CREATE TABLE Staff(
        FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
        medical char,
        hiredate DATE,
-       primary_dept char,
+       primary_dept char(32),
        FOREIGN KEY (primary_dept) REFERENCES Service_department(dept_code),
        PRIMARY KEY(user_id)
 );
 
--- ALTER TABLE service_department
--- ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(user_id)
--- DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE service_department
+ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(user_id)
+DEFERRABLE INITIALLY DEFERRED;
 
 CREATE TABLE Provides(
        service char(32),
        FOREIGN KEY (service) REFERENCES Service(code),
        dept_code char(32),
        FOREIGN KEY (dept_code) REFERENCES Service_department(dept_code),
-       PRIMARY KEY(service)
+       PRIMARY KEY(service, dept_code)
 );
 
 CREATE TABLE Contains(

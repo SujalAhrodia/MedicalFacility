@@ -1,5 +1,8 @@
-DROP TABLE Address cascade constraints;
+-- first drop the constraint
+ALTER TABLE service_department DROP CONSTRAINT director_fkey;
+
 DROP TABLE Login_user cascade constraints;
+DROP TABLE Address cascade constraints;
 DROP TABLE Facility cascade constraints;
 DROP TABLE Certification cascade constraints;
 DROP TABLE Service cascade constraints;
