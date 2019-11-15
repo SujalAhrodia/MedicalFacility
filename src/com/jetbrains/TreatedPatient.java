@@ -29,7 +29,7 @@ public class TreatedPatient {
             System.out.println("List of Treated Patients");
             System.out.println("*************");
 
-            resultSet = st.executeQuery("SELECT * FROM Patient WHERE treated=1");
+            resultSet = st.executeQuery("SELECT * FROM Patient WHERE istreated='Y'");
 
             while(resultSet.next())
             {
@@ -204,19 +204,23 @@ public class TreatedPatient {
                 case "1":
                     System.out.println("Enter Facility Id (Enter 0 if none): ");
                     String fid = in.next();
+                    //check if not the same facility
                     pstmt = conn.prepareStatement("UPDATE Referral_status SET fid = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))");
                     pstmt.setInt (1, Integer.parseInt(fid));
                     pstmt.setInt (2, pid);
                     pstmt.execute();
+                    System.out.println("Facility ID saved!");
                     this.referralStatusMenu(conn,pid);
                     break;
                 case "2":
                     System.out.println("Enter Referrer's User Id: ");
                     String uid = in.next();
+                    //check if entered not staff... check if staff in same facility or not
                     pstmt = conn.prepareStatement("UPDATE Referral_status SET referrer = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))");
                     pstmt.setInt (1, Integer.parseInt(uid));
                     pstmt.setInt (2, pid);
                     pstmt.execute();
+                    System.out.println("Refferer ID saved!");
                     this.referralStatusMenu(conn,pid);
                     break;
                 case "3":
@@ -369,12 +373,19 @@ public class TreatedPatient {
             userinput = in.next();
             switch (userinput) {
                 case "1":
-                    System.out.println("Enter Reason Code: ");
+                    System.out.println("Enter Reason Code (1/2/3): ");
                     String inputCode = in.next();
+                    //display a list of sevices code
+                    System.out.println("Enter Service name: ");
+                    String service = in.next();
+                    System.out.println("Enter Description: ");
+                    String desc = in.next();
 
-                    pstmt = conn.prepareStatement("INSERT INTO Referralstatus_has_reason (rs_id, reason_code) VALUES ((SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = ?)), ?)");
+                    pstmt = conn.prepareStatement("INSERT INTO Reason (rs_id, reason_code, service_name, description) VALUES ((SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = ?)),?,?, ?)");
                     pstmt.setInt(1, pid);
                     pstmt.setString(2, inputCode);
+                    pstmt.setString(3,service);
+                    pstmt.setString(4,desc);
                     pstmt.execute();
                     this.referralStatusMenu(conn, pid);
                     break;
