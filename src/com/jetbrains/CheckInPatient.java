@@ -141,7 +141,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 			 }
 			
 			if(staffBodyPart.containsAll(patientBodyPart)){
-				pstmt = conn.prepareStatement("Update Patient SET isTreated = "+'Y'+" WHERE user_id="+patientId);
+				pstmt = conn.prepareStatement("Update Patient SET isTreated = 'Y' WHERE user_id="+patientId);
        		 pstmt.execute();
        		System.out.println("Patient moved to treated list");
 			}else {

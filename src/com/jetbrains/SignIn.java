@@ -76,7 +76,7 @@ public class SignIn {
                         if (Patient.has_uid(conn, id)) {
 				System.out.println("Successful Patient login");
 				//route to patient
-				Patient p = new Patient();
+				Patient p = new Patient(id);
 				p.routingMenu(conn);
                         } else if (Staff.has_uid(conn,id))
 			{

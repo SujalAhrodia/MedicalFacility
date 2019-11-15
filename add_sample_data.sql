@@ -68,6 +68,47 @@ INSERT INTO Certified
 (fid, acronym)
 VALUES(1002, 'CER003');
 
+INSERT INTO Symptom_scale
+(scale_name)
+VALUES ('1-10');
+
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '1', 1);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '2', 2);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '3', 3);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '4', 4);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '5', 5);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '6', 6);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '7', 7);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '8', 8);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '9', 9);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('1-10', '10', 10);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('true-false', 'True', 1);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('true-false', 'False', 0);
+
 -- Service Department
 
 INSERT INTO Service_department
