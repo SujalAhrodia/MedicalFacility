@@ -17,7 +17,7 @@ DROP TABLE Patient cascade constraints;
 DROP TABLE Service_department cascade constraints;
 DROP TABLE Staff cascade constraints;
 DROP TABLE Provides cascade constraints;
-DROP TABLE Service_has_equipment cascade constraints;
+-- DROP TABLE Service_has_equipment cascade constraints;
 DROP TABLE Associated_to cascade constraints;
 DROP TABLE Symptom cascade constraints;
 DROP TABLE Implies cascade constraints;
@@ -34,5 +34,6 @@ DROP TABLE Referral_has_reason cascade constraints;
 DROP TABLE Vital_recordings cascade constraints;
 DROP TABLE Works_in cascade constraints;
 DROP TABLE Facility_has_User cascade constraints;
+DROP TABLE Contains cascade constraints;
 
 drop sequence seq;

@@ -50,7 +50,9 @@ CREATE TABLE Service(
 
 CREATE TABLE Equipment(
        equip_name char(32),
-       PRIMARY KEY(equip_name)
+       service char(32),
+       FOREIGN KEY (service) REFERENCES Service(code),
+       PRIMARY KEY(equip_name, service)
 );
 
 CREATE TABLE Body_part(
@@ -128,42 +130,50 @@ CREATE TABLE Patient(
 );
 
 CREATE TABLE Service_department(
-       dept_id int,
-       dept_name char(32),
+       dept_code char(32),
+       dept_name char(100),
        director int,
        /*FOREIGN KEY REFERENCES (director) Staff(user_id),*/
-       PRIMARY KEY(dept_id)
+       PRIMARY KEY(dept_code)
 );
 
 CREATE TABLE Staff(
        user_id int,
        FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
-       designation char(32),
+       medical char,
        hiredate DATE,
-       primary_dept int,
-       FOREIGN KEY (primary_dept) REFERENCES Service_department(dept_id),
+       primary_dept char,
+       FOREIGN KEY (primary_dept) REFERENCES Service_department(dept_code),
        PRIMARY KEY(user_id)
 );
 
-ALTER TABLE service_department
-ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(user_id)
-DEFERRABLE INITIALLY DEFERRED;
+-- ALTER TABLE service_department
+-- ADD CONSTRAINT director_fkey FOREIGN KEY (director) REFERENCES Staff(user_id)
+-- DEFERRABLE INITIALLY DEFERRED;
 
 CREATE TABLE Provides(
        service char(32),
        FOREIGN KEY (service) REFERENCES Service(code),
-       dept_id int,
-       FOREIGN KEY (dept_id) REFERENCES Service_department(dept_id),
+       dept_code char(32),
+       FOREIGN KEY (dept_code) REFERENCES Service_department(dept_code),
        PRIMARY KEY(service)
 );
 
-CREATE TABLE Service_has_equipment(
-       service char(32),
-       FOREIGN KEY (service) REFERENCES Service(code),
-       equipment char(32),
-       FOREIGN KEY (equipment) REFERENCES Equipment(equip_name),
-       PRIMARY KEY(service, equipment)
+CREATE TABLE Contains(
+      fid int,
+      FOREIGN KEY (fid) REFERENCES Facility(fid),
+      dept_code char(32),
+      FOREIGN KEY (dept_code) REFERENCES Service_department(dept_code),
+      PRIMARY KEY (fid, dept_code)
 );
+
+-- CREATE TABLE Service_has_equipment(
+--        service char(32),
+--        FOREIGN KEY (service) REFERENCES Service(code),
+--        equipment char(32),
+--        FOREIGN KEY (equipment) REFERENCES Equipment(equip_name),
+--        PRIMARY KEY(service, equipment)
+-- );
 
 CREATE TABLE Associated_to(
        service char(32),
@@ -294,9 +304,9 @@ CREATE TABLE Vital_recordings(
 CREATE TABLE Works_in(
       user_id int,
       FOREIGN KEY (user_id) REFERENCES Staff(user_id),
-      dept_id int,
-      FOREIGN KEY (dept_id) REFERENCES Service_department(dept_id),
-      PRIMARY KEY(user_id, dept_id)
+      dept_code char(32),
+      FOREIGN KEY (dept_code) REFERENCES Service_department(dept_code),
+      PRIMARY KEY(user_id, dept_code)
 );
 
 CREATE TABLE Facility_has_User(
