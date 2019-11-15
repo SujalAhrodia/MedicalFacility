@@ -1,7 +1,6 @@
 package com.jetbrains;
 
 import java.sql.*;
-import java.util.Random;
 import java.util.Scanner;
 
 public class SignUp {
@@ -15,30 +14,30 @@ public class SignUp {
         System.out.println("*************");
         System.out.println("Enter the following information:");
         System.out.println("First Name: ");
-        String fname= in.next();
+        String fname= in.nextLine();
 
         System.out.println("Last Name: ");
-        String lname = in.next();
+        String lname = in.nextLine();
 
         System.out.println("Date of Birth: (format: YYYY-MM-DD)");
         //to-do
-        String dob = in.next();
+        String dob = in.nextLine();
 
         System.out.println("** Address ** ");
         System.out.println("Number: ");
-        int no = in.nextInt();
+        int no = Integer.parseInt(in.nextLine());
 
         System.out.println("Street Name: ");
-        String sname = in.next();
+        String sname = in.nextLine();
 
         System.out.println("City: ");
-        String city = in.next();
+        String city = in.nextLine();
 
         System.out.println("State: ");
-        String state = in.next();
+        String state = in.nextLine();
 
         System.out.println("Country: ");
-        String country = in.next();
+        String country = in.nextLine();
 
         System.out.println("Phone number: ");
         int ph = in.nextInt();
@@ -57,14 +56,21 @@ public class SignUp {
                 case 1:
                     System.out.println("Sign Up");
                     //store info in db
-                    pstmt = conn.prepareStatement("INSERT INTO Login_user (Fname, Lname, ph_no , DoB) VALUE (?,?,?,?)");
-
-                    pstmt.setString (1, fname);
-                    pstmt.setString (2, lname);
-                    pstmt.setInt (3, ph);
-                    pstmt.setString (4, dob);
-
+                    Statement st = conn.createStatement();
+                    ResultSet rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
+                    
+        			int uid = -1;
+        			while (rs.next())
+        				uid = rs.getInt("nextval");
+                    pstmt = conn.prepareStatement("INSERT INTO Login_user (user_id,Fname, Lname, ph_no , DoB) VALUES (?,?,?,?,?)");
+                    pstmt.setInt(1, uid);
+                    pstmt.setString (2, fname);
+                    pstmt.setString (3, lname);
+                    pstmt.setInt (4, ph);
+                    pstmt.setDate(5,java.sql.Date.valueOf(dob));
+                    
                     pstmt.execute();
+                    System.out.println("Signed Up");
                     pstmt = conn.prepareStatement("INSERT INTO Address(addr_number, addr_street, addr_city, addr_state, addr_country) VALUES (?,?,?,?,?)");
 
                     pstmt.setInt (1, no);
@@ -93,7 +99,7 @@ public class SignUp {
         }
         catch (Exception e )
         {
-            System.out.println(e.toString());
+        	e.printStackTrace();
         }
         finally
         {

@@ -24,8 +24,6 @@ public class CheckInPatient {
 			while(q.next()) {
 				if(q.getString("designation").equalsIgnoreCase("Medical")) {
 					System.out.println("Only medical Staff is allowed to view this information");
-					System.out.println("designation"+q.getString("designation"));
-					System.out.println("is medical:"+ q.getString("designation").equalsIgnoreCase("Medical") );
 					Staff s = new Staff();
 	                s.routingMenu(conn,staffId);
 	                return;
@@ -165,8 +163,12 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 		Statement st = null;
 		try {
 			st = conn.createStatement();
+            rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
+			int vid = -1;
+			while (rs.next())
+				vid = rs.getInt("nextval");
 			pstmt = conn.prepareStatement("INSERT INTO Vital_Signals (vital_id, temperature, sys_blood_pressure, dia_blood_pressure) VALUES (?,?,?,?)");
-			pstmt.setInt (1, 105);
+			pstmt.setInt (1, vid);
 	        pstmt.setInt(2, temp);
 	        pstmt.setInt(3, sysBP);
 	        pstmt.setInt (4, diaBP);
@@ -176,7 +178,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        System.out.println("Vitals Recorded!");
 	        System.out.println("Vitals Updating for patient!");
 	        pstmt = conn.prepareStatement("INSERT INTO Vital_recordings (vital_id, patient, staff) VALUES (?,?,?)");
-			pstmt.setInt (1, 105);
+			pstmt.setInt (1, vid);
 	        pstmt.setInt(2, pid);
 	        pstmt.setInt(3, userId);
 	      
