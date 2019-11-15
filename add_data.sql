@@ -17,15 +17,15 @@ VALUES (2, 42, 'unfortunate st', 'Greensboro', 'NC', 'nowhere');
 
 INSERT INTO login_user
 (user_id, Fname, Lname, ph_no, dob)
-VALUES (0, 'carl', 'wheezer', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
+VALUES (0, 'carl', 'wheezer', 'ph_no', TO_DATE('2015/12/17', 'YYYY/MM/DD'));
 
 INSERT INTO login_user
 (user_id, Fname, Lname, ph_no, dob)
-VALUES (1, 'jimmy', 'neutron', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
+VALUES (1, 'jimmy', 'neutron', 'ph_no', TO_DATE('2015/12/17', 'YYYY/MM/DD'));
 
 INSERT INTO login_user
 (user_id, Fname, Lname, ph_no, dob)
-VALUES (2, 'sheen', 'estevez', 'ph_no', TO_DATE('17/12/2015', 'DD/MM/YYYY'));
+VALUES (2, 'sheen', 'estevez', 'ph_no', TO_DATE('2015/12/17', 'YYYY/MM/DD'));
 
 INSERT INTO Assessment
 (assessment_id, category)
@@ -47,7 +47,7 @@ VALUES (0, 'Big dept', 0);
 
 INSERT INTO Staff
 (user_id, designation, hiredate, primary_dept)
-VALUES (0, 'Medical', TO_DATE('17/12/2016', 'DD/MM/YYYY'), 0);
+VALUES (0, 'Medical', TO_DATE('2016/12/17', 'YYYY/MM/DD'), 0);
 
 INSERT INTO Body_part
 (code, part_name)
@@ -67,8 +67,8 @@ VALUES ('HDCH', 'HED');
 
 INSERT INTO Patient
 (user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (1, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2016', 'DD/MM/YYYY'));
+VALUES (1, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2016/12/17', 'YYYY/MM/DD'));
 
 INSERT INTO Patient
 (user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (2, TO_DATE('17/12/2015', 'DD/MM/YYYY'), TO_DATE('17/12/2015', 'DD/MM/YYYY'), null);
+VALUES (2, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
