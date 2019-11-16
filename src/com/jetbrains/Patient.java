@@ -96,97 +96,103 @@ public class Patient {
     }
     public void checkinMenu(Connection conn) throws SQLException
     {
-        try
-        {
-            st = conn.createStatement();
-
-            //print symptoms from symptoms table
-            System.out.println("*************");
-            System.out.println("List of Symptoms");
-            System.out.println("*************");
-
-            temp = st.executeQuery("select symptom_name,code from Symptom");
-
-            int i=1;
-            //array for choice of symptoms
-            String[] symp = new String[100];
-	    String[] code = new String[100];
-
-            while(temp.next())
-            {
-                String name = temp.getString("symptom_name");
-                System.out.println(i + ".\t" + name);
-                symp[i]=name;
-		code[i] = temp.getString("code");
-                i++;
-            }
-
-            System.out.println(i + "\t" + "Other");
-            i++;
-            System.out.println(i + "\t" + "Done");
-            System.out.println("*************");
-            System.out.println("Enter your choice: (1-"+i+")");
-
-            int userinput = in.nextInt();
-
-            if( userinput == i )
-            {
-                //validate,record time, logout
-                System.out.println("*** Logging out ***");
-                Menu m = new Menu();
-                m.menuOptions(conn);
-            }
-            else if (userinput == i-1)
-            {
-                System.out.println("Add information about new symptom ---");
-
-		System.out.println("Symptom Name: ");
-		String s_name = in.next();
-
-		System.out.println("Symptom Code: ");
-		String s_code = in.next();
-		
-		// select a symptom scale
-		System.out.println("*************");
-		System.out.println("List of Symptom Scales");
-		System.out.println("*************");
-
-		ResultSet temp = st.executeQuery("SELECT scale_name FROM symptom_scale");
-
-		while(temp.next())
+	boolean cont = true;
+	while (cont) {
+		try
 		{
-			String id = temp.getString("scale_name");
-			System.out.println(id);
+			st = conn.createStatement();
+
+			//print symptoms from symptoms table
+			System.out.println("*************");
+			System.out.println("List of Symptoms");
+			System.out.println("*************");
+
+			temp = st.executeQuery("select symptom_name,code from Symptom");
+
+			int i=1;
+			//array for choice of symptoms
+			String[] symp = new String[100];
+			String[] code = new String[100];
+
+			while(temp.next())
+			{
+				String name = temp.getString("symptom_name");
+				System.out.println(i + ".\t" + name);
+				symp[i]=name;
+				code[i] = temp.getString("code");
+				i++;
+			}
+
+			System.out.println(i + "\t" + "Other");
+			i++;
+			System.out.println(i + "\t" + "Done");
+			System.out.println("*************");
+			System.out.println("Enter your choice: (1-"+i+")");
+
+			int userinput = in.nextInt();
+
+			if( userinput == i )
+			{
+				//validate,record time, logout
+				System.out.println("*** Logging out ***");
+				Menu m = new Menu();
+				m.menuOptions(conn);
+			}
+			else if (userinput == i-1)
+			{
+				System.out.println("Add information about new symptom ---");
+
+				System.out.println("Symptom Name: ");
+				String s_name = in.next();
+
+				System.out.println("Symptom Code: ");
+				String s_code = in.next();
+
+				// TODO implies
+		
+				// select a symptom scale
+				System.out.println("*************");
+				System.out.println("List of Symptom Scales");
+				System.out.println("*************");
+
+				ResultSet temp = st.executeQuery("SELECT scale_name FROM symptom_scale");
+
+				while(temp.next())
+				{
+					String id = temp.getString("scale_name");
+					System.out.println(id);
+				}
+				System.out.println("*************");
+				System.out.println("Choose a Symptom Severity Scale :");
+				System.out.println("*************");
+				System.out.println("Enter Scale name:");
+				String scale = in.next();
+
+				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Symptom (symptom_name, code, symptom_scale) VALUES (?,?,?)");
+				pstmt.setString(1, s_name);
+				pstmt.setString(2, s_code);
+				pstmt.setString(3, scale);
+				pstmt.execute();
+				System.out.println("Symptom Added");
+			}
+			else {
+				metaData(code[userinput], conn);
+				cont = false;
+			}
+
 		}
-		System.out.println("*************");
-		System.out.println("Choose a Symptom Severity Scale :");
-		System.out.println("*************");
-		System.out.println("Enter Scale name:");
-		String scale = in.next();
-
-		PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Symptom (symptom_name, code, priority, symptom_scale) VALUES (?,?,0,?)");
-		pstmt.setString(1, s_name);
-		pstmt.setString(2, s_code);
-		pstmt.setString(4, scale);
-		pstmt.execute();
-		System.out.println("Symptom Added");
-            }
-            else {
-		    metaData(code[userinput], conn);
-            }
-
-        }
-        catch(Exception e)
-        {
-            System.out.println(e.toString());
-        }
-        finally
-        {
-            if (st != null)
-            {
-                st.close();
-            }
-        }
+		catch(Exception e)
+		{
+			System.out.println(e.toString());
+		}
+		finally
+		{
+			if (st != null)
+			{
+				st.close();
+			}
+		}
+	}
     }
     public void metaData(String symp_code, Connection conn) throws SQLException
     {
@@ -240,7 +246,9 @@ public class Patient {
 				    break;
 			    case 2:
 				    System.out.println("Duration");
-				    dur = in.next();
+				    //throw away the extra \n not processed
+				    in.nextLine();
+				    dur = in.nextLine();
 				    break;
 			    case 3:
 				    System.out.println("Reoccurring");
@@ -252,7 +260,9 @@ public class Patient {
 				    break;
 			    case 5:
 				    System.out.println("Cause (Incident)");
-				    cause = in.next();
+				    //throw away the extra \n not processed
+				    in.nextLine();
+				    cause = in.nextLine();
 				    break;
 			    default:
 				    System.out.println("Invalid input!");
@@ -281,6 +291,7 @@ public class Patient {
 		    pstmt.setString(5, cause);
 		    pstmt.setString(6, re);
 		    pstmt.setString(7, part);
+		    System.out.println(symp_code + " " + pid + " " + part);
 		    pstmt.execute();
 		    System.out.println("Patient data updated");
 	    }

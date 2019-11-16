@@ -428,31 +428,31 @@ INSERT INTO Facility_has_User
 VALUES(1002, 67002);
 
 INSERT INTO Body_part
-(code, part_name)
-VALUES('Left Arm', 'ARM000')
+(part_name, code)
+VALUES('Left Arm', 'ARM000');
 
 INSERT INTO Body_part
-(code, part_name)
+(part_name, code)
 VALUES('Right Arm', 'ARM001');
 
 INSERT INTO Body_part
-(code, part_name)
+(part_name, code)
 VALUES('Abdominal', 'ABD000');
 
 INSERT INTO Body_part
-(code, part_name)
+(part_name, code)
 VALUES('Eye', 'EYE000');
 
 INSERT INTO Body_part
-(code, part_name)
+(part_name, code)
 VALUES('Heart', 'HRT000');
 
 INSERT INTO Body_part
-(code, part_name)
+(part_name, code)
 VALUES('Chest', 'CST000');
 
 INSERT INTO Body_part
-(code, part_name)
+(part_name, code)
 VALUES('Head', 'HED000');
 
 INSERT INTO Patient
