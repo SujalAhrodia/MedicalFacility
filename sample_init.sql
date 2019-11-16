@@ -13,6 +13,7 @@ CREATE TABLE Address(
        addr_city char(32),
        addr_state char(32),
        addr_zip char(32),
+       addr_country char(32),
        PRIMARY KEY(addr_id)
 );
 
@@ -186,7 +187,6 @@ CREATE TABLE Associated_to(
 CREATE TABLE Symptom(
        symptom_name char(32),
        code char(32),
-       priority int,
        symptom_scale char(32),
        FOREIGN KEY (symptom_scale) REFERENCES Symptom_scale(scale_name),
        PRIMARY KEY(code)
@@ -319,3 +319,4 @@ CREATE TABLE Facility_has_User(
       PRIMARY KEY(fid, user_id)
 );
 
+commit;
