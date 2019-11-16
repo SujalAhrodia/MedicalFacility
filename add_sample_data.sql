@@ -676,4 +676,15 @@ INSERT INTO Has_symptom
 (symptom, part, patient, value, duration, incident, recurring)
 VALUES('SYM006', 'EYE000', 4, 'Normal', '1','Unknown','N');
 
+INSERT INTO Associated_to
+(service, part)
+VALUES ('VIS01', 'EYE000');
+
+INSERT INTO Associated_to
+(service, part)
+VALUES ('SER01', 'EYE000');
+
+INSERT INTO Associated_to
+(service, part)
+VALUES ('SER01', 'HED000');
 commit;

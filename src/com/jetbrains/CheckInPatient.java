@@ -144,14 +144,14 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 			 while(q1.next()) {
 				 String part =q1.getString("part");
 				 staffBodyPart.add(part);
-				 System.out.println("staff"+part);
+				 
 			 }
 			
 			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom IN (SELECT symptom from Has_symptom WHERE patient="+patientId+")");
 			while(q2.next()) {
 				 String part =q2.getString("part");
 				 patientBodyPart.add(part);
-				 System.out.println("patient1"+part);
+				 
 			 }
 			
 			if(staffBodyPart.containsAll(patientBodyPart)){
