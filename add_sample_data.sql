@@ -449,11 +449,11 @@ VALUES(1002, 67002);
 -- Body Part
 INSERT INTO Body_part
 (code, part_name)
-VALUES('None','None')
+VALUES('None','None');
 
 INSERT INTO Body_part
 (code, part_name)
-VALUES('ARM000','Left Arm')
+VALUES('ARM000','Left Arm');
 
 INSERT INTO Body_part
 (code, part_name)
@@ -527,35 +527,84 @@ INSERT INTO Login_user
 (user_id, Fname, Lname, ph_no, DoB)
 VALUES(1, 'John', 'Smith', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'));
 
-INSERT INSERT Patient
+INSERT INTO Patient
 (user_id)
-VALUES(1)
+VALUES(1);
 
 INSERT INTO Address
-(addr_id, addr_number, addr_street, addr_city, addr_state, addr_country)
-VALUES (62,100, 'Avent Ferry Road', 'Raleigh', 'NC', 'USA');
+(addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
+VALUES (62,100, 'Avent Ferry Road', 'Raleigh', 'NC', '27606','USA');
 
 INSERT INTO Facility_has_User
 (fid, user_id)
 VALUES(1000, 1);
 
--- CREATE TABLE Has_symptom(
---        symptom char(32),
---        FOREIGN KEY (symptom) REFERENCES Symptom(code),
---        part char(32),
---        FOREIGN KEY (part) REFERENCES Body_part(code),
---        patient int,
---        FOREIGN KEY (patient) REFERENCES Patient(user_id),
---        value char(32),
---        duration char(32),
---        incident char(32),
---        recurring CHAR,
---        PRIMARY KEY(symptom, patient)
--- );
+INSERT INTO Has_symptom
+(symptom, part, patient, value, duration, incident, recurring)
+VALUES('SYM003', 'None', 1, 'High', '1','Unknown','N');
 
--- INSERT INTO Has_symptom
--- (symptom, part, patient, value, duration, incident, recurring)
--- VALUES('SYM003', 'None', 1, 'High', '1','Unknown','N');
 
+INSERT INTO Login_user
+(user_id, Fname, Lname, ph_no, DoB)
+VALUES(2, 'Jane', 'Doe', 9192453245, TO_DATE('2/29/2000', 'MM/DD/YYYY'));
+
+INSERT INTO Patient
+(user_id)
+VALUES(2);
+
+INSERT INTO Address
+(addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
+VALUES (63,1016, 'Lexington Road', 'New York', 'NY', '12005','USA');
+
+INSERT INTO Facility_has_User
+(fid, user_id)
+VALUES(1000, 2);
+
+INSERT INTO Has_symptom
+(symptom, part, patient, value, duration, incident, recurring)
+VALUES('SYM001', 'ARM000', 2, '5', '3','Fell off bike','Y');
+
+
+INSERT INTO Login_user
+(user_id, Fname, Lname, ph_no, DoB)
+VALUES(3, 'Rock', 'Start', 5403127893, TO_DATE('8/31/1970', 'MM/DD/YYYY'));
+
+INSERT INTO Patient
+(user_id)
+VALUES(3);
+
+INSERT INTO Address
+(addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
+VALUES (64,1022, 'Amphitheatre Parkway', 'Mountain View', 'CA', '90021','USA');
+
+INSERT INTO Facility_has_User
+(fid, user_id)
+VALUES(1001, 3);
+
+INSERT INTO Has_symptom
+(symptom, part, patient, value, duration, incident, recurring)
+VALUES('SYM002', 'None', 3, 'Severe', '1','Pepper challenge','N');
+
+
+
+INSERT INTO Login_user
+(user_id, Fname, Lname, ph_no, DoB)
+VALUES(4, 'Sheldon', 'Cooper', 6184628437, TO_DATE('05/26/1984', 'MM/DD/YYYY'));
+
+INSERT INTO Patient
+(user_id)
+VALUES(4);
+
+INSERT INTO Address
+(addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
+VALUES (65,1210, 'Sacramento', ' Santa Cruz', 'CA', '90021','USA');
+
+INSERT INTO Facility_has_User
+(fid, user_id)
+VALUES(1002, 4);
+
+INSERT INTO Has_symptom
+(symptom, part, patient, value, duration, incident, recurring)
+VALUES('SYM006', 'EYE000', 4, 'Normal', '1','Unknown','N');
 
 commit;
