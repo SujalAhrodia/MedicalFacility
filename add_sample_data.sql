@@ -605,10 +605,6 @@ INSERT INTO User_has_address
 (user_id, addr_id)
 VALUES(1, 62);
 
-INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 1);
-
 INSERT INTO Has_symptom
 (symptom, part, patient, value, duration, incident, recurring)
 VALUES('SYM003', 'None', 1, 'High', '1','Unknown','N');
@@ -629,10 +625,6 @@ VALUES (63,1016, 'Lexington Road', 'New York', 'NY', '12005','USA');
 INSERT INTO User_has_address
 (user_id, addr_id)
 VALUES(2, 63);
-
-INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 2);
 
 INSERT INTO Has_symptom
 (symptom, part, patient, value, duration, incident, recurring)
@@ -655,9 +647,6 @@ INSERT INTO User_has_address
 (user_id, addr_id)
 VALUES(3, 64);
 
-INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1001, 3);
 
 INSERT INTO Has_symptom
 (symptom, part, patient, value, duration, incident, recurring)
@@ -682,9 +671,6 @@ INSERT INTO User_has_address
 (user_id, addr_id)
 VALUES(4, 65);
 
-INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1002, 4);
 
 INSERT INTO Has_symptom
 (symptom, part, patient, value, duration, incident, recurring)
