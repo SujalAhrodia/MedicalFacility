@@ -112,14 +112,14 @@ public class Patient {
 			int i=1;
 			//array for choice of symptoms
 			String[] symp = new String[100];
-			String[] code = new String[100];
+			String[] codes = new String[100];
 
 			while(temp.next())
 			{
 				String name = temp.getString("symptom_name");
 				System.out.println(i + ".\t" + name);
 				symp[i]=name;
-				code[i] = temp.getString("code");
+				codes[i] = temp.getString("code");
 				i++;
 			}
 
@@ -141,42 +141,70 @@ public class Patient {
 			else if (userinput == i-1)
 			{
 				System.out.println("Add information about new symptom ---");
+				try {
+					Statement st = conn.createStatement();
+					System.out.println("*************");
+					System.out.println("Enter the following information:");
+					System.out.println("Symptom Name: ");
+					String name= in.next();
 
-				System.out.println("Symptom Name: ");
-				String s_name = in.next();
+					System.out.println("Symptom Code: ");
+					String code = in.next();
 
-				System.out.println("Symptom Code: ");
-				String s_code = in.next();
+					System.out.println("*************");
+					System.out.println("Body Parts");
+					System.out.println("*************");
+					ResultSet temp = st.executeQuery("SELECT * FROM Body_part");
 
-				// TODO implies
-		
-				// select a symptom scale
-				System.out.println("*************");
-				System.out.println("List of Symptom Scales");
-				System.out.println("*************");
+					while(temp.next())
+					{
+						String id = temp.getString("part_name");
+						String part_code = temp.getString("code");
+						System.out.println("code: "+part_code+"\t name:"+id);
+					}
+					System.out.println("*************");
+					System.out.println("Implied body part code: (leave blank for none)");
+					in.nextLine(); // remove the unprocessed \n
+					String part = in.nextLine();
+					if (part == "") part = "None";
 
-				ResultSet temp = st.executeQuery("SELECT scale_name FROM symptom_scale");
+					// select a symptom scale
+					System.out.println("*************");
+					System.out.println("List of Symptom Scales");
+					System.out.println("*************");
 
-				while(temp.next())
-				{
-					String id = temp.getString("scale_name");
-					System.out.println(id);
+					temp = st.executeQuery("SELECT scale_name FROM symptom_scale");
+
+					while(temp.next())
+					{
+						String id = temp.getString("scale_name");
+						System.out.println(id);
+					}
+					System.out.println("*************");
+					System.out.println("Choose a Symptom Severity Scale :");
+					System.out.println("*************");
+					System.out.println("Enter Scale name:");
+					String scale = in.next();
+		    
+					PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Symptom (symptom_name, code, symptom_scale) VALUES (?,?,?)");
+					pstmt.setString(1, name);
+					pstmt.setString(2, code);
+					pstmt.setString(3, scale);
+					pstmt.execute();
+
+					System.out.println("Symptom created");
+
+					pstmt = conn.prepareStatement("INSERT INTO Implies (symptom, part) VALUES (?,?)");
+					pstmt.setString(1, code);
+					pstmt.setString(2, part);
+					pstmt.execute();
+					
+				} catch (Exception e) {
+					System.out.println(e.toString());
 				}
-				System.out.println("*************");
-				System.out.println("Choose a Symptom Severity Scale :");
-				System.out.println("*************");
-				System.out.println("Enter Scale name:");
-				String scale = in.next();
-
-				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Symptom (symptom_name, code, symptom_scale) VALUES (?,?,?)");
-				pstmt.setString(1, s_name);
-				pstmt.setString(2, s_code);
-				pstmt.setString(3, scale);
-				pstmt.execute();
-				System.out.println("Symptom Added");
 			}
 			else {
-				metaData(code[userinput], conn);
+				metaData(codes[userinput], conn);
 				cont = false;
 			}
 
