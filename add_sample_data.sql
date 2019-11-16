@@ -474,3 +474,6 @@ VALUES (88001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/
 INSERT INTO Patient
 (user_id, checkin_time_start, checkin_time_end, checkout_time)
 VALUES (91001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
+
+INSERT INTO Negative_experience (ne_code, description) VALUES (1,'Misdiagnosis');
+INSERT INTO Negative_experience (ne_code, description) VALUES (2,'Patient acquired infection during hospital stay.');

@@ -82,7 +82,7 @@ CREATE TABLE Vital_signals(
 
 CREATE TABLE Negative_experience(
        ne_code int,
-       description char(32),
+       description char(50),
        PRIMARY KEY(ne_code)
 );
 
@@ -257,7 +257,8 @@ CREATE TABLE Report_has_negative(
        FOREIGN KEY (rid) REFERENCES Report(rid),
        ne_code int,
        FOREIGN KEY (ne_code) REFERENCES Negative_experience(ne_code),
-       PRIMARY KEY(rid, ne_code)
+       user_desc char(50),
+       PRIMARY KEY(rid, ne_code,user_desc)
 );
 
 CREATE TABLE Referral_status(
@@ -281,16 +282,10 @@ CREATE TABLE Reason(
        reason_code char(32),
        service_name char(32),
        FOREIGN KEY (service_name) REFERENCES Service(code),
-       description char(32),
-       PRIMARY KEY(reason_code)
-);
-
-CREATE TABLE Referral_has_reason(
        rs_id int,
        FOREIGN KEY (rs_id) REFERENCES Referral_status(rs_id),
-       reason_code char(32),
-       FOREIGN KEY (reason_code) REFERENCES Reason(reason_code),
-       PRIMARY KEY(rs_id)
+       description char(32),
+       PRIMARY KEY(reason_code,rs_id,service_name,description)
 );
 
 CREATE TABLE Vital_recordings(
