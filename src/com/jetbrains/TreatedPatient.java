@@ -13,7 +13,7 @@ public class TreatedPatient {
     int dsUpdated = 0; //0-notSet 1-successful 2-deceased 3-refferred
     boolean rsUpdated = false;
     boolean treatmentUpdated = false;
-    boolean neUpdated = false;
+    int noOfReasons = 0;
 
     /*
     Displays the Treated Patient List
@@ -81,7 +81,7 @@ public class TreatedPatient {
             System.out.println("5.  Go Back");
             System.out.println("6.  Submit");
             System.out.println("*************");
-            System.out.println("Please enter your selection: (1-3) ");
+            System.out.println("Please enter your selection: (1-6) ");
 
             userinput = in.next();
 
@@ -290,25 +290,35 @@ public class TreatedPatient {
 
     public void reportConfirmation(Connection conn, Integer pid){
         try{
-            PatientReport report = new PatientReport();
-            report.displayReport(conn, pid);
+            if(dsUpdated!=0 && (dsUpdated==3&&rsUpdated==true) && treatmentUpdated==true){
+                PatientReport report = new PatientReport();
+                report.displayReport(conn, pid);
 
-            System.out.println("MENU");
-            System.out.println("*************");
-            System.out.println("1.  Confirm");
-            System.out.println("2.  Go Back");
-            System.out.println("Please enter your selection: (1-2) ");
-            userinput = in.next();
-            switch (userinput) {
-                case "1":
-                    System.out.println("Saved!");
-                    break;
-                case "2":
-                    System.out.println("Go Back");
-                    this.patientCheckout(conn, pid);
-                    break;
+                System.out.println("MENU");
+                System.out.println("*************");
+                System.out.println("1.  Confirm");
+                System.out.println("2.  Go Back");
+                System.out.println("Please enter your selection: (1-2) ");
+                userinput = in.next();
+                switch (userinput) {
+                    case "1":
+                        System.out.println("Saved!");
+                        Staff s = new Staff();
+                        s.routingMenu(conn,pid);
+                        break;
+                    case "2":
+                        System.out.println("Go Back");
+                        //add something to delete all data for pid or something maybe
+                        this.patientCheckout(conn, pid);
+                        break;
+                }
+
             }
-
+            else
+            {
+                System.out.println("Some mandatory fields are empty. Please complete them.");
+                this.patientCheckout(conn,pid);
+            }
 
         }catch (Exception e){
             System.out.println(e.toString());
@@ -331,6 +341,7 @@ public class TreatedPatient {
             pstmt.execute();
 
             System.out.println("Treatment Description Saved!");
+            treatmentUpdated = true;
             this.patientCheckout(conn, pid);
 
         } catch (Exception e){
@@ -373,20 +384,27 @@ public class TreatedPatient {
             userinput = in.next();
             switch (userinput) {
                 case "1":
-                    System.out.println("Enter Reason Code (1/2/3): ");
-                    String inputCode = in.next();
-                    //display a list of sevices code
-                    System.out.println("Enter Service name: ");
-                    String service = in.next();
-                    System.out.println("Enter Description: ");
-                    String desc = in.next();
+                    if(noOfReasons>=3){
+                        System.out.println("You cannot enter more than 4 reasons.");
+                    }
+                    else{
+                        System.out.println("Enter Reason Code (1/2/3): ");
+                        String inputCode = in.next();
+                        //display a list of sevice names
+                        System.out.println("Enter Service name: ");
+                        String service = in.next();
+                        System.out.println("Enter Description: ");
+                        String desc = in.next();
 
-                    pstmt = conn.prepareStatement("INSERT INTO Reason (rs_id, reason_code, service_name, description) VALUES ((SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = ?)),?,?, ?)");
-                    pstmt.setInt(1, pid);
-                    pstmt.setString(2, inputCode);
-                    pstmt.setString(3,service);
-                    pstmt.setString(4,desc);
-                    pstmt.execute();
+                        pstmt = conn.prepareStatement("INSERT INTO Reason (rs_id, reason_code, service_name, description) VALUES ((SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = ?)),?,?, ?)");
+                        pstmt.setInt(1, pid);
+                        pstmt.setString(2, inputCode);
+                        pstmt.setString(3,service);
+                        pstmt.setString(4,desc);
+                        pstmt.execute();
+                        noOfReasons++;
+                    }
+                    rsUpdated = true;
                     this.referralStatusMenu(conn, pid);
                     break;
                 case "2":
