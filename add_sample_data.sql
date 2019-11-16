@@ -545,6 +545,44 @@ INSERT INTO Symptom
 (symptom_name, code, symptom_scale)
 VALUES('Bleeding', 'SYM007', 'Moderate/Heavy');
 
+-- Example Rules
+
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (0, 'H');
+
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (0, 'SYM001', 'CST000', '1-10', '7', '>');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (0, 'SYM003', 'None', 'Low/High', 'High', '==');
+
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (1, 'H');
+
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (1, 'SYM001', 'HED000', '1-10', '7', '>');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (1, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (1, 'SYM005', 'HED000', 'Normal/Severe', 'Normal', '>=');
+
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (2, 'N');
+
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (2, 'SYM001', 'HED000', '1-10', '7', '>=');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (2, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
+
 -- Patient
 
 INSERT INTO Login_user
@@ -558,6 +596,10 @@ VALUES(1);
 INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
 VALUES (62,100, 'Avent Ferry Road', 'Raleigh', 'NC', '27606','USA');
+
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(1, 62);
 
 INSERT INTO Facility_has_User
 (fid, user_id)
@@ -580,6 +622,10 @@ INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
 VALUES (63,1016, 'Lexington Road', 'New York', 'NY', '12005','USA');
 
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(2, 63);
+
 INSERT INTO Facility_has_User
 (fid, user_id)
 VALUES(1000, 2);
@@ -601,6 +647,10 @@ INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
 VALUES (64,1022, 'Amphitheatre Parkway', 'Mountain View', 'CA', '90021','USA');
 
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(3, 64);
+
 INSERT INTO Facility_has_User
 (fid, user_id)
 VALUES(1001, 3);
@@ -608,8 +658,6 @@ VALUES(1001, 3);
 INSERT INTO Has_symptom
 (symptom, part, patient, value, duration, incident, recurring)
 VALUES('SYM002', 'None', 3, 'Severe', '1','Pepper challenge','N');
-
-
 
 INSERT INTO Login_user
 (user_id, Fname, Lname, ph_no, DoB)
@@ -628,7 +676,11 @@ VALUES(4);
 
 INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
-VALUES (65,1210, 'Sacramento', ' Santa Cruz', 'CA', '90021','USA');
+VALUES (65,1210, 'Sacramento', 'Santa Cruz', 'CA', '90021','USA');
+
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(4, 65);
 
 INSERT INTO Facility_has_User
 (fid, user_id)

@@ -2,7 +2,9 @@ package com.jetbrains;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 
 public class Patient {
@@ -226,13 +228,16 @@ public class Patient {
     public void metaData(String symp_code, Connection conn) throws SQLException
     {
 	    String part = "";
+	    List<String> part_list = new ArrayList<>();
 	    try {
 		    Statement st = conn.createStatement();
-		    ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom IN (SELECT symptom from Has_symptom WHERE patient="+pid+")");
+		    ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom='"+symp_code+"'");
 		    while(q2.next()) {
 			    part = q2.getString("part");
-		    }
-	    }
+                part_list.add(part);
+            }
+
+        }
 	    catch (Exception e)
 	    {
 		    System.out.println(e.toString());
@@ -249,16 +254,28 @@ public class Patient {
 		    System.out.println("Enter the following data for "+ symp_code);
 		    System.out.println("*************");
 		    
-		    if (part == "")
-			    System.out.println("1. Body Part: ");
+		    if (part_list.size() == 0)
+			    System.out.println("1. Body Part ");
+		    else if(part_list.size()>0)
+		    {
+                System.out.println("*************");
+
+                for (int i=0;i<part_list.size();i++) {
+                    System.out.println(i+1+":"+part_list.get(i));
+                }
+                System.out.println("*************");
+
+                userinput = in.nextInt();
+                part = part_list.get(userinput+1);
+		    }
 		    if (dur == "")
-			    System.out.println("2. Duration: ");
+			    System.out.println("2. Duration ");
 		    if (re == "")
-			    System.out.println("3. Reoccurring: ");
+			    System.out.println("3. Reoccurring ");
 		    if (severity == "")
-			    System.out.println("4. Severity: ");
+			    System.out.println("4. Severity ");
 		    if (cause == "")
-			    System.out.println("5. Cause (Incident): ");
+			    System.out.println("5. Cause (Incident) ");
 		    
 		    System.out.println("*************");
 		    System.out.println("Please enter your selection: (1-5)");
@@ -270,7 +287,7 @@ public class Patient {
 			    switch (userinput)
 			    {
 			    case 1:
-				    System.out.println("Body Part");
+				    System.out.println("Body Part (If you don't want to specify, type 'None')");
 				    part = in.next();
 				    break;
 			    case 2:
@@ -280,11 +297,15 @@ public class Patient {
 				    dur = in.nextLine();
 				    break;
 			    case 3:
-				    System.out.println("Reoccurring");
+				    System.out.println("Reoccurring (Y/N)");
 				    re = in.next();
 				    break;
 			    case 4:
-				    System.out.println("Severity");
+			    	ResultSet rs = st.executeQuery("select symptom_scale from Symptom where code='"+symp_code+"'");
+			    	while(rs.next())
+                    {
+                        System.out.println("Choose Severity: "+rs.getString("symptom_scale"));
+                    }
 				    severity = in.next();
 				    break;
 			    case 5:
@@ -323,6 +344,7 @@ public class Patient {
 		    System.out.println(symp_code + " " + pid + " " + part);
 		    pstmt.execute();
 		    System.out.println("Patient data updated");
+            checkinMenu(conn);
 	    }
 	    catch (Exception e)
 	    {
