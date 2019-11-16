@@ -37,7 +37,7 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT Fname,user_id from Login_user where user_id IN (SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL)");
+				st.executeQuery("SELECT Fname,user_id from Login_user where user_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL)");
 			
 			// TODO clear checkin/checkout time on logout
 			
@@ -54,6 +54,10 @@ public class CheckInPatient {
 	                patients[i] = pid;
 	                i++;
 	            }
+	        if(patients.length ==0) {
+	        	System.out.println("Currently there is no Checked-In Patient");
+	        	return;
+	        }
 	        System.out.println("*************");
             System.out.println("Select the patient:");	
             userinput = in.next();
@@ -183,9 +187,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        pstmt.setInt (4, diaBP);
 	      
 	        pstmt.execute();
-
-	        System.out.println("Vitals Recorded!");
-	        System.out.println("Vitals Updating for patient!");
+	        
 	        pstmt = conn.prepareStatement("INSERT INTO Vital_recordings (vital_id, patient, staff) VALUES (?,?,?)");
 			pstmt.setInt (1, vid);
 	        pstmt.setInt(2, pid);
@@ -200,7 +202,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        //add check-in-end to patient table
 	        pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
 	        pstmt.executeUpdate();
-	        System.out.println("Patient check-in complete at:"+ dateObj+"for"+pid);
+	        System.out.println("Patient check-in complete at:"+ dateObj+"for patientid: "+pid);
 
 	        // enforce assessment rules
 	        Staff.apply_rules(conn, pid);

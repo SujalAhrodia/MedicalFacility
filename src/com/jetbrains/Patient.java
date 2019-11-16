@@ -86,16 +86,21 @@ public class Patient {
                             String name = temp.getString("fac_name");
                             System.out.println(id + "\t" + name);
                         }
+                        System.out.println(0 + "\t" + "Go Back");
                         System.out.println("*************");
                         System.out.println("Choose a Facility :");
                         System.out.println("*************");
 
                         facID= in.nextInt();
 
-                        if (facID == has_fid(conn, this.pid))
+                        if (facID == has_fid(conn, this.pid) && checkIsUserCheckedIn(conn,this.pid))
                         {
                             System.out.println("Already checked in!");
                             System.out.println("Please choose another facility!");
+                        }else if(facID ==0) {
+                        	System.out.println("GO Back");
+                            Menu menu = new Menu();
+                            menu.menuOptions(conn);
                         }
                         else {
                             flag=false;
@@ -126,6 +131,30 @@ public class Patient {
                 st.close();
             }
         }
+    }
+    public boolean checkIsUserCheckedIn(Connection conn, int pid2) throws SQLException {
+    	Statement st = conn.createStatement();
+    	try {
+    		ResultSet rs =
+    				st.executeQuery("SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL");
+    		while(rs.next()) {
+    			pid = rs.getInt("user_id");
+    			if(pid == pid2) {
+    				return true;
+    			}
+    		}
+
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    	}finally
+		{
+			if (st != null)
+			{
+				st.close();
+			}
+		}
+    	return false;
+
     }
 
     public void checkinMenu(Connection conn, int facID) throws SQLException
@@ -250,7 +279,7 @@ public class Patient {
 					pstmt.execute();
 					
 				} catch (Exception e) {
-					System.out.println(e.toString());
+					e.printStackTrace();
 				}
 			}
 			else {
@@ -260,7 +289,7 @@ public class Patient {
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.toString());
+			e.printStackTrace();
 		}
 		finally
 		{
@@ -369,7 +398,7 @@ public class Patient {
 		    }
 		    catch (Exception e)
 		    {
-			    System.out.println(e.toString());
+			    e.printStackTrace();
 		    }
 
 		    // if all the fields are set then exit the loop
@@ -422,7 +451,6 @@ public class Patient {
             pstmt = conn.prepareStatement("Update Patient SET checkout_time =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
 	        pstmt.executeUpdate();
 
-	        st.executeQuery("DELETE from Facility_has_user where user_id ="+pid);
 	        System.out.println("Facility ID saved!");
 		}catch (Exception e){
 			System.out.println(e.toString());
