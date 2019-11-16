@@ -62,8 +62,8 @@ public class PatientReport {
             System.out.println("-----Negative Experiences-----");
             resultSet = st.executeQuery("SELECT ne_code, user_desc FROM Report_has_Negative WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id =" + pid + ")");
 
-            System.out.println("Code" + "\t" + "Service Name" + "\t" + "Description");
-            System.out.println(".....................................................");
+            System.out.println("Code" + "\t" + "Description");
+            System.out.println("..........................................");
 
             while(resultSet.next())
             {
