@@ -74,7 +74,7 @@ public class TreatedPatient {
     public void patientCheckout(Connection conn, Integer pid){
         try {
             System.out.println("*************");
-            System.out.println("1.  Discharge Status "); //perfect
+            System.out.println("1.  Discharge Status ");
             System.out.println("2.  Referral Status");
             System.out.println("3.  Treatment ");
             System.out.println("4.  Negative Experience");

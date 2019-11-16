@@ -1,5 +1,6 @@
 package com.jetbrains;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -71,6 +72,7 @@ public class Patient {
                     break;
                 case 2:
                     System.out.println("Check out");
+                    this.patientCheckout(conn);
                     break;
                 case 3:
                     System.out.println("GO Back");
@@ -288,5 +290,32 @@ public class Patient {
 	    }
 
     }
+
+    void patientCheckout(Connection conn) throws SQLException {
+		PreparedStatement pstmt = null;
+		Statement st = null;
+		ResultSet rs;
+    	try{
+			rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
+			int rid = -1;
+			while (rs.next())
+				rid = rs.getInt("nextval");
+
+			pstmt = conn.prepareStatement("INSERT INTO Report(rid) VALUES (?)");
+			pstmt.setInt(1,rid);
+			pstmt.execute();
+			pstmt = conn.prepareStatement("INSERT INTO Patient_has_Report(user_id,rid) VALUES (?,?)");
+			pstmt.setInt(1,pid);
+			pstmt.setInt(2,rid);
+			pstmt.execute();
+			System.out.println("Facility ID saved!");
+		}catch (Exception e){
+			System.out.println(e.toString());
+		}
+    	finally {
+			if(pstmt!=null) {pstmt.close();}
+			if(st!=null) {st.close();}
+		}
+	}
 
 }
