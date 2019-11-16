@@ -16,9 +16,10 @@ public class CheckInPatient {
 	static String userinput;
 
 	static Scanner in = new Scanner(System.in);
-	public static void displayCheckedInPatients(Connection conn, int staffId) {
+	public static void displayCheckedInPatients(Connection conn, int staffId) throws SQLException {
+		Statement st = null;
 		try {
-			Statement st = conn.createStatement();
+			 st = conn.createStatement();
 			// check if user is not medical staff show error and go back
 			ResultSet q = st.executeQuery("SELECT medical FROM Staff WHere user_id ="+staffId);
 			while(q.next()) {
@@ -36,7 +37,7 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL");
+				st.executeQuery("SELECT Fname from Login_user where user_id IN (SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL)");
 			
 			// TODO clear checkin/checkout time on logout
 			
@@ -46,7 +47,7 @@ public class CheckInPatient {
 
 	        while(rs.next())
 	            {
-	                String name = rs.getString("user_id");
+	                String name = rs.getString("Fname");
 	                System.out.println(i + ".\t" + name);
 	                patients[i] = name;
 	                i++;
@@ -82,8 +83,10 @@ public class CheckInPatient {
         }
             
 		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
+			e.printStackTrace();
+		}finally {
+	        if (st != null) { st.close(); }
+	    }
 		
 	}
 	
@@ -153,8 +156,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 			System.out.println(e.toString());
 		}finally {
 	        if (st != null) { st.close(); }
-	    }
-		
+	    }	
 	}
 	
 	public static void recordVitals(Connection conn,int temp,int sysBP,int diaBP,int pid,int userId) throws SQLException {
@@ -194,7 +196,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        System.out.println("Patient check-in complete at:"+ dateObj+"for"+pid);
 	        
 	        // enforce assessment rules
-		Staff.apply_rules(conn, pid);
+	        Staff.apply_rules(conn, pid);
 	        
 	        System.out.println("Going Back");
 		} catch (SQLException e) {
