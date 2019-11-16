@@ -40,3 +40,5 @@ DROP TABLE Facility_has_User cascade constraints;
 DROP TABLE Contains cascade constraints;
 
 drop sequence seq;
+
+commit ;
