@@ -237,33 +237,46 @@ public class Staff {
 			{
 				String id = temp.getString("code");
 				String name = temp.getString("symptom_name");
-				scale  = temp.getString("symptom_scale");
 				System.out.println(id + " " + name);
 			}
 			System.out.println("*************");
 			System.out.println("Choose a Symptom code:");
 			String symptom = in.next();
 
-			System.out.println("*************");
-			System.out.println("Body Parts");
-			System.out.println("*************");
-
-			temp = st.executeQuery("SELECT code,part_name FROM body_part");
-
-			while(temp.next())
-			{
-				String id = temp.getString("code");
-				String name = temp.getString("part_name");
-				System.out.println(id + " " + name);
+			temp = st.executeQuery("SELECT symptom_scale FROM symptom WHERE code = '" + symptom + "'");
+			while (temp.next()) {
+				scale = temp.getString("symptom_scale");
 			}
-			System.out.println("*************");
-			System.out.println("Choose a Body Part:");
-			String part = in.next();
+
+			String part = "";
+			ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom = '"+symptom+"'");
+			while(q2.next()) {
+				part = q2.getString("part");
+			}
+
+			if (part != "None") {
+				System.out.println("*************");
+				System.out.println("Body Parts");
+				System.out.println("*************");
+
+				temp = st.executeQuery("SELECT code,part_name FROM body_part");
+
+				while(temp.next())
+				{
+					String id = temp.getString("code");
+					String name = temp.getString("part_name");
+					System.out.println(id + " " + name);
+				}
+				System.out.println("*************");
+				System.out.println("Choose a Body Part:");
+				part = in.next();
+			}
 
 			System.out.println("*************");
 			System.out.println("Severity");
 			System.out.println("*************");
 
+			System.out.println("SELECT param FROM scale_parameter WHERE scale_name = '" + scale  + "'");
 			temp = st.executeQuery("SELECT param FROM scale_parameter WHERE scale_name = '" + scale  + "'");
 
 			while(temp.next())
@@ -275,7 +288,7 @@ public class Staff {
 			System.out.println("Choose a Symptom Severity :");
 			String threshold = in.next();
 
-			System.out.println("Should the rule trigger when GREATER or LESSER to the threshold?:");
+			System.out.println("Should the rule trigger when > or < to the threshold?:");
 			String dir = in.next();
 
 			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Consists_of (assessment_id, symptom, part, sympt_scale, direction, threshold) VALUES (?,?,?,?,?,?)");
@@ -383,8 +396,8 @@ public class Staff {
 
 				// add it to the WIP assessment
 				if (severity != -1 && thresh_severity != -1
-				    && ((direction == "GREATER" && severity > thresh_severity)
-					|| (direction == "LESSER" && severity < thresh_severity))
+				    && ((direction == ">" && severity > thresh_severity)
+					|| (direction == "<" && severity < thresh_severity))
 					)
 					condition = true;
 				else

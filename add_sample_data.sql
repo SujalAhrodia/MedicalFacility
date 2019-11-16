@@ -75,18 +75,42 @@ VALUES ('1-10');
 INSERT INTO Symptom_scale
 (scale_name)
 VALUES ('Normal/Severe');
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Normal/Severe', 'Normal', 1);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Normal/Severe', 'Severe', 2);
 
 INSERT INTO Symptom_scale
 (scale_name)
 VALUES ('Low/High');
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Low/High', 'Low', 1);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Low/High', 'High', 2);
 
 INSERT INTO Symptom_scale
 (scale_name)
 VALUES ('Normal/Premium');
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Normal/Premium', 'Normal', 1);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Normal/Premium', 'Premium', 2);
 
 INSERT INTO Symptom_scale
 (scale_name)
 VALUES ('Moderate/Heavy');
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Moderate/Heavy', 'Moderate', 1);
+INSERT INTO Scale_parameter
+(scale_name, param, severity)
+VALUES ('Moderate/Heavy', 'Heavy', 2);
 
 INSERT INTO Scale_parameter
 (scale_name, param, severity)
