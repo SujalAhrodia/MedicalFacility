@@ -2,6 +2,7 @@ package com.jetbrains;
 
 import javax.swing.plaf.nimbus.State;
 import java.sql.*;
+import java.util.Calendar;
 import java.util.Scanner;
 
 public class Patient {
@@ -296,6 +297,10 @@ public class Patient {
 			pstmt.setInt(1,pid);
 			pstmt.setInt(2,rid);
 			pstmt.execute();
+			Calendar calendar = Calendar.getInstance();
+	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
+            pstmt = conn.prepareStatement("Update Patient SET checkout_time =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
+	        pstmt.executeUpdate();
 			System.out.println("Facility ID saved!");
 		}catch (Exception e){
 			System.out.println(e.toString());
