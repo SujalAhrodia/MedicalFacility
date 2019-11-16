@@ -41,14 +41,15 @@ public class SignIn {
 				int facID= in.nextInt();
 
 				System.out.println("Last Name:");
-				String lname = in.next();
+				in.nextLine();
+				String lname = in.nextLine();
 
 				System.out.println("Date of Birth: (format: YYYY-MM-DD)");
 				//format needs to be updated
-				String dob = in.next();
+				String dob = in.nextLine();
 
 				System.out.println("City of Address: ");
-				String city = in.next();
+				String city = in.nextLine();
 
 				System.out.println("*************");
 				System.out.println("1.  Sign In ");
@@ -64,9 +65,15 @@ public class SignIn {
 					System.out.println("Sign In");
 					temp = null;
 
-					//query to be added for city
-					temp = st.executeQuery("SELECT * FROM login_user WHERE Lname='"
-							+lname+"' AND dob=TO_DATE('"+dob+"', 'YYYY-MM-DD')");
+					try
+                    {
+                        temp = st.executeQuery("SELECT user_id FROM login_user WHERE Lname='"
+                            +lname+"' AND dob=TO_DATE('"+dob+"', 'YYYY-MM-DD')");
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
 					int id = -1;
 
@@ -74,13 +81,42 @@ public class SignIn {
 						id = temp.getInt("user_id");
 					}
 
-					if (Patient.has_uid(conn, id)) {
+					int aid = -1;
+
+					try {
+                        temp = st.executeQuery("SELECT addr_id from User_has_address where user_id="+id);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+					while (temp.next()) {
+                        aid = temp.getInt("addr_id");
+                    }
+					String c = null;
+                    try
+                    {
+                        temp = st.executeQuery("SELECT * from Address where addr_id="+aid);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    while (temp.next()) {
+                        c = (temp.getString("addr_city"));
+                    }
+                    System.out.println(c);
+                    System.out.println(city);
+
+                    if (Patient.has_uid(conn, id) && c.replaceAll("\\s+","").equalsIgnoreCase(city.replaceAll("\\s+",""))) {
 
 						System.out.println("Successful Patient login");
-						//route to patient
 						Patient p = new Patient(id);
 						p.routingMenu(conn);
-					} else if (Staff.has_uid(conn,id))
+					}
+					else if (Staff.has_uid(conn,id))
 					{
 						System.out.println("Staff login");
 						Staff s = new Staff();

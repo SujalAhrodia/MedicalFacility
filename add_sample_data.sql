@@ -308,7 +308,7 @@ VALUES(67001, 'Y',TO_DATE('10/12/1983', 'MM/DD/YYYY'), 'GP000');
 
 INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state,addr_zip, addr_country)
-VALUES (55, 7540, 'Plymouth Court', 'Derry,', 'NH', '03038', 'USA');
+VALUES (55, 7540, 'Plymouth Court', 'Derry', 'NH', '03038', 'USA');
 
 INSERT INTO User_has_address
 (user_id, addr_id)
@@ -408,7 +408,7 @@ VALUES(89002, 'N',TO_DATE('08/19/2014', 'MM/DD/YYYY'), 'SE000');
 
 INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state,addr_zip, addr_country)
-VALUES (59, 7056, 'W. Piper Dr.', 'Macon,', 'GA', '31204', 'USA');
+VALUES (59, 7056, 'W. Piper Dr.', 'Macon', 'GA', '31204', 'USA');
 
 INSERT INTO User_has_address
 (user_id, addr_id)

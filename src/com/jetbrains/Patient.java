@@ -182,7 +182,6 @@ public class Patient {
                 pstmt.executeUpdate();
 
                 System.out.println("*** Added to patient to facility ***");
-//1002 ,4
 				System.out.println("*** Logging out ***");
                 cont = false;
 
