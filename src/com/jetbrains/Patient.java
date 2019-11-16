@@ -189,6 +189,18 @@ public class Patient {
     public void metaData(String symp_code, Connection conn) throws SQLException
     {
 	    String part = "";
+	    try {
+		    Statement st = conn.createStatement();
+		    ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom IN (SELECT symptom from Has_symptom WHERE patient="+pid+")");
+		    while(q2.next()) {
+			    part = q2.getString("part");
+		    }
+	    }
+	    catch (Exception e)
+	    {
+		    System.out.println(e.toString());
+	    }
+
 	    String dur = "";
 	    String re = "";
 	    String severity = "";
