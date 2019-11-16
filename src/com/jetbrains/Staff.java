@@ -320,6 +320,7 @@ public class Staff {
 			{
 				aid = temp.getInt("assessment_id");
 				category = temp.getString("category");
+				System.out.println("Applying rule " + aid + " on " + pid);
 				boolean apply = apply_one_rule(conn, pid, aid);
 
 				// if this consists_of has the highest priority, then update the return
@@ -340,6 +341,7 @@ public class Staff {
 	static int get_severity(Connection conn, String scale, String value) {
 		try {
 			Statement st = conn.createStatement();
+			System.out.println("scale: "+scale+" value: "+value);
 			// SELECT severity FROM scale_parameter WHERE param = value;
 			ResultSet temp = st.executeQuery("SELECT severity FROM scale_parameter WHERE scale_name = '" + scale + "' AND param = '" + value + "'");
 
@@ -379,6 +381,7 @@ public class Staff {
 
 				// check if the patient has this symptom
 				// SELECT value FROM has_symptom WHERE patient = pid AND symptom = symptom;
+				System.out.println("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = '" + symptom + "'");
 				temp = st.executeQuery("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = '" + symptom + "'");
 
 				// patient does not have this symptom
@@ -387,14 +390,17 @@ public class Staff {
 
 				String value = "";
 				while(temp.next()) {
+					System.out.println("Found value " + value);
 					value = temp.getString("value");
 				}
 
 				// check if the severity hits the threshold
+				System.out.println("Getting severity with value " + value);
 				int severity = get_severity(conn, scale, value);
 				int thresh_severity = get_severity(conn, scale, value);
 
 				// add it to the WIP assessment
+				System.out.println("Enforcing "+severity+" "+direction+" "+thresh_severity);
 				if (severity != -1 && thresh_severity != -1
 				    && ((direction == ">" && severity > thresh_severity)
 					|| (direction == "<" && severity < thresh_severity)
