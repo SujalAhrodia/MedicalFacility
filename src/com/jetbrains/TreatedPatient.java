@@ -71,7 +71,10 @@ public class TreatedPatient {
     /*
     Displays the Checkout Menu for the selected Patient
      */
-    public void patientCheckout(Connection conn, Integer pid){
+    public void patientCheckout(Connection conn, Integer pid) throws SQLException {
+        Statement st = null;
+        ResultSet rs;
+        PreparedStatement pstmt = null;
         try {
             System.out.println("*************");
             System.out.println("1.  Discharge Status ");
@@ -98,6 +101,20 @@ public class TreatedPatient {
                     }
                     else
                     {
+                        st = conn.createStatement();
+                        //make entries - new id for referral_status and link report id to this rs.id
+                        rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual"); //working
+                        int rs_id = -1;
+                        while (rs.next())
+                            rs_id = rs.getInt("nextval");
+
+                        pstmt = conn.prepareStatement("INSERT INTO Referral_Status(rs_id) VALUES (?)"); //working
+                        pstmt.setInt(1,rs_id);
+                        pstmt.execute();
+                        pstmt = conn.prepareStatement("INSERT INTO Report_has_Ref(rid,rs_id) VALUES ((SELECT rid FROM Patient_has_report WHERE user_id = ?),?)"); //working
+                        pstmt.setInt(1,pid);
+                        pstmt.setInt(2,rs_id);
+                        pstmt.execute();
                         System.out.println("Referral Status Menu");
                         this.referralStatusMenu(conn,pid);
                     }
@@ -121,6 +138,9 @@ public class TreatedPatient {
             }
         } catch(Exception e) {
             System.out.println(e.toString());
+        }finally {
+            if(pstmt!=null) {pstmt.close();}
+            if(st!=null) {st.close();}
         }
     }
 
@@ -189,24 +209,8 @@ public class TreatedPatient {
 
     public void referralStatusMenu(Connection conn, Integer pid) throws SQLException {
         PreparedStatement pstmt = null;
-        Statement st = null;
-        ResultSet rs;
+
         try{
-	    st = conn.createStatement();
-            //make entries - new id for referral_status and link report id to this rs.id
-            rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual"); //working
-            int rs_id = -1;
-            while (rs.next())
-                rs_id = rs.getInt("nextval");
-
-            pstmt = conn.prepareStatement("INSERT INTO Referral_Status(rs_id) VALUES (?)"); //working
-            pstmt.setInt(1,rs_id);
-            pstmt.execute();
-            pstmt = conn.prepareStatement("INSERT INTO Report_has_Ref(rid,rs_id) VALUES ((SELECT rid FROM Patient_has_report WHERE user_id = ?),?)"); //working
-            pstmt.setInt(1,pid);
-            pstmt.setInt(2,rs_id);
-            pstmt.execute();
-
             userinput = "";
             System.out.println("*************");
             System.out.println("1.  Facility Id ");
@@ -402,7 +406,7 @@ public class TreatedPatient {
             userinput = in.next();
             switch (userinput) {
                 case "1":
-                    if(noOfReasons>=3){
+                    if(noOfReasons>=4){
                         System.out.println("You cannot enter more than 4 reasons.");
                     }
                     else{
