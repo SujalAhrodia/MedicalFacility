@@ -1,17 +1,19 @@
 package com.jetbrains;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class Patient {
     int userinput;
+    int pid;
 
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
     Statement st = null;
+
+    Patient(int pid) {
+	    this.pid = pid;
+    }
 
     public static boolean has_uid(Connection conn, int uid) {
 	    try {
@@ -48,10 +50,8 @@ public class Patient {
             switch (userinput)
             {
                 case 1:
-                    System.out.println("Check in");
+                    System.out.println("Check into a facility: --");
                     //print facilities from facilities table
-                    System.out.println("*************");
-                    System.out.println("List of Facilities");
                     System.out.println("*************");
 
                     temp = st.executeQuery("select fid, fac_name from Facility");
@@ -64,8 +64,6 @@ public class Patient {
                     }
                     System.out.println("*************");
                     System.out.println("Choose a Facility :");
-                    System.out.println("*************");
-                    System.out.println("Facility Id:");
                     int facID= in.nextInt();
 
                     //check if the patient has already checked in at that facility
@@ -105,17 +103,19 @@ public class Patient {
             System.out.println("List of Symptoms");
             System.out.println("*************");
 
-            temp = st.executeQuery("select symptom_name from Symptom");
+            temp = st.executeQuery("select symptom_name,code from Symptom");
 
             int i=1;
             //array for choice of symptoms
             String[] symp = new String[100];
+	    String[] code = new String[100];
 
             while(temp.next())
             {
                 String name = temp.getString("symptom_name");
                 System.out.println(i + ".\t" + name);
                 symp[i]=name;
+		code[i] = temp.getString("code");
                 i++;
             }
 
@@ -136,11 +136,41 @@ public class Patient {
             }
             else if (userinput == i-1)
             {
-                System.out.println("Add information about new symptom");
-                //To-do
+                System.out.println("Add information about new symptom ---");
+
+		System.out.println("Symptom Name: ");
+		String s_name = in.next();
+
+		System.out.println("Symptom Code: ");
+		String s_code = in.next();
+		
+		// select a symptom scale
+		System.out.println("*************");
+		System.out.println("List of Symptom Scales");
+		System.out.println("*************");
+
+		ResultSet temp = st.executeQuery("SELECT scale_name FROM symptom_scale");
+
+		while(temp.next())
+		{
+			String id = temp.getString("scale_name");
+			System.out.println(id);
+		}
+		System.out.println("*************");
+		System.out.println("Choose a Symptom Severity Scale :");
+		System.out.println("*************");
+		System.out.println("Enter Scale name:");
+		String scale = in.next();
+
+		PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Symptom (symptom_name, code, priority, symptom_scale) VALUES (?,?,0,?)");
+		pstmt.setString(1, s_name);
+		pstmt.setString(2, s_code);
+		pstmt.setString(4, scale);
+		pstmt.execute();
+		System.out.println("Symptom Added");
             }
             else {
-                metaData(symp[userinput], conn);
+		    metaData(code[userinput], conn);
             }
 
         }
@@ -156,50 +186,95 @@ public class Patient {
             }
         }
     }
-    public void metaData(String symp, Connection conn) throws SQLException
+    public void metaData(String symp_code, Connection conn) throws SQLException
     {
-        System.out.println("*************");
-        System.out.println("Enter the following data for "+symp);
-        System.out.println("*************");
-        System.out.println("1. Body Part: ");
-        System.out.println("2. Duration: ");
-        System.out.println("3. Reoccurring: ");
-        System.out.println("4. Severity: ");
-        System.out.println("5. Cause (Incident): ");
-        System.out.println("*************");
-        System.out.println("Please enter your selection: (1-5)");
+	    String part = "";
+	    String dur = "";
+	    String re = "";
+	    String severity = "";
+	    String cause = "";
+	    
+	    boolean cont = true;
+	    while (cont) {
+		    System.out.println("*************");
+		    System.out.println("Enter the following data for "+ symp_code);
+		    System.out.println("*************");
+		    
+		    if (part == "")
+			    System.out.println("1. Body Part: ");
+		    if (dur == "")
+			    System.out.println("2. Duration: ");
+		    if (re == "")
+			    System.out.println("3. Reoccurring: ");
+		    if (severity == "")
+			    System.out.println("4. Severity: ");
+		    if (cause == "")
+			    System.out.println("5. Cause (Incident): ");
+		    
+		    System.out.println("*************");
+		    System.out.println("Please enter your selection: (1-5)");
 
-        try
-        {
-            userinput = in.nextInt();
+		    try
+		    {
+			    userinput = in.nextInt();
 
-            switch (userinput)
-            {
-                case 1:
-                    System.out.println("Body Part");
-                    break;
-                case 2:
-                    System.out.println("Duration");
-                    break;
-                case 3:
-                    System.out.println("Reoccurring");
-                    break;
-                case 4:
-                    System.out.println("Severity");
-                    break;
-                case 5:
-                    System.out.println("Cause (Incident)");
-                    break;
-                default:
-                    System.out.println("Invalid input!");
-                    System.out.println("Please read the options carefully");
-            }
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.toString());
-        }
-        checkinMenu(conn);
+			    switch (userinput)
+			    {
+			    case 1:
+				    System.out.println("Body Part");
+				    part = in.next();
+				    break;
+			    case 2:
+				    System.out.println("Duration");
+				    dur = in.next();
+				    break;
+			    case 3:
+				    System.out.println("Reoccurring");
+				    re = in.next();
+				    break;
+			    case 4:
+				    System.out.println("Severity");
+				    severity = in.next();
+				    break;
+			    case 5:
+				    System.out.println("Cause (Incident)");
+				    cause = in.next();
+				    break;
+			    default:
+				    System.out.println("Invalid input!");
+				    System.out.println("Please read the options carefully");
+				    cont = false;
+				    break;
+			    }
+		    }
+		    catch (Exception e)
+		    {
+			    System.out.println(e.toString());
+		    }
+
+		    // if all the fields are set then exit the loop
+		    if (part != "" && dur != "" && re != "" && severity != "" && cause != "")
+			    break;
+	    }
+
+	    try
+	    {
+		    PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Has_symptom (symptom, patient, value, duration, incident, recurring, part) VALUES (?,?,?,?,?,?,?)");
+		    pstmt.setString(1, symp_code);
+		    pstmt.setInt(2, pid);
+		    pstmt.setString(3, severity);
+		    pstmt.setString(4, dur);
+		    pstmt.setString(5, cause);
+		    pstmt.setString(6, re);
+		    pstmt.setString(7, part);
+		    pstmt.execute();
+		    System.out.println("Patient data updated");
+	    }
+	    catch (Exception e)
+	    {
+		    System.out.println(e.toString());
+	    }
+
     }
 
 }

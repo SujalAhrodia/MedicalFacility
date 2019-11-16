@@ -36,8 +36,8 @@ public class SignUp {
         System.out.println("State: ");
         String state = in.nextLine();
 
-        System.out.println("Country: ");
-        String country = in.nextLine();
+        //System.out.println("Country: ");
+        //String country = in.nextLine();
 
         System.out.println("Phone number: ");
         int ph = in.nextInt();
@@ -68,16 +68,22 @@ public class SignUp {
                     pstmt.setString (3, lname);
                     pstmt.setInt (4, ph);
                     pstmt.setDate(5,java.sql.Date.valueOf(dob));
-                    
                     pstmt.execute();
+
+		    // now add to the patient table
+		     pstmt = conn.prepareStatement("INSERT INTO Patient (user_id,isTreated) VALUES (?,?)");
+                    pstmt.setInt(1, uid);
+                    pstmt.setString (2, "N");
+                    pstmt.execute();
+		    
                     System.out.println("Signed Up");
-                    pstmt = conn.prepareStatement("INSERT INTO Address(addr_number, addr_street, addr_city, addr_state, addr_country) VALUES (?,?,?,?,?)");
+                    pstmt = conn.prepareStatement("INSERT INTO Address(addr_id, addr_number, addr_street, addr_city, addr_state) VALUES (seq.NEXTVAL,?,?,?,?)");
 
                     pstmt.setInt (1, no);
                     pstmt.setString (2, sname);
                     pstmt.setString (3, city);
                     pstmt.setString (4, state);
-                    pstmt.setString (5, country);
+                    //pstmt.setString (5, country);
 
                     pstmt.execute();
                     //show msg
