@@ -358,6 +358,7 @@ public class Patient {
 		Statement st = null;
 		ResultSet rs;
     	try{
+		        st = conn.createStatement();
 			rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
 			int rid = -1;
 			while (rs.next())
