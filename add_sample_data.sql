@@ -455,3 +455,22 @@ INSERT INTO Body_part
 (code, part_name)
 VALUES('Head', 'HED000');
 
+INSERT INTO Patient
+(user_id, checkin_time_start, checkin_time_end, checkout_time)
+VALUES (89001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2016/12/17', 'YYYY/MM/DD'));
+
+INSERT INTO Patient
+(user_id, checkin_time_start, checkin_time_end, checkout_time)
+VALUES (93001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
+
+INSERT INTO Patient
+(user_id, checkin_time_start, checkin_time_end, checkout_time)
+VALUES (67001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
+
+INSERT INTO Patient
+(user_id, checkin_time_start, checkin_time_end, checkout_time)
+VALUES (88001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
+
+INSERT INTO Patient
+(user_id, checkin_time_start, checkin_time_end, checkout_time)
+VALUES (91001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
