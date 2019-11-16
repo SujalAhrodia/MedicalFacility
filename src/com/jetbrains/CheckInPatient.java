@@ -59,37 +59,42 @@ public class CheckInPatient {
             userinput = in.next();
             System.out.println("*************");
             int patientId = patients[Integer.parseInt(userinput)];
-            System.out.println("*************");
-            System.out.println("1.  Enter Vitals ");
-            System.out.println("2.  Treat Patient ");
-            System.out.println("3.  Go Back ");
-            System.out.println("*************");
-            System.out.println("Select the operation to perform:(1-3)");
-            userinput = in.next();
-            System.out.println("*************");
-            switch (userinput) {
-            case "1":
-                enterVitals(conn,staffId,patientId);
-                break;
-            case "2":
-                treatPatient(conn,staffId,patientId);
-                break;
-            case "3":
-            	System.out.println("GO Back");
-            	Staff s = new Staff();
-                s.routingMenu(conn,staffId);
-                break;
-            default:
-                System.out.println("Invalid input!");
-                System.out.println("Please read the options carefully");
-        }
-            
+            staffCheckinMenu(conn,staffId,patientId);
+              
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 	        if (st != null) { st.close(); }
 	    }
 		
+	}
+	
+	public static void staffCheckinMenu(Connection conn, int staffId, int patientId) throws SQLException {
+		 System.out.println("*************");
+         System.out.println("1.  Enter Vitals ");
+         System.out.println("2.  Treat Patient ");
+         System.out.println("3.  Go Back ");
+         System.out.println("*************");
+         System.out.println("Select the operation to perform:(1-3)");
+         userinput = in.next();
+         System.out.println("*************");
+         switch (userinput) {
+         case "1":
+             enterVitals(conn,staffId,patientId);
+             break;
+         case "2":
+             treatPatient(conn,staffId,patientId);
+             break;
+         case "3":
+         	System.out.println("GO Back");
+         	Staff s = new Staff();
+             s.routingMenu(conn,staffId);
+             break;
+         default:
+             System.out.println("Invalid input!");
+             System.out.println("Please read the options carefully");
+         }
+             
 	}
 	
 	public static void enterVitals(Connection conn,int userId,int patientId) throws SQLException {
@@ -201,6 +206,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        Staff.apply_rules(conn, pid);
 	        
 	        System.out.println("Going Back");
+	        staffCheckinMenu(conn,userId,pid);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
