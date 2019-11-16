@@ -5,7 +5,7 @@ import java.sql.*;
 public class PatientReport {
     Integer pid;
 
-    public void displayReport(Connection conn, Integer pid, int dsUpdated){
+    public void displayReport(Connection conn, Integer pid, int dsUpdated) throws SQLException {
         Statement st = null;
         ResultSet resultSet = null;
         try{
@@ -74,10 +74,10 @@ public class PatientReport {
             }
 
         }catch (Exception e){
-
+            System.out.println(e.toString());
         }
         finally {
-
+            if(st!=null) {st.close();}
         }
     }
 
