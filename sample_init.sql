@@ -211,7 +211,7 @@ CREATE TABLE Has_symptom(
        duration char(32),
        incident char(32),
        recurring CHAR,
-       PRIMARY KEY(symptom, patient)
+       PRIMARY KEY(symptom, patient, part)
 );
 
 CREATE TABLE Scale_parameter(

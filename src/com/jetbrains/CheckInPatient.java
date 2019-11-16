@@ -36,7 +36,7 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT user_id, from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL");
+				st.executeQuery("SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL");
 			
 			// TODO clear checkin/checkout time on logout
 			
@@ -46,7 +46,7 @@ public class CheckInPatient {
 
 	        while(rs.next())
 	            {
-	                String name = rs.getString("");
+	                String name = rs.getString("user_id");
 	                System.out.println(i + ".\t" + name);
 	                patients[i] = name;
 	                i++;
