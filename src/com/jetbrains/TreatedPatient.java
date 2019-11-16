@@ -192,6 +192,7 @@ public class TreatedPatient {
         Statement st = null;
         ResultSet rs;
         try{
+	    st = conn.createStatement();
             //make entries - new id for referral_status and link report id to this rs.id
             rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual"); //working
             int rs_id = -1;
