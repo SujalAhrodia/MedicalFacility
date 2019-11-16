@@ -333,7 +333,8 @@ public class TreatedPatient {
         try{
 
             System.out.println("Enter Treatment Description: ");
-            userinput = in.next();
+            in.nextLine(); // remove the unprocessed \n
+            userinput = in.nextLine();
 
             pstmt = conn.prepareStatement("UPDATE Report SET treatment = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)");
             pstmt.setString (1, userinput);
@@ -394,7 +395,8 @@ public class TreatedPatient {
                         System.out.println("Enter Service name: ");
                         String service = in.next();
                         System.out.println("Enter Description: ");
-                        String desc = in.next();
+                        in.nextLine(); // remove the unprocessed \n
+                        String desc = in.nextLine();
 
                         pstmt = conn.prepareStatement("INSERT INTO Reason (rs_id, reason_code, service_name, description) VALUES ((SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = ?)),?,?, ?)");
                         pstmt.setInt(1, pid);
@@ -426,7 +428,8 @@ public class TreatedPatient {
         PreparedStatement pstmt = null;
         try{
             System.out.println("Enter Negative Experience Description: ");
-            String userinput = in.next();
+            in.nextLine(); // remove the unprocessed \n
+            String userinput = in.nextLine();
             pstmt = conn.prepareStatement("UPDATE Report_has_negative SET user_desc = ? WHERE rid = (SELECT rid FROM Patient_has_Report WHERE user_id = ?) AND ne_code = ?");
             pstmt.setString (1, userinput);
             pstmt.setInt (2, pid);
