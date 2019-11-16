@@ -288,7 +288,7 @@ public class Staff {
 			System.out.println("Choose a Symptom Severity :");
 			String threshold = in.next();
 
-			System.out.println("Should the rule trigger when > or < to the threshold?:");
+			System.out.println("Should the rule trigger when >, <, >=, <=, or == to the threshold?:");
 			String dir = in.next();
 
 			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Consists_of (assessment_id, symptom, part, sympt_scale, direction, threshold) VALUES (?,?,?,?,?,?)");
@@ -397,7 +397,10 @@ public class Staff {
 				// add it to the WIP assessment
 				if (severity != -1 && thresh_severity != -1
 				    && ((direction == ">" && severity > thresh_severity)
-					|| (direction == "<" && severity < thresh_severity))
+					|| (direction == "<" && severity < thresh_severity)
+					|| (direction == ">=" && severity >= thresh_severity)
+					|| (direction == "<=" && severity <= thresh_severity)
+					|| (direction == "==" && severity == thresh_severity))
 					)
 					condition = true;
 				else

@@ -545,6 +545,44 @@ INSERT INTO Symptom
 (symptom_name, code, symptom_scale)
 VALUES('Bleeding', 'SYM007', 'Moderate/Heavy');
 
+-- Example Rules
+
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (0, 'H');
+
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (0, 'SYM001', 'CST000', '1-10', '7', '>');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (0, 'SYM003', 'None', 'Low/High', 'High', '==');
+
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (1, 'H');
+
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (1, 'SYM001', 'HED000', '1-10', '7', '>');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (1, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (1, 'SYM005', 'HED000', 'Normal/Severe', 'Normal', '>=');
+
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (2, 'N');
+
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (2, 'SYM001', 'HED000', '1-10', '7', '>=');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (2, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
+
 -- Patient
 
 INSERT INTO Login_user
