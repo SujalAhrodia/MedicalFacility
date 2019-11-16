@@ -667,10 +667,6 @@ INSERT INTO Login_user
 (user_id, Fname, Lname, ph_no, DoB)
 VALUES(4, 'Sheldon', 'Cooper', 6184628437, TO_DATE('05/26/1984', 'MM/DD/YYYY'));
 
-INSERT INTO Patient
-(user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (91001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
-
 INSERT INTO Negative_experience (ne_code, description) VALUES (1,'Misdiagnosis');
 INSERT INTO Negative_experience (ne_code, description) VALUES (2,'Patient acquired infection during hospital stay.');
 
