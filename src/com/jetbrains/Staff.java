@@ -409,7 +409,7 @@ public class Staff {
 					) {
 					condition = true;
 				} else {
-					condition = false;
+					return false;
 				}
 				st.close();
 			}

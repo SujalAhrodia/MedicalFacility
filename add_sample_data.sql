@@ -582,7 +582,7 @@ VALUES (3, 'N');
 
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (3, 'SYM001', 'HED000', '1-10', '7', '>=');
+VALUES (3, 'SYM001', 'HED000', '1-10', '7', '<=');
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
 VALUES (3, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
