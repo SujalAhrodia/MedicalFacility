@@ -416,10 +416,13 @@ public class Patient {
 			pstmt.setInt(1,pid);
 			pstmt.setInt(2,rid);
 			pstmt.execute();
+
 			Calendar calendar = Calendar.getInstance();
 	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
             pstmt = conn.prepareStatement("Update Patient SET checkout_time =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
 	        pstmt.executeUpdate();
+
+	        st.executeQuery("DELETE from Facility_has_user where user_id ="+pid);
 	        System.out.println("Facility ID saved!");
 		}catch (Exception e){
 			System.out.println(e.toString());

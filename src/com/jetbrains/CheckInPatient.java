@@ -201,6 +201,8 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        Staff.apply_rules(conn, pid);
 	        
 	        System.out.println("Going Back");
+
+	        displayCheckedInPatients(conn, userId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {

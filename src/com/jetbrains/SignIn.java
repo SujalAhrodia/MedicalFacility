@@ -107,8 +107,6 @@ public class SignIn {
                     while (temp.next()) {
                         c = (temp.getString("addr_city"));
                     }
-                    System.out.println(c);
-                    System.out.println(city);
 
                     if (Patient.has_uid(conn, id) && c.replaceAll("\\s+","").equalsIgnoreCase(city.replaceAll("\\s+",""))) {
 
