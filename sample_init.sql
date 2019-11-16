@@ -249,7 +249,7 @@ CREATE TABLE Patient_has_report(
        FOREIGN KEY (user_id) REFERENCES Patient(user_id),
        rid int,
        FOREIGN KEY (rid) REFERENCES Report(rid),
-       PRIMARY KEY(user_id, rid)
+       PRIMARY KEY(user_id)
 );
 
 CREATE TABLE Report_has_negative(
@@ -275,7 +275,7 @@ CREATE TABLE Report_has_ref(
        FOREIGN KEY (rid) REFERENCES Report(rid),
        rs_id int,
        FOREIGN KEY (rs_id) REFERENCES Referral_status(rs_id),
-       PRIMARY KEY(rid, rs_id)
+       PRIMARY KEY(rid)
 );
 
 CREATE TABLE Reason(
