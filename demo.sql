@@ -46,6 +46,21 @@ WHERE f.fid NOT IN (
 -- take the max
 
 -- query 4 -- Find facilities that had no negative experience for patients with cardiac symptoms
+SELECT f.fac_name
+FROM Facility f
+WHERE f.fid NOT IN (
+      SELECT fid FROM Facility_has_user fhu WHERE fhu.user_id IN (
+      	     SELECT user_id FROM Patient p, Report r WHERE p.user_id IN (
+	     	    SELECT user_id FROM patient_has_report phr WHERE phr.rid = r.rid
+	     )
+	     AND r.rid IN (
+	     	    SELECT rid FROM report_has_negative rhn
+	     )
+	     AND fhu.user_id IN (
+	     	    SELECT patient FROM has_symptom hs WHERE hs.part = 'HRT000'
+	     )
+      )
+);
 
 -- query 5 -- Find the facility with the most number of negative experiences (overall i.e. of either kind).
 
