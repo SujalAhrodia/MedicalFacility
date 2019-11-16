@@ -523,21 +523,21 @@ VALUES('Bleeding', 'SYM007', 'Moderate/Heavy');
 
 -- Patient
 
--- INSERT INTO Login_user
--- (user_id, Fname, Lname, ph_no, DoB)
--- VALUES(1, 'John', 'Smith', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'));
+INSERT INTO Login_user
+(user_id, Fname, Lname, ph_no, DoB)
+VALUES(1, 'John', 'Smith', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'));
 
--- INSERT INSERT Patient
--- (user_id)
--- VALUES(1)
+INSERT INSERT Patient
+(user_id)
+VALUES(1)
 
--- INSERT INTO Address
--- (addr_id, addr_number, addr_street, addr_city, addr_state, addr_country)
--- VALUES (62,100, 'Avent Ferry Road', 'Raleigh', 'NC', 'USA');
+INSERT INTO Address
+(addr_id, addr_number, addr_street, addr_city, addr_state, addr_country)
+VALUES (62,100, 'Avent Ferry Road', 'Raleigh', 'NC', 'USA');
 
--- INSERT INTO Facility_has_User
--- (fid, user_id)
--- VALUES(1000, 1);
+INSERT INTO Facility_has_User
+(fid, user_id)
+VALUES(1000, 1);
 
 -- CREATE TABLE Has_symptom(
 --        symptom char(32),
@@ -557,24 +557,5 @@ VALUES('Bleeding', 'SYM007', 'Moderate/Heavy');
 -- (symptom, part, patient, value, duration, incident, recurring)
 -- VALUES('SYM003', 'None', 1, 'High', '1','Unknown','N');
 
-INSERT INTO Patient
-(user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (89001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2016/12/17', 'YYYY/MM/DD'));
-
-INSERT INTO Patient
-(user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (93001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
-
-INSERT INTO Patient
-(user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (67001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
-
-INSERT INTO Patient
-(user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (88001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
-
-INSERT INTO Patient
-(user_id, checkin_time_start, checkin_time_end, checkout_time)
-VALUES (91001, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
 
 commit;
