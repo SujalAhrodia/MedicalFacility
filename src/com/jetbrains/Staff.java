@@ -211,7 +211,7 @@ public class Staff {
 	public static void addEvaluate(Connection conn, int aid, int uid) {
 		try {
 			Statement st = conn.createStatement();
-
+			
 			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Evaluate (assessment_id, user_id) VALUES (?,?)");
 			pstmt.setInt(1, aid);
 			pstmt.setInt(2, uid);
@@ -320,7 +320,6 @@ public class Staff {
 			{
 				aid = temp.getInt("assessment_id");
 				category = temp.getString("category");
-				System.out.println("Applying rule " + aid + " on " + pid);
 				boolean apply = apply_one_rule(conn, pid, aid);
 
 				// if this consists_of has the highest priority, then update the return
@@ -332,6 +331,7 @@ public class Staff {
 
 			System.out.println("Patient priority is " + priority);
 
+			st.close();
 			addEvaluate(conn, applied_aid, pid);
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -341,7 +341,6 @@ public class Staff {
 	static int get_severity(Connection conn, String scale, String value) {
 		try {
 			Statement st = conn.createStatement();
-			System.out.println("scale: "+scale+" value: "+value);
 			// SELECT severity FROM scale_parameter WHERE param = value;
 			ResultSet temp = st.executeQuery("SELECT severity FROM scale_parameter WHERE scale_name = '" + scale + "' AND param = '" + value + "'");
 
@@ -350,6 +349,7 @@ public class Staff {
 				severity = temp.getInt("severity");
 			}
 
+			st.close();
 			return severity;
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -363,17 +363,19 @@ public class Staff {
 
 			// for each consists_of
 			// SELECT symptom,threshold,direction FROM consists_of WHERE assessment_id = pid;
-			Statement st = conn.createStatement();
+			Statement ost = conn.createStatement();
 
-			ResultSet temp = st.executeQuery("SELECT symptom,threshold,direction FROM consists_of WHERE assessment_id = " + rule);
+			ResultSet outer = ost.executeQuery("SELECT symptom,threshold,direction,part FROM consists_of WHERE assessment_id = " + rule);
 
-			String symptom = "", threshold = "", direction = "";
-			while(temp.next()) {
-				symptom = temp.getString("symptom");
-				threshold = temp.getString("threshold");
-				direction = temp.getString("direction");
+			String symptom = "", threshold = "", direction = ""; String part = "";
+			while(outer.next()) {
+				symptom = outer.getString("symptom");
+				threshold = outer.getString("threshold");
+				direction = outer.getString("direction");
+				part = outer.getString("part");
 
-				temp = st.executeQuery("SELECT symptom_scale FROM symptom");
+				Statement st = conn.createStatement();
+				ResultSet temp = st.executeQuery("SELECT symptom_scale FROM symptom WHERE code = '"+symptom+"'");
 
 				String scale = "";
 				while(temp.next())
@@ -381,37 +383,37 @@ public class Staff {
 
 				// check if the patient has this symptom
 				// SELECT value FROM has_symptom WHERE patient = pid AND symptom = symptom;
-				System.out.println("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = '" + symptom + "'");
-				temp = st.executeQuery("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = '" + symptom + "'");
-
-				// patient does not have this symptom
-				if (!temp.next())
-					continue;
+				temp = st.executeQuery("SELECT value FROM has_symptom WHERE patient = " + pid + " AND symptom = '" + symptom + "' AND part = '"+part+"'");
 
 				String value = "";
 				while(temp.next()) {
-					System.out.println("Found value " + value);
 					value = temp.getString("value");
+				}
+				
+				// patient does not have this symptom
+				if (value == "") {
+					return false;
 				}
 
 				// check if the severity hits the threshold
-				System.out.println("Getting severity with value " + value);
 				int severity = get_severity(conn, scale, value);
-				int thresh_severity = get_severity(conn, scale, value);
+				int thresh_severity = get_severity(conn, scale, threshold);
 
 				// add it to the WIP assessment
-				System.out.println("Enforcing "+severity+" "+direction+" "+thresh_severity);
 				if (severity != -1 && thresh_severity != -1
-				    && ((direction == ">" && severity > thresh_severity)
-					|| (direction == "<" && severity < thresh_severity)
-					|| (direction == ">=" && severity >= thresh_severity)
-					|| (direction == "<=" && severity <= thresh_severity)
-					|| (direction == "==" && severity == thresh_severity))
-					)
+				    && ((direction.contains(">") && severity > thresh_severity)
+					|| (direction.contains("<") && severity < thresh_severity)
+					|| (direction.contains(">=") && severity >= thresh_severity)
+					|| (direction.contains("<=") && severity <= thresh_severity)
+					|| (direction.contains("==") && severity == thresh_severity))
+					) {
 					condition = true;
-				else
+				} else {
 					condition = false;
+				}
+				st.close();
 			}
+			ost.close();
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
