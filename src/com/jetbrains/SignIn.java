@@ -75,10 +75,7 @@ public class SignIn {
 					}
 
 					if (Patient.has_uid(conn, id)) {
-						Calendar calendar = Calendar.getInstance();
-				        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
-			            PreparedStatement pstmt = conn.prepareStatement("Update Patient SET checkin_time_start =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+id);
-				        pstmt.executeUpdate();
+
 						System.out.println("Successful Patient login");
 						//route to patient
 						Patient p = new Patient(id);

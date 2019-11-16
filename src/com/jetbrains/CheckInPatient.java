@@ -196,7 +196,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
 	        pstmt.executeUpdate();
 	        System.out.println("Patient check-in complete at:"+ dateObj+"for"+pid);
-	        
+
 	        // enforce assessment rules
 	        Staff.apply_rules(conn, pid);
 	        

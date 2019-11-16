@@ -1,6 +1,5 @@
 package com.jetbrains;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,6 +35,23 @@ public class Patient {
 	    return false;
     }
 
+    public static int has_fid(Connection conn, int uid) {
+        try {
+            Statement st = conn.createStatement();
+            ResultSet rs =
+                    st.executeQuery("SELECT fid FROM facility_has_user WHERE user_id = "
+                            + uid);
+
+            if (rs.next()) {
+                return rs.getInt("fid");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        return 0;
+    }
+
     public void routingMenu(Connection conn) throws SQLException
     {
         try
@@ -54,24 +70,38 @@ public class Patient {
             switch (userinput)
             {
                 case 1:
-                    System.out.println("Check into a facility: --");
-                    //print facilities from facilities table
-                    System.out.println("*************");
+                    boolean flag=true;
+                    int facID=-1;
 
-                    temp = st.executeQuery("select fid, fac_name from Facility");
-
-                    while(temp.next())
+                    while(flag)
                     {
-                        int id = temp.getInt("fid");
-                        String name = temp.getString("fac_name");
-                        System.out.println(id + "\t" + name);
-                    }
-                    System.out.println("*************");
-                    System.out.println("Choose a Facility :");
-                    int facID= in.nextInt();
+                        System.out.println("Check into a facility: --");
+                        //print facilities from facilities table
+                        System.out.println("*************");
 
-                    //check if the patient has already checked in at that facility
-                    checkinMenu(conn);
+                        temp = st.executeQuery("select fid, fac_name from Facility");
+                        while(temp.next())
+                        {
+                            int id = temp.getInt("fid");
+                            String name = temp.getString("fac_name");
+                            System.out.println(id + "\t" + name);
+                        }
+                        System.out.println("*************");
+                        System.out.println("Choose a Facility :");
+                        System.out.println("*************");
+
+                        facID= in.nextInt();
+
+                        if (facID == has_fid(conn, this.pid))
+                        {
+                            System.out.println("Already checked in!");
+                            System.out.println("Please choose another facility!");
+                        }
+                        else {
+                            flag=false;
+                        }
+                    }
+                    checkinMenu(conn, facID);
                     break;
                 case 2:
                     System.out.println("Check out");
@@ -97,7 +127,8 @@ public class Patient {
             }
         }
     }
-    public void checkinMenu(Connection conn) throws SQLException
+
+    public void checkinMenu(Connection conn, int facID) throws SQLException
     {
 	boolean cont = true;
 	while (cont) {
@@ -136,9 +167,26 @@ public class Patient {
 
 			if( userinput == i )
 			{
-				//validate,record time, logout
+				//validate,
+                Calendar calendar = Calendar.getInstance();
+                java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
+                PreparedStatement pstmt = conn.prepareStatement("Update Patient SET checkin_time_start =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+this.pid);
+                pstmt.executeUpdate();
+
+                pstmt = conn.prepareStatement("Update Patient SET checkout_time = NULL WHERE user_id="+this.pid);
+                pstmt.executeUpdate();
+
+                pstmt = conn.prepareStatement("INSERT INTO Facility_has_user(fid, user_id) VALUES (?,?)");
+                pstmt.setInt(1, facID);
+                pstmt.setInt(2, this.pid);
+                pstmt.executeUpdate();
+
+                System.out.println("*** Added to patient to facility ***");
+//1002 ,4
 				System.out.println("*** Logging out ***");
-				Menu m = new Menu();
+                cont = false;
+
+                Menu m = new Menu();
 				m.menuOptions(conn);
 			}
 			else if (userinput == i-1)
@@ -208,7 +256,6 @@ public class Patient {
 			}
 			else {
 				metaData(codes[userinput], conn);
-				cont = false;
 			}
 
 		}
@@ -256,7 +303,7 @@ public class Patient {
 		    
 		    if (part_list.size() == 0)
 			    System.out.println("1. Body Part ");
-		    else if(part_list.size()>0)
+		    else if(part_list.size()>1)
 		    {
                 System.out.println("*************");
 
@@ -341,10 +388,9 @@ public class Patient {
 		    pstmt.setString(5, cause);
 		    pstmt.setString(6, re);
 		    pstmt.setString(7, part);
-		    System.out.println(symp_code + " " + pid + " " + part);
+//		    System.out.println(symp_code + " " + pid + " " + part);
 		    pstmt.execute();
 		    System.out.println("Patient data updated");
-            checkinMenu(conn);
 	    }
 	    catch (Exception e)
 	    {
@@ -375,7 +421,7 @@ public class Patient {
 	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
             pstmt = conn.prepareStatement("Update Patient SET checkout_time =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
 	        pstmt.executeUpdate();
-			System.out.println("Facility ID saved!");
+	        System.out.println("Facility ID saved!");
 		}catch (Exception e){
 			System.out.println(e.toString());
 		}
