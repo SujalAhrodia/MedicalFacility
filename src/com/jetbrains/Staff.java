@@ -86,11 +86,13 @@ public class Staff {
 			{
 				String id = temp.getString("part_name");
 				String part_code = temp.getString("code");
-				System.out.println("code: "+code+"\t name:"+id);
+				System.out.println("code: "+part_code+"\t name:"+id);
 			}
 			System.out.println("*************");
 			System.out.println("Implied body part code: (leave blank for none)");
+			in.nextLine(); // remove the unprocessed \n
 			String part = in.nextLine();
+			if (part == "") part = "None";
 
 			// select a symptom scale
 			System.out.println("*************");
@@ -110,15 +112,18 @@ public class Staff {
 			System.out.println("Enter Scale name:");
 			String scale = in.next();
 		    
-			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Symptom (symptom_name, code, priority, symptom_scale, part) VALUES (?,?,0,?,?)");
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Symptom (symptom_name, code, symptom_scale) VALUES (?,?,?)");
 			pstmt.setString(1, name);
 			pstmt.setString(2, code);
-			pstmt.setString(3, part);
-			pstmt.setString(4, scale);
-			pstmt.setString(5, part);
+			pstmt.setString(3, scale);
 			pstmt.execute();
 
 			System.out.println("Symptom created");
+
+			pstmt = conn.prepareStatement("INSERT INTO Implies (symptom, part) VALUES (?,?)");
+			pstmt.setString(1, code);
+			pstmt.setString(2, part);
+			pstmt.execute();
 					
 		} catch (Exception e) {
 			System.out.println(e.toString());
