@@ -32,10 +32,18 @@ WHERE f.fid NOT IN (
 	     AND r.rid IN (
 	     	    SELECT rid FROM report_has_negative rhn
 	     )
+	     AND p.checkout_time >= TO_DATE('2014/12/17', 'YYYY/MM/DD')
+	     AND p.checkout_time <= TO_DATE('2018/12/17', 'YYYY/MM/DD')
       )
 );
 
 -- query 3 -- For each facility, find the facility that is sends the most referrals to.
+-- for each facility
+-- get the patients of the facility
+-- get the report for the patient
+-- get the ref stat for the report
+-- count the ref stat's fid
+-- take the max
 
 -- query 4 -- Find facilities that had no negative experience for patients with cardiac symptoms
 
