@@ -98,4 +98,15 @@ GROUP BY f.fac_name;
 
 -- query 6 -- Find each facility, list the patient encounters with the top five longest check-in phases (i.e. time from begin check-in to when treatment phase begins (list the name of patient, date, facility, duration and list of symptoms).
 
-
+SELECT f.fid, user_id, checkin_time_end, checkin_time_start
+FROM Facility f, (
+     SELECT * FROM (
+     	      SELECT p.user_id, p.checkin_time_end, p.checkin_time_start
+	      FROM Patient p       	     
+       	      ORDER BY p.checkin_time_end - p.checkin_time_start
+     ) WHERE ROWNUM <= 5
+)
+WHERE f.fid IN (
+      SELECT fid FROM Facility_has_user fhu WHERE fhu.user_id = user_id
+)
+ORDER BY f.fid, checkin_time_end - checkin_time_start;
