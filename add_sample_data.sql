@@ -549,14 +549,7 @@ VALUES('Bleeding', 'SYM007', 'Moderate/Heavy');
 
 INSERT INTO Assessment
 (assessment_id, category)
-VALUES (0, 'H');
-
-INSERT INTO Consists_of
-(assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (0, 'SYM001', 'CST000', '1-10', '7', '>');
-INSERT INTO Consists_of
-(assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (0, 'SYM003', 'None', 'Low/High', 'High', '==');
+VALUES (0, 'N');
 
 INSERT INTO Assessment
 (assessment_id, category)
@@ -564,24 +557,35 @@ VALUES (1, 'H');
 
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (1, 'SYM001', 'HED000', '1-10', '7', '>');
+VALUES (1, 'SYM001', 'CST000', '1-10', '7', '>');
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (1, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
-INSERT INTO Consists_of
-(assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (1, 'SYM005', 'HED000', 'Normal/Severe', 'Normal', '>=');
+VALUES (1, 'SYM003', 'None', 'Low/High', 'High', '==');
 
 INSERT INTO Assessment
 (assessment_id, category)
-VALUES (2, 'N');
+VALUES (2, 'H');
 
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
-VALUES (2, 'SYM001', 'HED000', '1-10', '7', '>=');
+VALUES (2, 'SYM001', 'HED000', '1-10', '7', '>');
 INSERT INTO Consists_of
 (assessment_id, symptom, part, sympt_scale, threshold, direction)
 VALUES (2, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (2, 'SYM005', 'HED000', 'Normal/Severe', 'Normal', '>=');
+
+INSERT INTO Assessment
+(assessment_id, category)
+VALUES (3, 'N');
+
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (3, 'SYM001', 'HED000', '1-10', '7', '>=');
+INSERT INTO Consists_of
+(assessment_id, symptom, part, sympt_scale, threshold, direction)
+VALUES (3, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
 
 -- Patient
 
