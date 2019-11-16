@@ -308,7 +308,7 @@ public class TreatedPatient {
         try{
             if(dsUpdated!=0 && (dsUpdated==3&&rsUpdated==true) && treatmentUpdated==true){
                 PatientReport report = new PatientReport();
-                report.displayReport(conn, pid);
+                report.displayReport(conn, pid,dsUpdated);
 
                 System.out.println("MENU");
                 System.out.println("*************");
