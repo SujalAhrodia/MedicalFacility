@@ -1,12 +1,11 @@
 package com.jetbrains;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class PatientReport {
     Integer pid;
 
+<<<<<<< Updated upstream
     public void displayReport(Connection conn, Integer pid, int dsUpdated){
         Statement st = null;
         ResultSet resultSet = null;
@@ -81,6 +80,10 @@ public class PatientReport {
         finally {
 
         }
+=======
+    public void displayReport(Connection conn, Integer pid){
+
+>>>>>>> Stashed changes
     }
 
     public void acknowledgeReport(Integer pid){

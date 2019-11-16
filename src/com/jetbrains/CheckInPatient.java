@@ -20,9 +20,9 @@ public class CheckInPatient {
 		try {
 			Statement st = conn.createStatement();
 			// check if user is not medical staff show error and go back
-			ResultSet q = st.executeQuery("SELECT designation FROM Staff WHere user_id ="+staffId);
+			ResultSet q = st.executeQuery("SELECT medical FROM Staff WHere user_id ="+staffId);
 			while(q.next()) {
-				if(q.getString("designation").equalsIgnoreCase("Medical")) {
+				if(q.getString("medical").equals("N")) {
 					System.out.println("Only medical Staff is allowed to view this information");
 					Staff s = new Staff();
 	                s.routingMenu(conn,staffId);
@@ -36,7 +36,7 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL");
+				st.executeQuery("SELECT user_id, from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL");
 			
 			// TODO clear checkin/checkout time on logout
 			
@@ -46,7 +46,7 @@ public class CheckInPatient {
 
 	        while(rs.next())
 	            {
-	                String name = rs.getString("user_id");
+	                String name = rs.getString("");
 	                System.out.println(i + ".\t" + name);
 	                patients[i] = name;
 	                i++;
@@ -126,7 +126,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 		
 		Statement st = conn.createStatement();
 		try {
-			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service IN (SELECT service from Provides WHERE dept_id IN (SELECT dept_id from Works_in Where user_id = "+userId +"))");
+			ResultSet q1 = st.executeQuery("SELECT part FROM Associated_to WHERE service IN (SELECT service from Provides WHERE dept_code IN (SELECT dept_code from Works_in Where user_id = "+userId +"))");
 			 while(q1.next()) {
 				 String part =q1.getString("part");
 				 staffBodyPart.add(part);

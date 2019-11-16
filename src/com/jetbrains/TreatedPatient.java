@@ -29,7 +29,7 @@ public class TreatedPatient {
             System.out.println("List of Treated Patients");
             System.out.println("*************");
 
-            resultSet = st.executeQuery("SELECT * FROM Patient WHERE istreated='Y'"); //working
+            resultSet = st.executeQuery("SELECT * FROM Patient WHERE istreated='Y'");
 
             while(resultSet.next())
             {
@@ -146,7 +146,7 @@ public class TreatedPatient {
                 case "1":
                     System.out.println("Selected-Successful Treatment. Saved!");
                     status = "Successful Treatment";
-                    pstmt = conn.prepareStatement("UPDATE Report SET discharge_status = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)"); //working
+                    pstmt = conn.prepareStatement("UPDATE Report SET discharge_status = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)");
                     pstmt.setString (1, status);
                     pstmt.setInt (2, pid);
                     pstmt.execute();
@@ -156,7 +156,7 @@ public class TreatedPatient {
                 case "2":
                     System.out.println("Selected-Successful Deceased. Saved!");
                     status = "Deceased";
-                    pstmt = conn.prepareStatement("UPDATE Report SET discharge_status = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)"); //working
+                    pstmt = conn.prepareStatement("UPDATE Report SET discharge_status = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)");
                     pstmt.setString (1, status);
                     pstmt.setInt (2, pid);
                     pstmt.execute();
@@ -166,7 +166,7 @@ public class TreatedPatient {
                 case "3":
                     System.out.println("Selected-Referred. Saved!");
                     status = "Referred";
-                    pstmt = conn.prepareStatement("UPDATE Report SET discharge_status = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)"); //working
+                    pstmt = conn.prepareStatement("UPDATE Report SET discharge_status = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)");
                     pstmt.setString (1, status);
                     pstmt.setInt (2, pid);
                     pstmt.execute();
@@ -189,23 +189,7 @@ public class TreatedPatient {
 
     public void referralStatusMenu(Connection conn, Integer pid) throws SQLException {
         PreparedStatement pstmt = null;
-        Statement st = null;
-        ResultSet rs;
         try{
-            //make entries - new id for referral_status and link report id to this rs.id
-            rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual"); //working
-            int rs_id = -1;
-            while (rs.next())
-                rs_id = rs.getInt("nextval");
-
-            pstmt = conn.prepareStatement("INSERT INTO Referral_Status(rs_id) VALUES (?)"); //working
-            pstmt.setInt(1,rs_id);
-            pstmt.execute();
-            pstmt = conn.prepareStatement("INSERT INTO Report_has_Ref(rid,rs_id) VALUES ((SELECT rid FROM Patient_has_report WHERE user_id = ?),?)"); //working
-            pstmt.setInt(1,pid);
-            pstmt.setInt(2,rs_id);
-            pstmt.execute();
-
             userinput = "";
             System.out.println("*************");
             System.out.println("1.  Facility Id ");
@@ -221,7 +205,7 @@ public class TreatedPatient {
                     System.out.println("Enter Facility Id (Enter 0 if none): ");
                     String fid = in.next();
                     //check if not the same facility
-                    pstmt = conn.prepareStatement("UPDATE Referral_status SET fid = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))"); //working
+                    pstmt = conn.prepareStatement("UPDATE Referral_status SET fid = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))");
                     pstmt.setInt (1, Integer.parseInt(fid));
                     pstmt.setInt (2, pid);
                     pstmt.execute();
@@ -232,7 +216,7 @@ public class TreatedPatient {
                     System.out.println("Enter Referrer's User Id: ");
                     String uid = in.next();
                     //check if entered not staff... check if staff in same facility or not
-                    pstmt = conn.prepareStatement("UPDATE Referral_status SET referrer = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))"); //working
+                    pstmt = conn.prepareStatement("UPDATE Referral_status SET referrer = ? WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id=?))");
                     pstmt.setInt (1, Integer.parseInt(uid));
                     pstmt.setInt (2, pid);
                     pstmt.execute();
@@ -265,7 +249,7 @@ public class TreatedPatient {
             System.out.println("Negative Experience Codes");
             System.out.println("*************");
 
-            resultSet = st.executeQuery("SELECT * FROM Negative_experience"); //working
+            resultSet = st.executeQuery("SELECT * FROM Negative_experience");
 
             System.out.println("Code" + "\t" + "Description");
             System.out.println("------------------------------");
@@ -292,7 +276,7 @@ public class TreatedPatient {
                     break;
                 case "2":
                     System.out.println("Go Back");
-                    this.patientCheckout(conn, pid);
+                    this.referralStatusMenu(conn, pid);
                     break;
             }
 
@@ -351,7 +335,7 @@ public class TreatedPatient {
             System.out.println("Enter Treatment Description: ");
             userinput = in.next();
 
-            pstmt = conn.prepareStatement("UPDATE Report SET treatment = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)"); //working
+            pstmt = conn.prepareStatement("UPDATE Report SET treatment = ?  WHERE rid=(SELECT rid FROM Patient_has_report WHERE user_id = ?)");
             pstmt.setString (1, userinput);
             pstmt.setInt (2, pid);
             pstmt.execute();
@@ -379,7 +363,7 @@ public class TreatedPatient {
             System.out.println("List of Reasons");
             System.out.println("*************");
 
-            resultSet = st.executeQuery("SELECT * FROM Reason"); //working
+            resultSet = st.executeQuery("SELECT * FROM Reason");
 
             System.out.println("Code" + "\t" + "Service Name" + "\t" + "Description");
             System.out.println("----------------------------------------------------");
@@ -407,13 +391,12 @@ public class TreatedPatient {
                         System.out.println("Enter Reason Code (1/2/3): ");
                         String inputCode = in.next();
                         //display a list of sevice names
-                        //need to add a check for not inserting same (reason code, service) pair
-                        System.out.println("Enter Service Code: ");
+                        System.out.println("Enter Service name: ");
                         String service = in.next();
                         System.out.println("Enter Description: ");
                         String desc = in.next();
 
-                        pstmt = conn.prepareStatement("INSERT INTO Reason (rs_id, reason_code, service_name, description) VALUES ((SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = ?)),?,?, ?)"); //working
+                        pstmt = conn.prepareStatement("INSERT INTO Reason (rs_id, reason_code, service_name, description) VALUES ((SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = ?)),?,?, ?)");
                         pstmt.setInt(1, pid);
                         pstmt.setString(2, inputCode);
                         pstmt.setString(3,service);
@@ -444,7 +427,7 @@ public class TreatedPatient {
         try{
             System.out.println("Enter Negative Experience Description: ");
             String userinput = in.next();
-            pstmt = conn.prepareStatement("INSERT INTO Report_has_negative (user_desc, rid, ne_code) VALUES (?,(SELECT rid FROM Patient_has_Report WHERE user_id = ?),?)");//working
+            pstmt = conn.prepareStatement("UPDATE Report_has_negative SET user_desc = ? WHERE rid = (SELECT rid FROM Patient_has_Report WHERE user_id = ?) AND ne_code = ?");
             pstmt.setString (1, userinput);
             pstmt.setInt (2, pid);
             pstmt.setString (3, code);
