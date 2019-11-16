@@ -597,6 +597,10 @@ INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
 VALUES (62,100, 'Avent Ferry Road', 'Raleigh', 'NC', '27606','USA');
 
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(1, 62);
+
 INSERT INTO Facility_has_User
 (fid, user_id)
 VALUES(1000, 1);
@@ -617,6 +621,10 @@ VALUES(2);
 INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
 VALUES (63,1016, 'Lexington Road', 'New York', 'NY', '12005','USA');
+
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(2, 63);
 
 INSERT INTO Facility_has_User
 (fid, user_id)
@@ -639,6 +647,10 @@ INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
 VALUES (64,1022, 'Amphitheatre Parkway', 'Mountain View', 'CA', '90021','USA');
 
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(3, 64);
+
 INSERT INTO Facility_has_User
 (fid, user_id)
 VALUES(1001, 3);
@@ -646,8 +658,6 @@ VALUES(1001, 3);
 INSERT INTO Has_symptom
 (symptom, part, patient, value, duration, incident, recurring)
 VALUES('SYM002', 'None', 3, 'Severe', '1','Pepper challenge','N');
-
-
 
 INSERT INTO Login_user
 (user_id, Fname, Lname, ph_no, DoB)
@@ -666,7 +676,11 @@ VALUES(4);
 
 INSERT INTO Address
 (addr_id, addr_number, addr_street, addr_city, addr_state, addr_zip, addr_country)
-VALUES (65,1210, 'Sacramento', ' Santa Cruz', 'CA', '90021','USA');
+VALUES (65,1210, 'Sacramento', 'Santa Cruz', 'CA', '90021','USA');
+
+INSERT INTO User_has_address
+(user_id, addr_id)
+VALUES(4, 65);
 
 INSERT INTO Facility_has_User
 (fid, user_id)
