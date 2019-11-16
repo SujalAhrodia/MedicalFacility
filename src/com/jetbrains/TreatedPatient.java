@@ -99,6 +99,21 @@ public class TreatedPatient {
                     else
                     {
                         System.out.println("Referral Status Menu");
+			Statement st = conn.createStatement();
+			//make entries - new id for referral_status and link report id to this rs.id
+			ResultSet rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual"); //working
+			int rs_id = -1;
+			while (rs.next())
+				rs_id = rs.getInt("nextval");
+
+			PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Referral_Status(rs_id) VALUES (?)"); //working
+			pstmt.setInt(1,rs_id);
+			pstmt.execute();
+			pstmt = conn.prepareStatement("INSERT INTO Report_has_Ref(rid,rs_id) VALUES ((SELECT rid FROM Patient_has_report WHERE user_id = ?),?)"); //working
+			pstmt.setInt(1,pid);
+			pstmt.setInt(2,rs_id);
+			pstmt.execute();
+
                         this.referralStatusMenu(conn,pid);
                     }
                     break;
@@ -193,20 +208,6 @@ public class TreatedPatient {
         ResultSet rs;
         try{
 	    st = conn.createStatement();
-            //make entries - new id for referral_status and link report id to this rs.id
-            rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual"); //working
-            int rs_id = -1;
-            while (rs.next())
-                rs_id = rs.getInt("nextval");
-
-            pstmt = conn.prepareStatement("INSERT INTO Referral_Status(rs_id) VALUES (?)"); //working
-            pstmt.setInt(1,rs_id);
-            pstmt.execute();
-            pstmt = conn.prepareStatement("INSERT INTO Report_has_Ref(rid,rs_id) VALUES ((SELECT rid FROM Patient_has_report WHERE user_id = ?),?)"); //working
-            pstmt.setInt(1,pid);
-            pstmt.setInt(2,rs_id);
-            pstmt.execute();
-
             userinput = "";
             System.out.println("*************");
             System.out.println("1.  Facility Id ");
