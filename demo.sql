@@ -38,6 +38,23 @@ WHERE f.fid NOT IN (
 );
 
 -- query 3 -- For each facility, find the facility that is sends the most referrals to.
+SELECT f.fac_name, MAX(totalcount.excount)
+FROM Facility f, (
+      SELECT fhu.fid, COUNT(fhu.fid) excount
+      FROM Facility_has_user fhu WHERE fhu.user_id IN (
+      	     SELECT user_id FROM Patient p, Report r WHERE p.user_id IN (
+	     	    SELECT user_id FROM patient_has_report phr WHERE phr.rid = r.rid
+	     )
+	     AND r.rid IN (
+	     	    SELECT rid FROM report_has_ref rhr WHERE rhr.rid IN (
+		    	   SELECT rid FROM Referral_status rs WHERE rs.fid = fhu.fid
+		    )
+	     )
+      )
+      GROUP BY fhu.fid
+) totalcount
+WHERE f.fid = totalcount.fid
+GROUP BY f.fac_name;
 -- for each facility
 -- get the patients of the facility
 -- get the report for the patient
