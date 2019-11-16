@@ -72,3 +72,19 @@ VALUES (1, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/D
 INSERT INTO Patient
 (user_id, checkin_time_start, checkin_time_end, checkout_time)
 VALUES (2, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), null);
+
+INSERT INTO Service
+(code, service_name)
+VALUES ('CST', 'Cast');
+
+INSERT INTO Service
+(code, service_name)
+VALUES ('DFB', 'Defibrillator');
+
+INSERT INTO Service
+(code, service_name)
+VALUES ('XRY', 'X-ray');
+
+INSERT INTO Report
+(rid, treatment, discharge_status)
+VALUES (0, 'Prescribed motrin', 'Discharged');
