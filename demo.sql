@@ -63,6 +63,21 @@ WHERE f.fid NOT IN (
 );
 
 -- query 5 -- Find the facility with the most number of negative experiences (overall i.e. of either kind).
+SELECT f.fac_name, MAX(totalcount.excount)
+FROM Facility f, (
+      SELECT fhu.fid, COUNT(fhu.fid) excount
+      FROM Facility_has_user fhu WHERE fhu.user_id IN (
+      	     SELECT user_id FROM Patient p, Report r WHERE p.user_id IN (
+	     	    SELECT user_id FROM patient_has_report phr WHERE phr.rid = r.rid
+	     )
+	     AND r.rid IN (
+	     	    SELECT rid FROM report_has_negative rhn
+	     )
+      )
+      GROUP BY fhu.fid
+) totalcount
+WHERE f.fid = totalcount.fid
+GROUP BY f.fac_name;
 
 -- query 6 -- Find each facility, list the patient encounters with the top five longest check-in phases (i.e. time from begin check-in to when treatment phase begins (list the name of patient, date, facility, duration and list of symptoms).
 
