@@ -37,26 +37,28 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT Fname from Login_user where user_id IN (SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL)");
+				st.executeQuery("SELECT Fname,user_id from Login_user where user_id IN (SELECT user_id from patient where checkout_time IS NULL AND checkin_time_start IS NOT NULL)");
 			
 			// TODO clear checkin/checkout time on logout
 			
 			int i=1;
 	        //list of patients checked-in
-	        String[] patients = new String[100];
+	        int[] patients = new int[100];
+	        int pid =0;
 
 	        while(rs.next())
 	            {
 	                String name = rs.getString("Fname");
+	                pid = rs.getInt("user_id");
 	                System.out.println(i + ".\t" + name);
-	                patients[i] = name;
+	                patients[i] = pid;
 	                i++;
 	            }
 	        System.out.println("*************");
             System.out.println("Select the patient:");	
             userinput = in.next();
             System.out.println("*************");
-            int patientId = Integer.parseInt(userinput);
+            int patientId = patients[Integer.parseInt(userinput)];
             System.out.println("*************");
             System.out.println("1.  Enter Vitals ");
             System.out.println("2.  Treat Patient ");
