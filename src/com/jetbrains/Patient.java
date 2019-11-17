@@ -204,7 +204,19 @@ public class Patient {
 
                 pstmt = conn.prepareStatement("Update Patient SET checkout_time = NULL WHERE user_id="+this.pid);
                 pstmt.executeUpdate();
+				st = conn.createStatement();
+				ResultSet rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
+				int rid = -1;
+				while (rs.next())
+					rid = rs.getInt("nextval");
 
+				pstmt = conn.prepareStatement("INSERT INTO Report(rid) VALUES (?)");
+				pstmt.setInt(1,rid);
+				pstmt.execute();
+				pstmt = conn.prepareStatement("INSERT INTO Patient_has_Report(user_id,rid) VALUES (?,?)");
+				pstmt.setInt(1,pid);
+				pstmt.setInt(2,rid);
+				pstmt.execute();
                 pstmt = conn.prepareStatement("INSERT INTO Facility_has_user(fid, user_id) VALUES (?,?)");
                 pstmt.setInt(1, facID);
                 pstmt.setInt(2, this.pid);
@@ -432,26 +444,43 @@ public class Patient {
 		Statement st = null;
 		ResultSet rs;
     	try{
-		        st = conn.createStatement();
-			rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
-			int rid = -1;
-			while (rs.next())
-				rid = rs.getInt("nextval");
 
-			pstmt = conn.prepareStatement("INSERT INTO Report(rid) VALUES (?)");
-			pstmt.setInt(1,rid);
-			pstmt.execute();
-			pstmt = conn.prepareStatement("INSERT INTO Patient_has_Report(user_id,rid) VALUES (?,?)");
-			pstmt.setInt(1,pid);
-			pstmt.setInt(2,rid);
-			pstmt.execute();
+			PatientReport report = new PatientReport();
+			report.displayReport(conn,pid);
 
-			Calendar calendar = Calendar.getInstance();
-	        java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
-            pstmt = conn.prepareStatement("Update Patient SET checkout_time =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
-	        pstmt.executeUpdate();
+			System.out.println("*********************");
+			System.out.println("Acknowledge Report");
+			System.out.println("1.  Yes");
+			System.out.println("2.  No");
+			System.out.println("3.  Go Back ");
+			System.out.println("*************");
+			System.out.println("Please enter your selection: (1-3) ");
 
-	        System.out.println("Facility ID saved!");
+			userinput = in.nextInt();
+
+			switch (userinput)
+			{
+				case 1:
+					System.out.println("Acknowledged Report!");
+					Calendar calendar = Calendar.getInstance();
+					java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
+					pstmt = conn.prepareStatement("Update Patient SET checkout_time =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
+					pstmt.executeUpdate();
+					break;
+				case 2:
+					System.out.println("Enter a reason for not acknowledging");
+					in.nextLine();
+					String input = in.nextLine();
+					System.out.println("Reason Entered");
+					break;
+				case 3:
+					System.out.println("GO Back");
+					break;
+
+			}
+
+			this.routingMenu(conn);
+
 		}catch (Exception e){
 			System.out.println(e.toString());
 		}

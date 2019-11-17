@@ -5,11 +5,18 @@ import java.sql.*;
 public class PatientReport {
     Integer pid;
 
-    public void displayReport(Connection conn, Integer pid, int dsUpdated) throws SQLException {
+    public void displayReport(Connection conn, Integer pid) throws SQLException {
         Statement st = null;
         ResultSet resultSet = null;
+        boolean ref = false;
         try{
             st = conn.createStatement();
+            resultSet = st.executeQuery("SELECT * from Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = "+pid+")");
+            if(resultSet.next()==false){
+                ref = false;
+            }
+            else
+                ref = true;
 
             System.out.println("*******************");
             System.out.println("Patient Report");
@@ -33,7 +40,7 @@ public class PatientReport {
                 System.out.println("Discharge Status:"+ds);
             }
 
-            if(dsUpdated==3){
+            if(ref){
 
                 System.out.println("---Refferral Status---");
                 resultSet = st.executeQuery("SELECT fid,referrer FROM Referral_Status WHERE rs_id = (SELECT rs_id FROM Report_has_ref WHERE rid=(SELECT rid FROM Patient_has_Report WHERE user_id = "+pid+"))"); //working

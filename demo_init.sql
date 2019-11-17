@@ -66,5 +66,10 @@ INSERT INTO REPORT_HAS_NEGATIVE (RID, NE_CODE, USER_DESC) VALUES (302,2,'used in
 INSERT INTO REPORT_HAS_NEGATIVE (RID, NE_CODE, USER_DESC) VALUES (303,2,'infected by the other patients');
 INSERT INTO REPORT_HAS_NEGATIVE (RID, NE_CODE, USER_DESC) VALUES (304,1,'misdiagnosed and gave wrong med');
 
+INSERT INTO Has_symptom (symptom, part, patient, value, duration, incident, recurring)
+VALUES('SYM001', 'HRT000', 1, 'High', '1','Unknown','N');
+
+INSERT INTO Has_symptom (symptom, part, patient, value, duration, incident, recurring)
+VALUES('SYM001', 'HRT000', 2, 'High', '2','Unknown','Y');1
 
 COMMIT;

@@ -311,9 +311,16 @@ public class TreatedPatient {
 
     public void reportConfirmation(Connection conn, Integer pid){
         try{
-            if(dsUpdated!=0 && (dsUpdated==3&&rsUpdated==true) && treatmentUpdated==true){
+
+            if(dsUpdated==0 || treatmentUpdated==false ||(dsUpdated==3&&rsUpdated==false)){
+
+                System.out.println("Some mandatory fields are empty. Please complete them.");
+                this.patientCheckout(conn,pid);
+            }
+            else
+            {
                 PatientReport report = new PatientReport();
-                report.displayReport(conn, pid,dsUpdated);
+                report.displayReport(conn, pid);
 
                 System.out.println("MENU");
                 System.out.println("*************");
@@ -333,12 +340,6 @@ public class TreatedPatient {
                         this.patientCheckout(conn, pid);
                         break;
                 }
-
-            }
-            else
-            {
-                System.out.println("Some mandatory fields are empty. Please complete them.");
-                this.patientCheckout(conn,pid);
             }
 
         }catch (Exception e){

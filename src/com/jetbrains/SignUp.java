@@ -77,15 +77,27 @@ public class SignUp {
                     pstmt.execute();
 		    
                     System.out.println("Signed Up");
-                    pstmt = conn.prepareStatement("INSERT INTO Address(addr_id, addr_number, addr_street, addr_city, addr_state) VALUES (seq.NEXTVAL,?,?,?,?)");
-
-                    pstmt.setInt (1, no);
-                    pstmt.setString (2, sname);
-                    pstmt.setString (3, city);
-                    pstmt.setString (4, state);
+                    ResultSet result = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
+                    int aid = -1;
+                    while (result.next())
+                        aid = result.getInt("nextval");
+                    pstmt = conn.prepareStatement("INSERT INTO Address(addr_id, addr_number, addr_street, addr_city, addr_state) VALUES (?,?,?,?,?)");
+                    pstmt.setInt (1, aid);
+                    pstmt.setInt (2, no);
+                    pstmt.setString (3, sname);
+                    pstmt.setString (4, city);
+                    pstmt.setString (5, state);
                     //pstmt.setString (5, country);
 
                     pstmt.execute();
+
+                    pstmt = conn.prepareStatement("INSERT INTO User_has_Address(user_id,addr_id) VALUES (?,?)");
+
+                    pstmt.setInt (1, uid);
+                    pstmt.setInt (2, aid);
+
+                    pstmt.execute();
+
                     //show msg
                     System.out.println("Profile Created!");
 

@@ -161,7 +161,8 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 			}else {
 				System.out.println("Inadequate Privilege");
 			}
-
+			System.out.println("Going Back");
+			staffCheckinMenu(conn,userId,patientId);
 	        
 		} catch (Exception e) {
 			System.out.println(e.toString());
