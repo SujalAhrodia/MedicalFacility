@@ -1,5 +1,6 @@
 mysqlscripts/
 obj/
+src/com/jetbrains/Establish.java
 src/com/jetbrains/establish.java
 /.idea
 /Medical Facility System.iml

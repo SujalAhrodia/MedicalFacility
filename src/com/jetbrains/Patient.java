@@ -8,27 +8,28 @@ import java.util.Scanner;
 
 public class Patient {
     int userinput;
-    int pid;
+    int uid;
 
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
     Statement st = null;
 
-    Patient(int pid) {
-	    this.pid = pid;
+    Patient(Connection conn, int uid) {
+	    this.uid = uid;
     }
 
     public static boolean has_uid(Connection conn, int uid) {
 	    try {
 		    Statement st = conn.createStatement();
 		    ResultSet rs =
-			    st.executeQuery("SELECT user_id FROM patient WHERE user_id = "
+			    st.executeQuery("SELECT isPatient FROM login_user WHERE user_id = "
 					    + uid);
 
 		    if (rs.next()) {
-			    return true;
+			    if (rs.getString("isPatient") == "Y")
+				    return true;
 		    }
-
+		    st.close();
 	    } catch (Exception e) {
 		    System.out.println(e.toString());
 	    }
@@ -93,7 +94,7 @@ public class Patient {
 
                         facID= in.nextInt();
 
-                        if (facID == has_fid(conn, this.pid) && checkIsUserCheckedIn(conn,this.pid))
+                        if (facID == has_fid(conn, this.uid) && checkIsUserCheckedIn(conn,this.uid, facID))
                         {
                             System.out.println("Already checked in!");
                             System.out.println("Please choose another facility!");
@@ -132,14 +133,14 @@ public class Patient {
             }
         }
     }
-    public boolean checkIsUserCheckedIn(Connection conn, int pid2) throws SQLException {
+    public boolean checkIsUserCheckedIn(Connection conn, int uid, int fid) throws SQLException {
     	Statement st = conn.createStatement();
     	try {
     		ResultSet rs =
-    				st.executeQuery("SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL");
+    				st.executeQuery("SELECT user_id FROM facility_has_user WHERE fhu_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL)");
     		while(rs.next()) {
-    			pid = rs.getInt("user_id");
-    			if(pid == pid2) {
+    			int pid = rs.getInt("user_id");
+    			if(pid == uid) {
     				return true;
     			}
     		}
@@ -159,18 +160,49 @@ public class Patient {
 
     public void checkinMenu(Connection conn, int facID) throws SQLException
     {
+	    System.out.println("checkinMenu: uid = " + this.uid + " facID = " + facID);
 	boolean cont = true;
+	int fhu_id = -1; // this is the future f_has_u id that is the patient's user_id primary key
+
+	try {
+		Statement st = conn.createStatement();
+		Calendar calendar = Calendar.getInstance();
+		java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
+
+		ResultSet rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
+		fhu_id = -1;
+		while (rs.next())
+			fhu_id = rs.getInt("nextval");
+
+		System.out.println("fhu_id = " + fhu_id);
+		PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Facility_has_user(fid, user_id, fhu_id) VALUES (?,?,?)");
+		pstmt.setInt(1, facID);
+		pstmt.setInt(2, this.uid);
+		pstmt.setInt(3, fhu_id);
+		pstmt.executeUpdate();
+
+		// now add to the patient table
+		pstmt = conn.prepareStatement("INSERT INTO Patient (user_id,isTreated,checkin_time_start, checkout_time) VALUES (?,?, TO_DATE(?, 'YYYY/MM/DD'), NULL)");
+		pstmt.setInt(1, fhu_id);
+		pstmt.setString (2, "N");
+		pstmt.setString (3, dateObj.toString());
+		pstmt.execute();
+
+		st.close();
+	} catch (Exception e) {
+		System.out.println(e.toString());
+	}
+	
 	while (cont) {
 		try
 		{
-			st = conn.createStatement();
-
+			Statement st = conn.createStatement();
 			//print symptoms from symptoms table
 			System.out.println("*************");
 			System.out.println("List of Symptoms");
 			System.out.println("*************");
 
-			temp = st.executeQuery("select symptom_name,code from Symptom");
+			ResultSet temp = st.executeQuery("select symptom_name,code from Symptom");
 
 			int i=1;
 			//array for choice of symptoms
@@ -197,43 +229,38 @@ public class Patient {
 			if( userinput == i )
 			{
 				//validate,
-                Calendar calendar = Calendar.getInstance();
-                java.sql.Date dateObj = new java.sql.Date(calendar.getTime().getTime());
-                PreparedStatement pstmt = conn.prepareStatement("Update Patient SET checkin_time_start =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+this.pid);
-                pstmt.executeUpdate();
+				
+				// PreparedStatement pstmt = conn.prepareStatement("Update Patient SET checkin_time_start =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+this.pid);
+				// pstmt.executeUpdate();
 
-                pstmt = conn.prepareStatement("Update Patient SET checkout_time = NULL WHERE user_id="+this.pid);
-                pstmt.executeUpdate();
-				st = conn.createStatement();
+				// pstmt = conn.prepareStatement("Update Patient SET checkout_time = NULL WHERE user_id="+this.pid);
+				// pstmt.executeUpdate();
+
+				
 				ResultSet rs = st.executeQuery("SELECT seq.NEXTVAL FROM dual");
 				int rid = -1;
 				while (rs.next())
 					rid = rs.getInt("nextval");
 
-				pstmt = conn.prepareStatement("INSERT INTO Report(rid) VALUES (?)");
+				PreparedStatement pstmt = conn.prepareStatement("INSERT INTO Report(rid) VALUES (?)");
 				pstmt.setInt(1,rid);
 				pstmt.execute();
 				pstmt = conn.prepareStatement("INSERT INTO Patient_has_Report(user_id,rid) VALUES (?,?)");
-				pstmt.setInt(1,pid);
+				pstmt.setInt(1,fhu_id);
 				pstmt.setInt(2,rid);
 				pstmt.execute();
-                pstmt = conn.prepareStatement("INSERT INTO Facility_has_user(fid, user_id) VALUES (?,?)");
-                pstmt.setInt(1, facID);
-                pstmt.setInt(2, this.pid);
-                pstmt.executeUpdate();
 
-                System.out.println("*** Added to patient to facility ***");
+				System.out.println("*** Added to patient to facility ***");
 				System.out.println("*** Logging out ***");
-                cont = false;
+				cont = false;
 
-                Menu m = new Menu();
+				Menu m = new Menu();
 				m.menuOptions(conn);
 			}
 			else if (userinput == i-1)
 			{
 				System.out.println("Add information about new symptom ---");
 				try {
-					Statement st = conn.createStatement();
 					System.out.println("*************");
 					System.out.println("Enter the following information:");
 					System.out.println("Symptom Name: ");
@@ -245,7 +272,7 @@ public class Patient {
 					System.out.println("*************");
 					System.out.println("Body Parts");
 					System.out.println("*************");
-					ResultSet temp = st.executeQuery("SELECT * FROM Body_part");
+					temp = st.executeQuery("SELECT * FROM Body_part");
 
 					while(temp.next())
 					{
@@ -295,7 +322,7 @@ public class Patient {
 				}
 			}
 			else {
-				metaData(codes[userinput], conn);
+				metaData(fhu_id, codes[userinput], conn);
 			}
 
 		}
@@ -312,7 +339,7 @@ public class Patient {
 		}
 	}
     }
-    public void metaData(String symp_code, Connection conn) throws SQLException
+    public void metaData(int pid, String symp_code, Connection conn) throws SQLException
     {
 	    String part = "";
 	    List<String> part_list = new ArrayList<>();
@@ -444,8 +471,15 @@ public class Patient {
 		Statement st = null;
 		ResultSet rs;
     	try{
+		st = conn.createStatement();
+		ResultSet temp = st.executeQuery("SELECT fhu_id FROM facility_has_user WHERE user_id = " + this.uid);
 
-			PatientReport report = new PatientReport();
+		int pid = -1;
+		while(temp.next()) {
+			pid = temp.getInt("fhu_id");
+		}
+
+		        PatientReport report = new PatientReport();
 			report.displayReport(conn,pid);
 
 			System.out.println("*********************");

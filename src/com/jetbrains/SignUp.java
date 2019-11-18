@@ -69,12 +69,6 @@ public class SignUp {
                     pstmt.setInt (4, ph);
                     pstmt.setDate(5,java.sql.Date.valueOf(dob));
                     pstmt.execute();
-
-		    // now add to the patient table
-		     pstmt = conn.prepareStatement("INSERT INTO Patient (user_id,isTreated) VALUES (?,?)");
-                    pstmt.setInt(1, uid);
-                    pstmt.setString (2, "N");
-                    pstmt.execute();
 		    
                     System.out.println("Signed Up");
                     ResultSet result = st.executeQuery("SELECT seq.NEXTVAL FROM dual");

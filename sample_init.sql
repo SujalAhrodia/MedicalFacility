@@ -23,6 +23,7 @@ CREATE TABLE Login_user(
        Lname char(32),
        ph_no char(32),
        DoB DATE,
+       isPatient char,
        PRIMARY KEY(user_id)
 );
 
@@ -120,9 +121,18 @@ CREATE TABLE Certified(
        PRIMARY KEY(fid, acronym)
 );
 
+CREATE TABLE Facility_has_User(
+      fhu_id int,
+      fid int,
+      FOREIGN KEY (fid) REFERENCES facility(fid),
+      user_id int,
+      FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
+      PRIMARY KEY(fhu_id)
+);
+
 CREATE TABLE Patient(
        user_id int,
-       FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
+       FOREIGN KEY (user_id) REFERENCES Facility_has_User(fhu_id),
        checkin_time_start DATE,
        checkin_time_end DATE,
        checkout_time DATE,
@@ -304,14 +314,6 @@ CREATE TABLE Works_in(
       dept_code char(32),
       FOREIGN KEY (dept_code) REFERENCES Service_department(dept_code),
       PRIMARY KEY(user_id, dept_code)
-);
-
-CREATE TABLE Facility_has_User(
-      fid int,
-      FOREIGN KEY (fid) REFERENCES facility(fid),
-      user_id int,
-      FOREIGN KEY (user_id) REFERENCES Login_user(user_id),
-      PRIMARY KEY(fid, user_id)
 );
 
 commit;

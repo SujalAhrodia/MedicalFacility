@@ -251,8 +251,8 @@ VALUES('VIS01', 'OP000');
 -- Staff
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(89001, 'Medical', 'Robot', '1234567890', TO_DATE('04/19/1989', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(89001, 'Medical', 'Robot', '1234567890', TO_DATE('04/19/1989', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -271,12 +271,12 @@ INSERT INTO Works_in
 VALUES(89001, 'OP000');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 89001);
+(fid, user_id, fhu_id)
+VALUES(1000, 89001, 89001);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(93001, 'Musical', 'Robert', '1234567890', TO_DATE('01/29/1993', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(93001, 'Musical', 'Robert', '1234567890', TO_DATE('01/29/1993', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -295,12 +295,12 @@ INSERT INTO Works_in
 VALUES(93001, 'ER000');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1001, 93001);
+(fid, user_id, fhu_id)
+VALUES(1001, 93001, 93001);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(67001, 'Muscular', 'Rob', '1234567890', TO_DATE('12/09/1967', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(67001, 'Muscular', 'Rob', '1234567890', TO_DATE('12/09/1967', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -319,12 +319,12 @@ INSERT INTO Works_in
 VALUES(67001, 'GP000');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 67001);
+(fid, user_id, fhu_id)
+VALUES(1000, 67001, 67001);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(88001, 'Mechanical', 'Roboto', '1234567890', TO_DATE('05/18/1988', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(88001, 'Mechanical', 'Roboto', '1234567890', TO_DATE('05/18/1988', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -347,12 +347,12 @@ INSERT INTO Works_in
 VALUES(88001, 'OP000');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 88001);
+(fid, user_id, fhu_id)
+VALUES(1000, 88001, 8801);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(91001, 'Millennium', 'Roberten', '1234567890', TO_DATE('06/28/1991', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(91001, 'Millennium', 'Roberten', '1234567890', TO_DATE('06/28/1991', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -371,12 +371,12 @@ INSERT INTO Works_in
 VALUES(91001, 'GP001');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1001, 91001);
+(fid, user_id, fhu_id)
+VALUES(1001, 91001, 91001);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(66001, 'Missionary', 'Robinson', '1234567890', TO_DATE('07/08/1966', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(66001, 'Missionary', 'Robinson', '1234567890', TO_DATE('07/08/1966', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -395,12 +395,12 @@ INSERT INTO Works_in
 VALUES(66001, 'ER000');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1001, 66001);
+(fid, user_id, fhu_id)
+VALUES(1001, 66001, 66001);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(89002, 'Miscellaneous', 'Robotor', '1234567890', TO_DATE('04/19/1989', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(89002, 'Miscellaneous', 'Robotor', '1234567890', TO_DATE('04/19/1989', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -419,12 +419,12 @@ INSERT INTO Works_in
 VALUES(89002, 'SE000');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 89002);
+(fid, user_id, fhu_id)
+VALUES(1000, 89002, 89002);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(93002, 'Musician', 'Root', '1234567890', TO_DATE('01/29/1993', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(93002, 'Musician', 'Root', '1234567890', TO_DATE('01/29/1993', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -443,12 +443,12 @@ INSERT INTO Works_in
 VALUES(93002, 'SE000');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 93002);
+(fid, user_id, fhu_id)
+VALUES(1000, 93002, 93002);
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(67002, 'Massaging', 'Robin', '1234567890', TO_DATE('12/09/1967', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(67002, 'Massaging', 'Robin', '1234567890', TO_DATE('12/09/1967', 'MM/DD/YYYY'), 'N');
 
 INSERT INTO Staff
 (user_id, medical, hiredate, primary_dept)
@@ -467,8 +467,8 @@ INSERT INTO Works_in
 VALUES(67002, 'ER001');
 
 INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1002, 67002);
+(fid, user_id, fhu_id)
+VALUES(1002, 67002, 67002);
 
 -- Body Part
 INSERT INTO Body_part
@@ -590,8 +590,12 @@ VALUES (3, 'SYM006', 'EYE000', 'Normal/Severe', 'Normal', '>=');
 -- Patient
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(1, 'John', 'Smith', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(1, 'John', 'Smith', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'), 'Y');
+
+INSERT INTO Facility_has_User
+(fid, user_id, fhu_id)
+VALUES(1000, 1, 1);
 
 INSERT INTO Patient
 (user_id)
@@ -611,8 +615,12 @@ VALUES('SYM003', 'None', 1, 'High', '1','Unknown','N');
 
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(2, 'Jane', 'Doe', 9192453245, TO_DATE('2/29/2000', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(2, 'Jane', 'Doe', 9192453245, TO_DATE('2/29/2000', 'MM/DD/YYYY'), 'Y');
+
+INSERT INTO Facility_has_User
+(fid, user_id, fhu_id)
+VALUES(1000, 2, 2);
 
 INSERT INTO Patient
 (user_id)
@@ -632,8 +640,12 @@ VALUES('SYM001', 'ARM000', 2, '5', '3','Fell off bike','Y');
 
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(3, 'Rock', 'Start', 5403127893, TO_DATE('8/31/1970', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(3, 'Rock', 'Start', 5403127893, TO_DATE('8/31/1970', 'MM/DD/YYYY'), 'Y');
+
+INSERT INTO Facility_has_User
+(fid, user_id, fhu_id)
+VALUES(1000, 3, 3);
 
 INSERT INTO Patient
 (user_id)
@@ -653,11 +665,15 @@ INSERT INTO Has_symptom
 VALUES('SYM002', 'None', 3, 'Severe', '1','Pepper challenge','N');
 
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(4, 'Sheldon', 'Cooper', 6184628437, TO_DATE('05/26/1984', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, isPatient)
+VALUES(4, 'Sheldon', 'Cooper', 6184628437, TO_DATE('05/26/1984', 'MM/DD/YYYY'), 'Y');
 
 INSERT INTO Negative_experience (ne_code, description) VALUES (1,'Misdiagnosis');
 INSERT INTO Negative_experience (ne_code, description) VALUES (2,'Patient acquired infection during hospital stay.');
+
+INSERT INTO Facility_has_User
+(fid, user_id, fhu_id)
+VALUES(1000, 4, 4);
 
 INSERT INTO Patient
 (user_id)

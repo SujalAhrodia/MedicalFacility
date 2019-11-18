@@ -111,7 +111,7 @@ public class SignIn {
                     if (Patient.has_uid(conn, id) && c.replaceAll("\\s+","").equalsIgnoreCase(city.replaceAll("\\s+",""))) {
 
 						System.out.println("Successful Patient login");
-						Patient p = new Patient(id);
+						Patient p = new Patient(conn, id);
 						p.routingMenu(conn);
 					}
 					else if (Staff.has_uid(conn,id))

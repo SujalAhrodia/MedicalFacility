@@ -37,7 +37,7 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT Fname,user_id from Login_user where user_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL)");
+				st.executeQuery("SELECT Fname,user_id from Login_user WHERE user_id IN (SELECT user_id FROM facility_has_user WHERE fhu_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL))");
 			
 			// TODO clear checkin/checkout time on logout
 			
