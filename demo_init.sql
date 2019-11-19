@@ -4,6 +4,10 @@ INSERT INTO Login_user
 (user_id, Fname, Lname, ph_no, DoB)
 VALUES(80, 'A', 'Demo', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'));
 
+INSERT INTO Facility_has_User
+(fid, user_id, fhu_id)
+VALUES(1000, 80, 80);
+
 INSERT INTO Patient
 (user_id, checkin_time_start, checkin_time_end, checkout_time, isTreated)
 VALUES (80, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2016/12/17', 'YYYY/MM/DD'), 'Y');
@@ -11,10 +15,6 @@ VALUES (80, TO_DATE('2015/12/17', 'YYYY/MM/DD'), TO_DATE('2015/12/17', 'YYYY/MM/
 INSERT INTO User_has_address
 (user_id, addr_id)
 VALUES(80, 63);
-
-INSERT INTO Facility_has_User
-(fid, user_id)
-VALUES(1000, 80);
 
 -- Create discharge report
 INSERT INTO Report

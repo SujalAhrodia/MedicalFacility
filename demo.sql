@@ -18,8 +18,7 @@ AND ne.ne_code IN
 (SELECT ne_code FROM report_has_negative rhn WHERE rhn.rid IN
 	 (SELECT rid FROM patient_has_report phr WHERE phr.user_id = p.user_id)
 )
-AND lu.user_id = p.user_id
-AND f.fid IN (SELECT fid FROM Facility_has_user fhu WHERE fhu.user_id = p.user_id);
+AND f.fid IN (SELECT fid FROM Facility_has_user fhu WHERE fhu.user_id = lu.user_id AND fhu.fhu_id = p.user_id);
 
 -- query 2 -- Find facilities that did not have a negative experience for a specific period (to be given)
 SELECT f.fac_name
