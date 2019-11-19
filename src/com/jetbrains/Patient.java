@@ -26,7 +26,7 @@ public class Patient {
 					    + uid);
 
 		    if (rs.next()) {
-			    if (rs.getString("isPatient") == "Y")
+			    if (rs.getString("isPatient").equals("Y"))
 				    return true;
 		    }
 		    st.close();
@@ -137,10 +137,11 @@ public class Patient {
     	Statement st = conn.createStatement();
     	try {
     		ResultSet rs =
-    				st.executeQuery("SELECT user_id FROM facility_has_user WHERE fhu_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL)");
+    				st.executeQuery("SELECT user_id,fid FROM facility_has_user WHERE fhu_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL)");
     		while(rs.next()) {
-    			int pid = rs.getInt("user_id");
-    			if(pid == uid) {
+			int nfid = rs.getInt("fid");
+    			int nuid = rs.getInt("user_id");
+    			if(nuid == uid && nfid == fid) {
     				return true;
     			}
     		}
