@@ -39,7 +39,7 @@ public class Staff {
 			userinput = in.next();
 
 			switch (userinput) {
-			case "1": 
+			case "1":
 				CheckInPatient.displayCheckedInPatients(conn,uid);
 				break;
 			case "2":
@@ -60,7 +60,15 @@ public class Staff {
 				System.out.println("Add assessment rule");
 				this.addAssessment(conn);
 				break;
-			}
+                case "6":
+                    System.out.println("*************");
+                    System.out.println("Logging out");
+                    System.out.println("*************");
+
+                    SignIn s = new SignIn();
+                    s.menuOptions(conn);
+                    break;
+            }
 		} catch(Exception e) {
 			System.out.println(e.toString());
 		}

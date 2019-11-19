@@ -116,8 +116,11 @@ public class Patient {
                     this.patientCheckout(conn);
                     break;
                 case 3:
-                    System.out.println("GO Back");
-                    Menu menu = new Menu();
+					System.out.println("*************");
+					System.out.println("Logging Out");
+					System.out.println("*************");
+
+					Menu menu = new Menu();
                     menu.menuOptions(conn);
                     break;
 
@@ -373,18 +376,6 @@ public class Patient {
 		    
 		    if (part_list.size() == 0)
 			    System.out.println("1. Body Part ");
-		    else if(part_list.size()>1)
-		    {
-                System.out.println("*************");
-
-                for (int i=0;i<part_list.size();i++) {
-                    System.out.println(i+1+":"+part_list.get(i));
-                }
-                System.out.println("*************");
-
-                userinput = in.nextInt();
-                part = part_list.get(userinput+1);
-		    }
 		    if (dur == "")
 			    System.out.println("2. Duration ");
 		    if (re == "")
@@ -404,7 +395,15 @@ public class Patient {
 			    switch (userinput)
 			    {
 			    case 1:
-				    System.out.println("Body Part (If you don't want to specify, type 'None')");
+				    System.out.println("Body Part (Type body part code, If you don't want to specify, type 'None')");
+					System.out.println("*************");
+
+					ResultSet q2 = st.executeQuery("SELECT code FROM BODY_PART");
+					while(q2.next()) {
+						System.out.println(q2.getString("code"));
+					}
+					System.out.println("*************");
+
 				    part = in.next();
 				    break;
 			    case 2:

@@ -1,8 +1,8 @@
 
 -- Create a test patient
 INSERT INTO Login_user
-(user_id, Fname, Lname, ph_no, DoB)
-VALUES(80, 'A', 'Demo', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'));
+(user_id, Fname, Lname, ph_no, DoB, ispatient)
+VALUES(80, 'A', 'Demo', 9007004567, TO_DATE('1/1/1990', 'MM/DD/YYYY'), 'Y');
 
 INSERT INTO Facility_has_User
 (fid, user_id, fhu_id)

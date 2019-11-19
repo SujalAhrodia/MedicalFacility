@@ -97,7 +97,7 @@ public class SignIn {
 					String c = null;
                     try
                     {
-                        temp = st.executeQuery("SELECT * from Address where addr_id="+aid);
+                        temp = st.executeQuery("SELECT ADDR_CITY from Address where addr_id="+aid);
                     }
                     catch (Exception e)
                     {

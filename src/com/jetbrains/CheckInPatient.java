@@ -30,20 +30,26 @@ public class CheckInPatient {
 	                return;
 				}
 			}
-			
+
+
+			boolean flag=false;
+			//list of patients checked-in
+			int[] patients = new int[100];
+			int patient_id = -1;
+
+			while(!flag) {
 			// show checked-in patients if user is a medical staff
             System.out.println("*************");
             System.out.println("Checked-In Patients");
             System.out.println("*************");
-			
+
 			ResultSet rs =
 				st.executeQuery("SELECT * from Login_user lu, facility_has_user fhu WHERE lu.user_id = fhu.user_id AND fhu_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL)");
-			
+
 			// TODO clear checkin/checkout time on logout
-			
+
 			int i=1;
-	        //list of patients checked-in
-	        int[] patients = new int[100];
+
 	        int pid =0;
 
 	        while(rs.next())
@@ -60,11 +66,20 @@ public class CheckInPatient {
 	        	return;
 	        }
 	        System.out.println("*************");
-            System.out.println("Select the patient:");	
+            System.out.println("Select the patient:");
             userinput = in.next();
             System.out.println("*************");
-            int patient_id = patients[Integer.parseInt(userinput)];
-	    
+
+            if (Integer.parseInt(userinput) < i )
+			{
+				flag=true;
+				patient_id = patients[Integer.parseInt(userinput)];
+			}
+			else {
+				System.out.println("Incorrect selection");
+			}
+			}
+
             staffCheckinMenu(conn,staffId,patient_id);
               
 		} catch (Exception e) {
@@ -126,7 +141,9 @@ public class CheckInPatient {
 		break;
         case "2":
         	System.out.println("GO Back");
-		break;
+			Staff s = new Staff();
+			s.routingMenu(conn,userId);
+			break;
         default:
             System.out.println("Invalid input!");
             System.out.println("Please read the options carefully");
@@ -205,7 +222,7 @@ public static void treatPatient(Connection conn,int userId,int patientId) throws
 	        //add check-in-end to patient table
 	        pstmt = conn.prepareStatement("Update Patient SET checkin_time_end =TO_DATE('"+dateObj+"', 'YYYY/MM/DD') WHERE user_id="+pid);
 	        pstmt.executeUpdate();
-	        System.out.println("Patient check-in complete at:"+ dateObj+"for patientid: "+pid);
+	        System.out.println("Patient check-in complete at : "+ dateObj+" For patientid: "+pid);
 
 	        // enforce assessment rules
 	        Staff.apply_rules(conn, pid);

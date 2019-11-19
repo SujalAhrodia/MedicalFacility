@@ -20,7 +20,6 @@ public class SignUp {
         String lname = in.nextLine();
 
         System.out.println("Date of Birth: (format: YYYY-MM-DD)");
-        //to-do
         String dob = in.nextLine();
 
         System.out.println("** Address ** ");
@@ -36,11 +35,17 @@ public class SignUp {
         System.out.println("State: ");
         String state = in.nextLine();
 
-        //System.out.println("Country: ");
-        //String country = in.nextLine();
+        System.out.println("ZIP: ");
+        int zip = Integer.parseInt(in.nextLine());
+
+        System.out.println("Country: ");
+        String country = in.nextLine();
 
         System.out.println("Phone number: ");
-        int ph = in.nextInt();
+        int ph = Integer.parseInt(in.nextLine());
+
+        System.out.println("Are you a Patient: (Y/N)");
+        String p = in.nextLine();
 
         System.out.println("*************");
         System.out.println("1.  Sign Up ");
@@ -62,12 +67,13 @@ public class SignUp {
         			int uid = -1;
         			while (rs.next())
         				uid = rs.getInt("nextval");
-                    pstmt = conn.prepareStatement("INSERT INTO Login_user (user_id,Fname, Lname, ph_no , DoB) VALUES (?,?,?,?,?)");
+                    pstmt = conn.prepareStatement("INSERT INTO Login_user (user_id, FNAME, LNAME, PH_NO, DOB, ISPATIENT ) VALUES (?,?,?,?,?,?)");
                     pstmt.setInt(1, uid);
                     pstmt.setString (2, fname);
                     pstmt.setString (3, lname);
                     pstmt.setInt (4, ph);
                     pstmt.setDate(5,java.sql.Date.valueOf(dob));
+                    pstmt.setString(6, p);
                     pstmt.execute();
 		    
                     System.out.println("Signed Up");
@@ -75,13 +81,14 @@ public class SignUp {
                     int aid = -1;
                     while (result.next())
                         aid = result.getInt("nextval");
-                    pstmt = conn.prepareStatement("INSERT INTO Address(addr_id, addr_number, addr_street, addr_city, addr_state) VALUES (?,?,?,?,?)");
+                    pstmt = conn.prepareStatement("INSERT INTO Address(ADDR_ID, ADDR_NUMBER, ADDR_STREET, ADDR_CITY, ADDR_STATE, ADDR_ZIP, ADDR_COUNTRY) VALUES (?,?,?,?,?,?,?)");
                     pstmt.setInt (1, aid);
                     pstmt.setInt (2, no);
                     pstmt.setString (3, sname);
                     pstmt.setString (4, city);
                     pstmt.setString (5, state);
-                    //pstmt.setString (5, country);
+                    pstmt.setInt(6, zip);
+                    pstmt.setString(7, country);
 
                     pstmt.execute();
 
