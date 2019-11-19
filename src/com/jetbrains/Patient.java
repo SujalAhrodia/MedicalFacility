@@ -9,13 +9,15 @@ import java.util.Scanner;
 public class Patient {
     int userinput;
     int uid;
+    int globalFid;
 
     Scanner in = new Scanner(System.in);
     ResultSet temp = null;
     Statement st = null;
 
-    Patient(Connection conn, int uid) {
+    Patient(Connection conn, int uid,int fid) {
 	    this.uid = uid;
+	    this.globalFid = fid;
     }
 
     public static boolean has_uid(Connection conn, int uid) {
@@ -473,7 +475,7 @@ public class Patient {
 		ResultSet rs;
     	try{
 		st = conn.createStatement();
-		ResultSet temp = st.executeQuery("SELECT fhu_id FROM facility_has_user WHERE user_id = " + this.uid);
+		ResultSet temp = st.executeQuery("SELECT fhu_id FROM facility_has_user WHERE user_id = " + this.uid + "AND fid = "+ globalFid);
 
 		int pid = -1;
 		while(temp.next()) {
