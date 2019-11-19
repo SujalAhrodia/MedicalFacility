@@ -344,8 +344,8 @@ public class Patient {
     {
 	    String part = "";
 	    List<String> part_list = new ArrayList<>();
+	    Statement st = conn.createStatement();
 	    try {
-		    Statement st = conn.createStatement();
 		    ResultSet q2 = st.executeQuery("SELECT part FROM Implies WHERE symptom='"+symp_code+"'");
 		    while(q2.next()) {
 			    part = q2.getString("part");

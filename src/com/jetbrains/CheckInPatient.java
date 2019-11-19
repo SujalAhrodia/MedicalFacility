@@ -37,7 +37,7 @@ public class CheckInPatient {
             System.out.println("*************");
 			
 			ResultSet rs =
-				st.executeQuery("SELECT Fname,user_id from Login_user WHERE user_id IN (SELECT user_id FROM facility_has_user WHERE fhu_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL))");
+				st.executeQuery("SELECT * from Login_user lu, facility_has_user fhu WHERE lu.user_id = fhu.user_id AND fhu_id IN (SELECT user_id from patient where (checkout_time IS NULL OR checkout_time < checkin_time_start) AND checkin_time_start IS NOT NULL)");
 			
 			// TODO clear checkin/checkout time on logout
 			
@@ -49,8 +49,9 @@ public class CheckInPatient {
 	        while(rs.next())
 	            {
 	                String name = rs.getString("Fname");
-	                pid = rs.getInt("user_id");
-	                System.out.println(i + ".\t" + name);
+			int uid = rs.getInt("user_id");
+	                pid = rs.getInt("fhu_id");
+	                System.out.println(i + ".\t" + name + " checked into facility " + rs.getInt("fid"));
 	                patients[i] = pid;
 	                i++;
 	            }
@@ -62,8 +63,9 @@ public class CheckInPatient {
             System.out.println("Select the patient:");	
             userinput = in.next();
             System.out.println("*************");
-            int patientId = patients[Integer.parseInt(userinput)];
-            staffCheckinMenu(conn,staffId,patientId);
+            int patient_id = patients[Integer.parseInt(userinput)];
+	    
+            staffCheckinMenu(conn,staffId,patient_id);
               
 		} catch (Exception e) {
 			e.printStackTrace();
