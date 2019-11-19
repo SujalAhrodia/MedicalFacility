@@ -24,16 +24,16 @@ AND f.fid IN (SELECT fid FROM Facility_has_user fhu WHERE fhu.user_id = lu.user_
 SELECT f.fac_name
 FROM Facility f
 WHERE f.fid NOT IN (
-      SELECT fid FROM Facility_has_user fhu WHERE fhu.user_id IN (
-      	     SELECT user_id FROM Patient p, Report r WHERE p.user_id IN (
-	     	    SELECT user_id FROM patient_has_report phr WHERE phr.rid = r.rid
-	     )
-	     AND r.rid IN (
-	     	    SELECT rid FROM report_has_negative rhn
-	     )
-	     AND p.checkout_time >= TO_DATE('2014/12/17', 'YYYY/MM/DD')
-	     AND p.checkout_time <= TO_DATE('2018/12/17', 'YYYY/MM/DD')
-      )
+    SELECT fid FROM Facility_has_user fhu WHERE fhu.FHU_ID IN (
+        SELECT user_id FROM Patient p, Report r WHERE p.user_id IN (
+            SELECT user_id FROM patient_has_report phr WHERE phr.rid = r.rid
+        )
+                                                  AND r.rid IN (
+                SELECT rid FROM report_has_negative rhn
+            )
+                                                  AND p.checkout_time >= TO_DATE('2014/12/17', 'YYYY/MM/DD')
+                                                  AND p.checkout_time <= TO_DATE('2019/12/17', 'YYYY/MM/DD')
+    )
 );
 
 -- query 3 -- For each facility, find the facility that is sends the most referrals to.
@@ -81,16 +81,16 @@ WHERE f.fid NOT IN (
 -- query 5 -- Find the facility with the most number of negative experiences (overall i.e. of either kind).
 SELECT f.fac_name, MAX(totalcount.excount)
 FROM Facility f, (
-      SELECT fhu.fid, COUNT(fhu.fid) excount
-      FROM Facility_has_user fhu WHERE fhu.user_id IN (
-      	     SELECT user_id FROM Patient p, Report r WHERE p.user_id IN (
-	     	    SELECT user_id FROM patient_has_report phr WHERE phr.rid = r.rid
-	     )
-	     AND r.rid IN (
-	     	    SELECT rid FROM report_has_negative rhn
-	     )
-      )
-      GROUP BY fhu.fid
+    SELECT fhu.fid, COUNT(fhu.fid) excount
+    FROM Facility_has_user fhu WHERE fhu.FHU_ID IN (
+        SELECT user_id FROM Patient p, Report r WHERE p.user_id IN (
+            SELECT user_id FROM patient_has_report phr WHERE phr.rid = r.rid
+        )
+                                                  AND r.rid IN (
+                SELECT rid FROM report_has_negative rhn
+            )
+    )
+    GROUP BY fhu.fid
 ) totalcount
 WHERE f.fid = totalcount.fid
 GROUP BY f.fac_name;
