@@ -118,3 +118,8 @@ ORDER BY f.fid, checkin_time_end - checkin_time_start;
 SELECT s.symptom_name,sd.dept_name FROM symptom s,implies i,service_department sd,Associated_to a WHERE i.part = a.part AND i.symptom = s.code AND sd.dept_code IN (SELECT p.dept_code FROM Provides p WHERE p.service = a.service);
 
 -- 2. List of all the patients who have problems in all body parts.
+SELECT lu.lname,
+       lu.fname
+FROM Login_user lu
+WHERE lu.user_id IN (SELECT user_id from FACILITY_HAS_USER fhu WHERE fhu.fhu_id IN (SELECT patient FROM Has_symptom WHERE part = 'None'));
+
